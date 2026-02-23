@@ -35,6 +35,41 @@
     --l1: #003189;
   }
 
+  /* ── LIGHT MODE ── */
+  body.light-mode {
+    --pitch-dark: #f0f4f0;
+    --pitch-mid: #e8f0ea;
+    --pitch-green: #d4e8d8;
+    --pitch-line: #c0dcc6;
+    --grass: #8fc49a;
+    --card-bg: rgba(255,255,255,0.92);
+    --card-hover: rgba(240,248,242,0.98);
+    --border: rgba(0,0,0,0.1);
+    --white: #1a2e1f;
+    --white-dim: #4a6650;
+    --shadow: 0 8px 32px rgba(0,0,0,0.12);
+    background: #eef4f0;
+    color: #1a2e1f;
+  }
+  body.light-mode::before { opacity: 0.3; }
+  body.light-mode .header { background: linear-gradient(180deg,rgba(255,255,255,0.97) 0%,rgba(240,248,242,0.98) 100%); }
+  body.light-mode .ticker { background: rgba(26,46,31,0.9); }
+  body.light-mode .nav-tabs { background: rgba(255,255,255,0.95); border-color: rgba(0,0,0,0.1); }
+  body.light-mode .data-table th { background: rgba(26,46,31,0.08); color: #1a2e1f; }
+  body.light-mode .data-table td { border-color: rgba(0,0,0,0.06); }
+  body.light-mode .modal { background: #fff; }
+  body.light-mode .api-status-bar { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.1); }
+  body.light-mode .suspension-panel { background: rgba(255,255,255,0.92); }
+
+  /* ── THEME TOGGLE BUTTON ── */
+  .theme-toggle {
+    background: none; border: 1px solid var(--border); border-radius: 20px;
+    color: var(--white-dim); cursor: pointer; padding: 5px 12px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem;
+    letter-spacing: 1px; transition: all 0.2s; white-space: nowrap;
+  }
+  .theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -1012,6 +1047,64 @@
   .tag-bl { background: rgba(180,0,10,0.5); color: #ffaaaa; }
   .tag-l1 { background: rgba(0,40,120,0.5); color: #aabfff; }
 
+  /* ── SUSPENSION TRACKER ── */
+  .suspension-panel { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border); padding: 20px; }
+  .suspension-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .suspension-row:last-child { border-bottom: none; }
+  .sus-player { flex: 1; }
+  .sus-player-name { font-family: 'Barlow Condensed'; font-weight: 700; font-size: 1rem; }
+  .sus-team { font-size: .75rem; color: var(--white-dim); }
+  .sus-bar-wrap { flex: 2; }
+  .sus-bar-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; overflow: hidden; }
+  .sus-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .sus-bar-fill.safe { background: var(--accent); }
+  .sus-bar-fill.warning { background: var(--gold); }
+  .sus-bar-fill.danger { background: var(--red-card); }
+  .sus-counts { font-family: 'Barlow Condensed'; font-size: .85rem; color: var(--white-dim); margin-top: 3px; }
+  .sus-badge { font-family: 'Barlow Condensed'; font-size: .72rem; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+  .sus-badge.safe { background: rgba(74,222,128,0.15); color: var(--accent); }
+  .sus-badge.warning { background: rgba(245,200,66,0.15); color: var(--gold); }
+  .sus-badge.danger { background: rgba(230,57,70,0.2); color: var(--red-card); }
+  .sus-badge.suspended { background: rgba(230,57,70,0.35); color: #fff; }
+
+  /* ── TEAM SEARCH ── */
+  .team-search-wrap { position: relative; margin-bottom: 16px; }
+  .team-search-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 6px; color: var(--white); font-family: 'Barlow', sans-serif; font-size: .9rem; padding: 9px 16px 9px 38px; outline: none; transition: border-color 0.2s; }
+  .team-search-input:focus { border-color: var(--gold); }
+  .team-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--white-dim); font-size: 1rem; pointer-events: none; }
+  body.light-mode .team-search-input { background: rgba(0,0,0,0.05); color: #1a2e1f; }
+
+  /* ── LAST UPDATED ── */
+  .last-updated { font-family: 'Barlow Condensed'; font-size: .75rem; color: var(--white-dim); letter-spacing: 1px; padding: 4px 12px; }
+
+  /* ── H2H MINI TABLE ── */
+  .h2h-mini { margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 6px; font-family: 'Barlow Condensed'; font-size: .8rem; }
+  .h2h-mini-title { color: var(--gold); font-size: .72rem; letter-spacing: 1px; margin-bottom: 6px; }
+  .h2h-result-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--white-dim); }
+  .h2h-result-row:last-child { border-bottom: none; }
+  .h2h-score { color: var(--white); font-weight: 700; }
+
+  /* ── EXPORT CARD ── */
+  .export-btn { background: linear-gradient(135deg,var(--gold),var(--gold-dim)); color: #1a1a1a; border: none; border-radius: 6px; padding: 8px 18px; font-family: 'Barlow Condensed'; font-size: .85rem; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; transition: opacity 0.2s; }
+  .export-btn:hover { opacity: 0.85; }
+
+  /* ── MOBILE IMPROVEMENTS ── */
+  @media (max-width: 640px) {
+    .header-leagues { display: none; }
+    .grid-2 { grid-template-columns: 1fr !important; }
+    .grid-4 { grid-template-columns: 1fr 1fr !important; }
+    .fixture-teams { font-size: 0.85rem; gap: 6px; }
+    .fixture-team { font-size: 0.82rem; }
+    .data-table { font-size: 0.78rem; }
+    .data-table th, .data-table td { padding: 6px 8px; }
+    .rec-picks { grid-template-columns: 1fr 1fr !important; }
+    .week-selector { flex-wrap: wrap; justify-content: center; }
+    .nav-tabs-inner { gap: 0; }
+    .nav-tab { padding: 12px 10px; font-size: .75rem; letter-spacing: 0; }
+    .sus-bar-wrap { display: none; }
+    .card { padding: 16px; }
+  }
+
   .section-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--border), transparent);
@@ -1101,9 +1194,13 @@
         <div class="league-badge l1 active" onclick="toggleLeague('l1')">🇫🇷 Ligue 1</div>
       </div>
 
-      <div class="live-pulse">
-        <div class="pulse-dot"></div>
-        LIVE
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="last-updated" id="lastUpdated"></span>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+        <div class="live-pulse">
+          <div class="pulse-dot"></div>
+          LIVE
+        </div>
       </div>
     </div>
   </header>
@@ -1121,6 +1218,7 @@
       <div class="nav-tab" onclick="switchTab('predictions')">🎯 Predictions</div>
       <div class="nav-tab" onclick="switchTab('bookings')">🟨 Bookings & Cards</div>
       <div class="nav-tab" onclick="switchTab('referees')">👮 Referee Stats</div>
+      <div class="nav-tab" onclick="switchTab('suspensions')">🚨 Suspensions</div>
       <div class="nav-tab" onclick="switchTab('standings')">🏆 Standings</div>
     </div>
   </nav>
@@ -1248,6 +1346,10 @@
         <span class="section-sub">2025-26 Season</span>
       </div>
 
+      <div class="team-search-wrap">
+        <span class="team-search-icon">🔍</span>
+        <input class="team-search-input" id="teamSearchInput" placeholder="Search by team name…" oninput="filterByTeam(this.value)">
+      </div>
       <div class="filter-row mb-20">
         <span class="filter-label">Filter:</span>
         <div class="league-badge pl active" onclick="filterFixtures('pl',this)">Premier League</div>
@@ -1266,9 +1368,12 @@
 
     <!-- PREDICTIONS TAB -->
     <div class="tab-content" id="tab-predictions">
-      <div class="section-header">
-        <span class="section-title">Weekly Predictions</span>
-        <span class="section-sub">AI-Powered Picks · 2025-26</span>
+      <div class="section-header" style="justify-content:space-between;align-items:center;">
+        <div>
+          <span class="section-title">Weekly Predictions</span>
+          <span class="section-sub">AI-Powered Picks · 2025-26</span>
+        </div>
+        <button class="export-btn" onclick="exportPredictionsCard()" style="margin-left:auto;">📋 Copy Picks Card</button>
       </div>
 
       <div class="info-box">
@@ -1424,6 +1529,70 @@
           <span class="section-sub">Known Referees for Next Matchweek</span>
         </div>
         <div id="upcomingRefAssignments" class="grid-auto"></div>
+      </div>
+    </div>
+
+    <!-- SUSPENSION TRACKER TAB -->
+    <div class="tab-content" id="tab-suspensions">
+      <div class="section-header">
+        <span class="section-title">Suspension Tracker</span>
+        <span class="section-sub">Yellow card accumulation · 2025-26</span>
+      </div>
+
+      <div class="info-box" style="margin-bottom:20px;">
+        <strong style="color:var(--gold)">⚠️ Suspension Thresholds:</strong>
+        Most leagues ban a player for 1 match after <strong>5 yellows</strong> in the first phase of the season, then again at <strong>10 yellows</strong>.
+        Thresholds reset mid-season in some competitions. Risk levels: 
+        <span style="color:var(--red-card)">■ DANGER</span> = 1 away · 
+        <span style="color:var(--gold)">■ WARNING</span> = 2 away · 
+        <span style="color:var(--accent)">■ SAFE</span> = 3+ away.
+      </div>
+
+      <div class="grid-2 mb-32">
+        <div class="card">
+          <div class="section-header mb-20">
+            <span class="section-title">One Yellow From Ban</span>
+            <span class="section-sub" style="color:var(--red-card)">🚨 Immediate Danger</span>
+          </div>
+          <div id="susDanger"></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-20">
+            <span class="section-title">Two Yellows From Ban</span>
+            <span class="section-sub" style="color:var(--gold)">⚠️ Monitor Closely</span>
+          </div>
+          <div id="susWarning"></div>
+        </div>
+      </div>
+
+      <div class="card mb-32">
+        <div class="section-header mb-20">
+          <span class="section-title">Full Accumulation Table</span>
+          <span class="section-sub">All tracked players — sorted by cards</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Team</th>
+              <th>League</th>
+              <th class="num">🟨 Cards</th>
+              <th class="num">Threshold</th>
+              <th class="num">Remaining</th>
+              <th class="num">Status</th>
+            </tr>
+          </thead>
+          <tbody id="susFullTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-header mb-20">
+          <span class="section-title">Export Suspension Alert Card</span>
+          <span class="section-sub">Share with your group</span>
+        </div>
+        <div id="exportCardPreview" style="background:linear-gradient(135deg,#0a1a0f,#1a3a24);border:2px solid var(--gold);border-radius:10px;padding:20px;margin-bottom:16px;font-family:'Barlow Condensed';"></div>
+        <button class="export-btn" onclick="exportSuspensionCard()">📋 Copy Alert Card to Clipboard</button>
       </div>
     </div>
 
@@ -1642,6 +1811,14 @@ const DEMO = {
     { player:'Christopher Trimmel',team:'Union Berlin',  risk:75, reasons:'BL leader 6Y · aging legs = more fouls · mid-table scrap', next:'vs Gladbach' },
     { player:'Máximo Perrone',    team:'Como',           risk:72, reasons:'6Y · Serie A relegation fight · combative midfield role', next:'vs Juventus' },
   ],
+
+  h2h: {
+    // Head-to-head records — last 5 meetings per fixture
+    'Arsenal_Chelsea':       [{d:'2025-10-05',h:'Arsenal',a:'Chelsea',r:{h:2,a:2}},{d:'2025-04-20',h:'Chelsea',a:'Arsenal',r:{h:0,a:1}},{d:'2024-12-26',h:'Arsenal',a:'Chelsea',r:{h:1,a:0}},{d:'2024-09-01',h:'Chelsea',a:'Arsenal',r:{h:2,a:2}},{d:'2024-04-23',h:'Arsenal',a:'Chelsea',r:{h:5,a:0}}],
+    'Liverpool_West Ham':    [{d:'2025-11-30',h:'Liverpool',a:'West Ham',r:{h:2,a:1}},{d:'2025-04-27',h:'West Ham',a:'Liverpool',r:{h:1,a:2}},{d:'2024-12-29',h:'Liverpool',a:'West Ham',r:{h:5,a:1}},{d:'2024-09-21',h:'West Ham',a:'Liverpool',r:{h:0,a:0}},{d:'2024-02-24',h:'Liverpool',a:'West Ham',r:{h:4,a:2}}],
+    'Barcelona_Villarreal':  [{d:'2026-01-26',h:'Villarreal',a:'Barcelona',r:{h:1,a:3}},{d:'2025-09-21',h:'Barcelona',a:'Villarreal',r:{h:4,a:0}},{d:'2025-04-20',h:'Villarreal',a:'Barcelona',r:{h:1,a:2}},{d:'2025-01-19',h:'Barcelona',a:'Villarreal',r:{h:2,a:1}},{d:'2024-09-22',h:'Villarreal',a:'Barcelona',r:{h:0,a:2}}],
+    'Real Madrid_Osasuna':   [{d:'2026-02-21',h:'Osasuna',a:'Real Madrid',r:{h:2,a:1}},{d:'2025-11-02',h:'Real Madrid',a:'Osasuna',r:{h:4,a:0}},{d:'2025-04-12',h:'Osasuna',a:'Real Madrid',r:{h:0,a:1}},{d:'2024-12-07',h:'Real Madrid',a:'Osasuna',r:{h:4,a:0}},{d:'2024-08-25',h:'Osasuna',a:'Real Madrid',r:{h:0,a:4}}],
+  },
 
   scorers: [
     { player:'Erling Haaland',   team:'Manchester City',    league:'pl', goals:22, games:26 },
@@ -2009,9 +2186,28 @@ function renderFixtures() {
           <span>H ${pred.probH}%</span>
           <span>D ${pred.probD}%</span>
           <span>A ${pred.probA}%</span>
-        </div>`;
+        </div>
+        ${(()=>{
+          const h2hKey = Object.keys(DEMO.h2h).find(k => k.includes(f.home) || k.includes(f.away));
+          const h2hData = h2hKey ? DEMO.h2h[h2hKey] : null;
+          if (!h2hData) return '';
+          return '<div class="h2h-mini"><div class="h2h-mini-title">⚔️ LAST 5 H2H</div>' +
+            h2hData.slice(0,3).map(m => '<div class="h2h-result-row"><span>' + m.h + ' vs ' + m.a + '</span><span class="h2h-score">' + m.r.h + '–' + m.r.a + '</span></div>').join('') +
+            '</div>';
+        })()}`;
     } else if (isResult) {
       const hw = f.result.h > f.result.a ? 'W' : f.result.h < f.result.a ? 'L' : 'D';
+      // Find H2H record
+      const h2hKey = Object.keys(DEMO.h2h).find(k => k.includes(f.home) || k.includes(f.away));
+      const h2hData = h2hKey ? DEMO.h2h[h2hKey] : null;
+      const h2hHtml = h2hData ? `
+        <div class="h2h-mini">
+          <div class="h2h-mini-title">⚔️ LAST 5 MEETINGS</div>
+          ${h2hData.slice(0,5).map(m => {
+            const win = m.r.h > m.r.a ? m.h : m.r.h < m.r.a ? m.a : 'Draw';
+            return `<div class="h2h-result-row"><span>${m.h} vs ${m.a}</span><span class="h2h-score">${m.r.h}–${m.r.a}</span></div>`;
+          }).join('')}
+        </div>` : '';
       predHtml = `
         <div class="fixture-predictions">
           <div class="pred-item">
@@ -2026,14 +2222,15 @@ function renderFixtures() {
             <div class="pred-label">Date</div>
             <div class="pred-value" style="font-size:.78rem">${dateStr}</div>
           </div>
-        </div>`;
+        </div>
+        ${h2hHtml}`;
     }
 
     return `
       <div class="fixture-card fade-in">
         <div class="fixture-top">
           <span class="fixture-league-tag ${lg.tag}" style="padding:2px 8px;border-radius:2px;font-size:.7rem;font-weight:700;letter-spacing:1.5px;">${lg.name}</span>
-          <span class="fixture-date">${dateStr} · MW${f.week}${f.note?` · <span style="color:var(--gold)">${f.note}</span>`:''}</span>
+          <span class="fixture-date">${dateStr} · MW${f.week}${f.note?' · <span style="color:var(--gold)">'+f.note+'</span>':''}${f.referee?' · <span style="color:var(--white-dim);font-size:.72em">👮 '+f.referee+'</span>':''}</span>
         </div>
         <div class="fixture-teams">
           <div class="fixture-team home">${f.home}</div>
@@ -2306,6 +2503,8 @@ function renderStandings() {
 // ============================================================
 
 function switchTab(tab) {
+  state.activeTab = tab;
+  if (tab === 'suspensions') renderSuspensions();
   state.activeTab = tab;
   document.querySelectorAll('.nav-tab').forEach((el, i) => {
     el.classList.toggle('active', el.textContent.toLowerCase().includes(tab.split('-')[0]));
@@ -2664,10 +2863,224 @@ async function fetchLiveData() {
 }
 
 // ============================================================
+// THEME TOGGLE
+// ============================================================
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('themeBtn');
+  const isLight = body.classList.toggle('light-mode');
+  btn.textContent = isLight ? '🌙 Dark' : '☀️ Light';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+// ============================================================
+// TEAM SEARCH
+// ============================================================
+function filterByTeam(query) {
+  const q = query.toLowerCase().trim();
+  const cards = document.querySelectorAll('#fixturesGrid .fixture-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+}
+
+// ============================================================
+// SUSPENSION TRACKER
+// ============================================================
+const SUSPENSION_THRESHOLD = 5; // yellows before first ban in most leagues
+
+function getSuspensionStatus(yellows, threshold) {
+  const remaining = threshold - yellows;
+  if (remaining <= 0)  return { label: 'SUSPENDED', cls: 'suspended' };
+  if (remaining === 1) return { label: '1 AWAY',    cls: 'danger'    };
+  if (remaining === 2) return { label: '2 AWAY',    cls: 'warning'   };
+  return                      { label: 'SAFE',      cls: 'safe'      };
+}
+
+function renderSuspensions() {
+  const threshold = 5;
+  const players = [...DEMO.bookedPlayers].sort((a,b) => b.yellow - a.yellow);
+
+  function makeRow(p) {
+    const remaining = threshold - p.yellow;
+    const pct = Math.min(100, (p.yellow / threshold) * 100);
+    const status = getSuspensionStatus(p.yellow, threshold);
+    const leagueName = LEAGUES[p.league]?.name || p.league.toUpperCase();
+    return `<div class="suspension-row">
+      <div class="sus-player">
+        <div class="sus-player-name">${p.player}</div>
+        <div class="sus-team">${p.team} · <span style="font-size:.7rem;color:var(--white-dim)">${leagueName}</span></div>
+      </div>
+      <div class="sus-bar-wrap">
+        <div class="sus-bar-track"><div class="sus-bar-fill ${status.cls}" style="width:${pct}%"></div></div>
+        <div class="sus-counts">${p.yellow} yellow${p.yellow!==1?'s':''} / ${threshold} threshold</div>
+      </div>
+      <span class="sus-badge ${status.cls}">${status.label}</span>
+    </div>`;
+  }
+
+  const danger  = players.filter(p => (threshold - p.yellow) <= 1);
+  const warning = players.filter(p => (threshold - p.yellow) === 2);
+
+  const dangerEl = document.getElementById('susDanger');
+  const warnEl   = document.getElementById('susWarning');
+  if (dangerEl)  dangerEl.innerHTML  = danger.length  ? danger.map(makeRow).join('')  : '<div style="color:var(--white-dim);padding:16px;text-align:center;font-family:Barlow Condensed">No players in immediate danger</div>';
+  if (warnEl)    warnEl.innerHTML    = warning.length ? warning.map(makeRow).join('') : '<div style="color:var(--white-dim);padding:16px;text-align:center;font-family:Barlow Condensed">No players at 2-away stage</div>';
+
+  // Full table
+  const tbody = document.getElementById('susFullTable');
+  if (tbody) {
+    tbody.innerHTML = players.map(p => {
+      const remaining = Math.max(0, threshold - p.yellow);
+      const status = getSuspensionStatus(p.yellow, threshold);
+      const lg = LEAGUES[p.league];
+      return `<tr>
+        <td><strong>${p.player}</strong></td>
+        <td>${p.team}</td>
+        <td><span class="fixture-league-tag ${lg?.tag||''}" style="padding:1px 6px;border-radius:2px;font-size:.68rem;font-weight:700;">${lg?.name||p.league}</span></td>
+        <td class="num" style="color:var(--yellow-card);font-weight:700;">${p.yellow}</td>
+        <td class="num">${threshold}</td>
+        <td class="num" style="color:${remaining<=1?'var(--red-card)':remaining===2?'var(--gold)':'var(--accent)'};font-weight:700;">${remaining}</td>
+        <td class="num"><span class="sus-badge ${status.cls}">${status.label}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Export card preview
+  renderExportCardPreview();
+}
+
+function renderExportCardPreview() {
+  const preview = document.getElementById('exportCardPreview');
+  if (!preview) return;
+  const threshold = 5;
+  const danger = DEMO.bookedPlayers.filter(p => (threshold - p.yellow) <= 1);
+  const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  preview.innerHTML = `
+    <div style="color:var(--gold);font-size:1.1rem;font-weight:700;letter-spacing:2px;margin-bottom:8px;">⚡ SUSPENSION ALERT · ${now}</div>
+    <div style="color:rgba(255,255,255,0.5);font-size:.75rem;margin-bottom:12px;">Players one yellow from a ban</div>
+    ${danger.map(p => `<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;">
+      <span style="color:#fff">${p.player} <span style="color:rgba(255,255,255,0.5);font-size:.8rem">(${p.team})</span></span>
+      <span style="color:#f5c842;font-weight:700">${p.yellow} 🟨</span>
+    </div>`).join('')}
+    <div style="margin-top:10px;color:rgba(255,255,255,0.4);font-size:.72rem;">Football Oracle · candid-nasturtium-6a0581.netlify.app</div>`;
+}
+
+function exportSuspensionCard() {
+  const threshold = 5;
+  const danger = DEMO.bookedPlayers.filter(p => (threshold - p.yellow) <= 1);
+  const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  let text = `⚡ SUSPENSION ALERT — ${now}
+Players one yellow from a ban:
+
+`;
+  danger.forEach(p => { text += `• ${p.player} (${p.team}) — ${p.yellow} yellows
+`; });
+  text += '
+Football Oracle · candid-nasturtium-6a0581.netlify.app';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Alert Card to Clipboard', 2000);
+  }).catch(() => alert(text));
+}
+
+function exportPredictionsCard() {
+  const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  let text = `🎯 FOOTBALL ORACLE PICKS — ${now}
+Matchweek ${state.currentWeek}
+
+`;
+  DEMO.predictions.forEach(p => {
+    text += `${p.home} vs ${p.away}
+`;
+    text += `  Pick: ${p.pick}
+`;
+    text += `  Goals: ${p.expGoals} · Yellows: ${p.expYellow}
+`;
+    text += `  Booking: ${p.playerToBook.split(' — ')[0]}
+
+`;
+  });
+  text += 'Football Oracle · candid-nasturtium-6a0581.netlify.app';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Picks Card', 2000);
+  }).catch(() => alert(text));
+}
+
+// ============================================================
+// LIVE SCORERS — fetch from football-data.org /scorers endpoint
+// ============================================================
+async function fetchLiveScorers() {
+  const codes = { pl:'PL', ll:'PD', sa:'SA', bl:'BL1', l1:'FL1' };
+  const allScorers = [];
+  for (const [key, code] of Object.entries(codes)) {
+    try {
+      const d = await fdFetch(`/v4/competitions/${code}/scorers?limit=5`);
+      if (d && d.scorers) {
+        d.scorers.forEach(s => {
+          allScorers.push({
+            player: s.player.name,
+            team:   normTeam(s.team.shortName || s.team.name),
+            league: key,
+            goals:  s.goals || 0,
+            games:  s.playedMatches || 0,
+          });
+        });
+      }
+    } catch(e) { /* silently fall back to demo */ }
+  }
+  if (allScorers.length > 0) {
+    // Sort by goals descending, keep top 10 overall
+    DEMO.scorers = allScorers.sort((a,b) => b.goals - a.goals).slice(0,10);
+    // Re-render overview if it's the active tab
+    if (state.activeTab === 'overview' || !state.activeTab) renderOverview();
+    console.log('%c⚽ Live scorers loaded:', 'color:#4ade80', allScorers.length, 'players');
+  }
+}
+
+// ============================================================
+// REFEREE ASSIGNMENT — attach referee to fixture cards
+// ============================================================
+async function fetchRefereeAssignments() {
+  // football-data.org includes referee in match data when available
+  // We already fetch matches — scan them for referee field
+  const codes = { pl:'PL', ll:'PD', sa:'SA', bl:'BL1', l1:'FL1' };
+  for (const [key, code] of Object.entries(codes)) {
+    try {
+      const dateFrom = new Date(Date.now()).toISOString().slice(0,10);
+      const dateTo   = new Date(Date.now() + 10*86400000).toISOString().slice(0,10);
+      const d = await fdFetch(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
+      if (d && d.matches) {
+        d.matches.forEach(m => {
+          if (m.referees && m.referees.length > 0) {
+            const refName = m.referees[0].name;
+            const home = normTeam(m.homeTeam.shortName || m.homeTeam.name);
+            const away = normTeam(m.awayTeam.shortName || m.awayTeam.name);
+            // Store in fixture data
+            const fx = (DEMO.fixtures[key] || []).find(f => f.home === home && f.away === away);
+            if (fx) fx.referee = refName;
+          }
+        });
+      }
+    } catch(e) {}
+  }
+}
+
+// ============================================================
 // INIT
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Restore theme
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeBtn').textContent = '🌙 Dark';
+  }
+
   renderTicker();
   renderOverview();
   
@@ -2680,7 +3093,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Start live data fetch
-  setTimeout(fetchLiveData, 500);
+  setTimeout(async () => {
+    await fetchLiveData();
+    // After live data, fetch scorers and referee assignments
+    await fetchLiveScorers();
+    await fetchRefereeAssignments();
+    // Update last-updated timestamp
+    const el = document.getElementById('lastUpdated');
+    if (el) el.textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    // Re-render suspensions with latest data
+    if (state.activeTab === 'suspensions') renderSuspensions();
+  }, 500);
   
   // Pre-fill API key fields from embedded keys
   document.getElementById('fdKey').value = CONFIG.fdKey;
