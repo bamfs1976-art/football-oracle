@@ -2365,7 +2365,7 @@ async function runApiDiagnostics() {
     log.scrollTop = log.scrollHeight;
   }
 
-  write('Testing Football-Data.org v4 via allorigins proxy…', '#f5c842');
+  write('Testing Football-Data.org v4 via Netlify function…', '#f5c842');
   const leagueCodes = { 'Premier League':'PL', 'La Liga':'PD', 'Serie A':'SA', 'Bundesliga':'BL1', 'Ligue 1':'FL1' };
 
   for (const [name, code] of Object.entries(leagueCodes)) {
@@ -2411,7 +2411,7 @@ async function runApiDiagnostics() {
   }
 
   write('');
-  write('Testing Bzzoiro Sports API via allorigins proxy…', '#f5c842');
+  write('Testing Bzzoiro Sports API…', '#f5c842');
   try {
     const bzKey = document.getElementById('bzKey')?.value.trim() || CONFIG.bzKey;
     const bzUrl = `https://sports.bzzoiro.com/api/predictions/?league=1&limit=5`;
@@ -2438,7 +2438,7 @@ async function runApiDiagnostics() {
   }
 
   write('');
-  write('Diagnostics complete. ✅ green = live data active. ❌ red = check key or proxy.', '#4ade80');
+  write('Diagnostics complete. ✅ green = live data via Netlify function. ❌ red = check key or function deploy.', '#4ade80');
 }
 
 function saveApiKeys() {
@@ -2568,24 +2568,14 @@ async function bzFetchPredictions(leagueKey) {
 }
 
 // Main live-data orchestrator
-// ─── CORS-PROXY HELPER ────────────────────────────────────────────────────
-// Direct browser→API calls are blocked by CORS on hosted sites.
-// We route through allorigins.win which adds Access-Control-Allow-Origin: *
+// ─── NETLIFY FUNCTION PROXY HELPER ───────────────────────────────────────
+// Calls /.netlify/functions/football-proxy which runs server-side,
+// adds the API key header, and returns JSON directly — no CORS issues.
 async function fdFetch(path) {
-  const key = CONFIG.fdKey;
-  if (!key) { console.warn('fdFetch: no API key set'); return null; }
-  // allorigins cannot forward custom headers, so we append the key as a query param
-  // football-data.org accepts ?token= as an alternative to X-Auth-Token header
-  const sep = path.includes('?') ? '&' : '?';
-  const apiUrl = 'https://api.football-data.org' + path + sep + 'token=' + key;
-  const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(apiUrl);
   try {
-    const r = await fetch(proxyUrl);
+    const r = await fetch('/.netlify/functions/football-proxy?path=' + encodeURIComponent(path));
     if (!r.ok) { console.warn('fdFetch: proxy HTTP', r.status); return null; }
-    const wrapper = await r.json();
-    if (!wrapper.contents) { console.warn('fdFetch: empty proxy contents'); return null; }
-    const parsed = JSON.parse(wrapper.contents);
-    // football-data.org returns {message:...} on auth errors
+    const parsed = await r.json();
     if (parsed.message) { console.warn('fdFetch API error:', parsed.message); return null; }
     return parsed;
   } catch(e) {
