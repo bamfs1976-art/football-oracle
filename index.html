@@ -2971,14 +2971,10 @@ function exportSuspensionCard() {
   const threshold = 5;
   const danger = DEMO.bookedPlayers.filter(p => (threshold - p.yellow) <= 1);
   const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  let text = `⚡ SUSPENSION ALERT — ${now}
-Players one yellow from a ban:
-
-`;
-  danger.forEach(p => { text += `• ${p.player} (${p.team}) — ${p.yellow} yellows
-`; });
-  text += '
-Football Oracle · candid-nasturtium-6a0581.netlify.app';
+  let lines = ['⚡ SUSPENSION ALERT — ' + now, 'Players one yellow from a ban:', ''];
+  danger.forEach(p => { lines.push('• ' + p.player + ' (' + p.team + ') — ' + p.yellow + ' yellows'); });
+  lines.push('', 'Football Oracle · candid-nasturtium-6a0581.netlify.app');
+  const text = lines.join('\n');
   navigator.clipboard.writeText(text).then(() => {
     const btn = event.target;
     btn.textContent = '✅ Copied!';
@@ -2988,22 +2984,16 @@ Football Oracle · candid-nasturtium-6a0581.netlify.app';
 
 function exportPredictionsCard() {
   const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  let text = `🎯 FOOTBALL ORACLE PICKS — ${now}
-Matchweek ${state.currentWeek}
-
-`;
+  let lines2 = ['🎯 FOOTBALL ORACLE PICKS — ' + now, 'Matchweek ' + state.currentWeek, ''];
   DEMO.predictions.forEach(p => {
-    text += `${p.home} vs ${p.away}
-`;
-    text += `  Pick: ${p.pick}
-`;
-    text += `  Goals: ${p.expGoals} · Yellows: ${p.expYellow}
-`;
-    text += `  Booking: ${p.playerToBook.split(' — ')[0]}
-
-`;
+    lines2.push(p.home + ' vs ' + p.away);
+    lines2.push('  Pick: ' + p.pick);
+    lines2.push('  Goals: ' + p.expGoals + ' · Yellows: ' + p.expYellow);
+    lines2.push('  Booking: ' + p.playerToBook.split(' — ')[0]);
+    lines2.push('');
   });
-  text += 'Football Oracle · candid-nasturtium-6a0581.netlify.app';
+  lines2.push('Football Oracle · candid-nasturtium-6a0581.netlify.app');
+  const text = lines2.join('\n');
   navigator.clipboard.writeText(text).then(() => {
     const btn = event.target;
     btn.textContent = '✅ Copied!';
