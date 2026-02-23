@@ -2,7 +2,7 @@
 // Sits server-side so no CORS issues, keeps API key safe
 // Endpoint: /.netlify/functions/football-proxy?path=/v4/competitions/PL/standings
 
-const FD_KEY = 'a5792c6faebf49abaf1a19937fb792dd';
+const FD_KEY = 'a707e148d9614e688fcc9b248c9961ee';
 const FD_BASE = 'https://api.football-data.org';
 
 exports.handler = async (event) => {
