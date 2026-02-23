@@ -2568,22 +2568,21 @@ async function runApiDiagnostics() {
     log.scrollTop = log.scrollHeight;
   }
 
-  write('Testing Football-Data.org v4 via Netlify function…', '#f5c842');
-  const leagueCodes = { 'Premier League':'PL', 'La Liga':'PD', 'Serie A':'SA', 'Bundesliga':'BL1', 'Ligue 1':'FL1' };
-
-  for (const [name, code] of Object.entries(leagueCodes)) {
-    write(`  ↳ ${name} (${code}) standings…`);
+  write('Testing API-Football — Standings (all 5 leagues)…', '#f5c842');
+  const afLeagueNames = { 39:'Premier League', 140:'La Liga', 135:'Serie A', 78:'Bundesliga', 61:'Ligue 1' };
+  for (const [id, name] of Object.entries(afLeagueNames)) {
+    write(`  ↳ ${name}…`);
     try {
       const t0 = Date.now();
-      const d = await fdFetch(`/v4/competitions/${code}/standings`);
+      const r = await fetch(`/.netlify/functions/af-proxy?path=/standings&league=${id}&season=2025`);
       const ms = Date.now() - t0;
-      if (d) {
-        const table = d.standings?.find(s => s.type === 'TOTAL')?.table;
-        const top = table?.[0];
-        const matchday = d.season?.currentMatchday;
-        write(`     ✅ ${ms}ms — MD${matchday} — P1: ${top?.team?.shortName ?? '?'} ${top?.points ?? '?'}pts`, '#4ade80');
+      const d = await r.json();
+      const table = d.response?.[0]?.league?.standings?.[0];
+      if (table && table.length) {
+        const top = table[0];
+        write(`     ✅ ${ms}ms — P1: ${top.team.name} ${top.points}pts (${top.all.played} played)`, '#4ade80');
       } else {
-        write(`     ❌ No data returned — proxy or API key issue`, '#e63946');
+        write(`     ❌ No standings data`, '#e63946');
       }
     } catch(e) {
       write(`     ❌ ERROR — ${e.message}`, '#e63946');
@@ -2591,24 +2590,20 @@ async function runApiDiagnostics() {
   }
 
   write('');
-  write('Testing Football-Data.org v4 — Recent PL matches…', '#f5c842');
+  write('Testing API-Football — Recent PL fixtures…', '#f5c842');
   try {
     const dateFrom = new Date(Date.now() - 7*86400000).toISOString().slice(0,10);
     const dateTo   = new Date(Date.now() + 7*86400000).toISOString().slice(0,10);
-    const d = await fdFetch(`/v4/competitions/PL/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
-    if (d) {
-      const matches = d.matches || [];
-      const finished  = matches.filter(m => m.status === 'FINISHED');
-      const scheduled = matches.filter(m => m.status === 'SCHEDULED' || m.status === 'TIMED');
-      write(`  ✅ ${matches.length} matches in window — ${finished.length} finished, ${scheduled.length} upcoming`, '#4ade80');
-      finished.slice(-3).forEach(m => {
-        const score = m.score?.fullTime;
-        write(`     ${m.homeTeam.shortName} ${score?.home ?? '?'}–${score?.away ?? '?'} ${m.awayTeam.shortName} (MD${m.matchday})`, '#a8a89a');
-      });
-      if (matches.length === 0) write(`  ℹ️  No matches in ±7 day window — try expanding date range`, '#f5c842');
-    } else {
-      write(`  ❌ No data returned from proxy`, '#e63946');
-    }
+    const r = await fetch(`/.netlify/functions/af-proxy?path=/fixtures&league=39&season=2025&from=${dateFrom}&to=${dateTo}`);
+    const d = await r.json();
+    const matches = d.response || [];
+    const finished  = matches.filter(m => m.fixture.status.short === 'FT');
+    const upcoming  = matches.filter(m => m.fixture.status.short === 'NS');
+    write(`  ✅ ${matches.length} matches — ${finished.length} finished, ${upcoming.length} upcoming`, '#4ade80');
+    finished.slice(-3).forEach(m => {
+      write(`     ${m.teams.home.name} ${m.goals.home}–${m.goals.away} ${m.teams.away.name}`, '#a8a89a');
+    });
+    if (matches.length === 0) write(`  ℹ️  No matches in ±7 day window`, '#f5c842');
   } catch(e) {
     write(`  ❌ ERROR — ${e.message}`, '#e63946');
   }
@@ -2731,49 +2726,50 @@ function setStatus(dotId, labelId, text, live) {
 
 // Fetch standings for one league from football-data.org
 async function fdFetchStandings(leagueKey) {
-  const code = FD_CODES[leagueKey];
-  if (!code || !CONFIG.fdKey) return null;
+  // Now uses API-Football as primary source
+  const leagueId = AF_LEAGUES[leagueKey];
+  if (!leagueId) return null;
   try {
-    const d = await fdFetch(`/v4/competitions/${code}/standings`);
-    if (!d) return null;
-    const table = d.standings?.find(s => s.type === 'TOTAL')?.table;
+    const data = await afFetch('/standings', { league: leagueId, season: AF_SEASON });
+    if (!data || !data.length) return null;
+    const table = data[0]?.league?.standings?.[0];
     if (!table) return null;
     return table.map(row => ({
-      pos:   row.position,
-      team:  normTeam(row.team.shortName || row.team.name),
-      P:     row.playedGames,
-      W:     row.won, D: row.draw, L: row.lost,
-      GF:    row.goalsFor, GA: row.goalsAgainst,
-      GD:    row.goalDifference,
-      pts:   row.points,
-      form:  (row.form || '').replace(/,/g,'').slice(-5),
-      zone:  row.position <= 4 ? 'cl' : row.position <= 6 ? 'el' : (row.position >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
+      pos:  row.rank,
+      team: normTeam(row.team.name),
+      P:    row.all.played,
+      W:    row.all.win, D: row.all.draw, L: row.all.lose,
+      GF:   row.all.goals.for, GA: row.all.goals.against,
+      GD:   row.goalsDiff,
+      pts:  row.points,
+      form: (row.form || '').slice(-5),
+      zone: row.rank <= 4 ? 'cl' : row.rank <= 6 ? 'el' : (row.rank >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
     }));
-  } catch(e) { return null; }
+  } catch(e) { console.warn('fdFetchStandings error:', e.message); return null; }
 }
 
-// Fetch recent + upcoming matches for one league from football-data.org
+// Fetch recent + upcoming matches — now via API-Football
 async function fdFetchMatches(leagueKey) {
-  const code = FD_CODES[leagueKey];
-  if (!code || !CONFIG.fdKey) return null;
+  const leagueId = AF_LEAGUES[leagueKey];
+  if (!leagueId) return null;
   try {
-    // Get last 10 finished + next 10 scheduled
     const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
     const dateTo   = new Date(Date.now() + 14*86400000).toISOString().slice(0,10);
-    const d = await fdFetch(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
-    if (!d) return null;
-    return (d.matches || []).map(m => ({
-      home:   normTeam(m.homeTeam.shortName || m.homeTeam.name),
-      away:   normTeam(m.awayTeam.shortName || m.awayTeam.name),
-      date:   m.utcDate.slice(0,10),
-      time:   m.utcDate.slice(11,16),
-      week:   m.matchday,
-      result: m.status === 'FINISHED' && m.score?.fullTime
-                ? { h: m.score.fullTime.home, a: m.score.fullTime.away }
+    const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+    if (!data || !data.length) return null;
+    return data.map(m => ({
+      home:   normTeam(m.teams.home.name),
+      away:   normTeam(m.teams.away.name),
+      date:   m.fixture.date.slice(0,10),
+      time:   m.fixture.date.slice(11,16),
+      week:   m.league.round?.match(/\d+/)?.[0] ? parseInt(m.league.round.match(/\d+/)[0]) : 0,
+      result: m.fixture.status.short === 'FT'
+                ? { h: m.goals.home, a: m.goals.away }
                 : null,
+      referee: m.fixture.referee || null,
       note:   '',
     }));
-  } catch(e) { return null; }
+  } catch(e) { console.warn('fdFetchMatches error:', e.message); return null; }
 }
 
 // Fetch predictions/odds from Bzzoiro
@@ -2863,10 +2859,10 @@ async function fetchLiveData() {
 
   // Update status bar indicators
   if (fdOk) {
-    setStatus('fdStatus','fdLabel','Football-Data.org ✓ Live', true);
+    setStatus('fdStatus','fdLabel','Fixtures & Standings ✓ Live', true);
     console.log('%c⚽ Football-Data.org: LIVE DATA ACTIVE', 'color:#4ade80;font-weight:bold');
   } else {
-    setStatus('fdStatus','fdLabel','Football-Data.org (check key)', false);
+    setStatus('fdStatus','fdLabel','Standings (via API-Football)', false);
     console.warn('⚠️ football-data.org: no data returned. Key may be rate-limited or invalid. Check the ⚙ Configure panel → 🔍 Test APIs Now');
   }
   if (bzOk) {
@@ -3254,28 +3250,26 @@ async function fetchAfData() {
 // LIVE SCORERS — fetch from football-data.org /scorers endpoint
 // ============================================================
 async function fetchLiveScorers() {
-  const codes = { pl:'PL', ll:'PD', sa:'SA', bl:'BL1', l1:'FL1' };
+  // Uses API-Football top scorers endpoint
   const allScorers = [];
-  for (const [key, code] of Object.entries(codes)) {
+  for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
     try {
-      const d = await fdFetch(`/v4/competitions/${code}/scorers?limit=5`);
-      if (d && d.scorers) {
-        d.scorers.forEach(s => {
+      const data = await afFetch('/players/topscorers', { league: leagueId, season: AF_SEASON });
+      if (data && data.length) {
+        data.slice(0,5).forEach(item => {
           allScorers.push({
-            player: s.player.name,
-            team:   normTeam(s.team.shortName || s.team.name),
+            player: item.player.name,
+            team:   normTeam(item.statistics?.[0]?.team?.name || ''),
             league: key,
-            goals:  s.goals || 0,
-            games:  s.playedMatches || 0,
+            goals:  item.statistics?.[0]?.goals?.total || 0,
+            games:  item.statistics?.[0]?.games?.appearences || 0,
           });
         });
       }
-    } catch(e) { /* silently fall back to demo */ }
+    } catch(e) { /* fall back to demo */ }
   }
   if (allScorers.length > 0) {
-    // Sort by goals descending, keep top 10 overall
     DEMO.scorers = allScorers.sort((a,b) => b.goals - a.goals).slice(0,10);
-    // Re-render overview if it's the active tab
     if (state.activeTab === 'overview' || !state.activeTab) renderOverview();
     console.log('%c⚽ Live scorers loaded:', 'color:#4ade80', allScorers.length, 'players');
   }
