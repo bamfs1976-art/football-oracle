@@ -1238,8 +1238,8 @@
         <span id="bzLabel">Bzzoiro Sports API — Connecting…</span>
       </div>
       <div class="api-source">
-        <div class="dot active"></div>
-        <span>Football-Data.org (Demo)</span>
+        <div class="dot" id="afStatus" style="background:var(--gold)"></div>
+        <span id="afLabel">API-Football — Connecting…</span>
       </div>
       <span class="api-key-hint" onclick="document.getElementById('apiModal').classList.remove('hidden')">⚙ Configure API Keys →</span>
     </div>
@@ -1619,13 +1619,17 @@
 // ─── API KEYS — pre-loaded (user-provided 23 Feb 2026) ───────────────────────
 const EMBED_FD_KEY = 'a707e148d9614e688fcc9b248c9961ee';
 const EMBED_BZ_KEY = '9285cbee56b774fa40e72207f136297fbe475c12';
-localStorage.setItem('fd_key', EMBED_FD_KEY);
-localStorage.setItem('bz_key', EMBED_BZ_KEY);
+const EMBED_AF_KEY = 'feaf41f2026c5d8b1a2256a52b7c2061';
 
 const CONFIG = {
   fdKey: EMBED_FD_KEY,
   bzKey: EMBED_BZ_KEY,
+  afKey: EMBED_AF_KEY,
 };
+
+// API-Football league IDs (season 2025)
+const AF_LEAGUES = { pl: 39, ll: 140, sa: 135, bl: 78, l1: 61 };
+const AF_SEASON  = 2025;
 
 const LEAGUES = {
   pl: { name: 'Premier League', country: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 England', fdId: 2021, bzId: 1, color: '#3d0073', tag: 'tag-pl' },
@@ -2637,6 +2641,27 @@ async function runApiDiagnostics() {
   }
 
   write('');
+  write('Testing API-Football via Netlify function…', '#f5c842');
+  try {
+    const t0 = Date.now();
+    const r = await fetch('/.netlify/functions/af-proxy?path=/status');
+    const ms = Date.now() - t0;
+    if (r.ok) {
+      const d = await r.json();
+      const sub = d.response?.subscription;
+      if (sub) {
+        write(`  ✅ ${ms}ms — Plan: ${sub.plan} · Requests today: ${d.response?.requests?.current || 0}/${d.response?.requests?.limit_day || 100}`, '#4ade80');
+      } else {
+        write(`  ✅ ${ms}ms — Connected (no subscription info returned)`, '#4ade80');
+      }
+    } else {
+      write(`  ❌ HTTP ${r.status}`, '#e63946');
+    }
+  } catch(e) {
+    write(`  ❌ ERROR — ${e.message}`, '#e63946');
+  }
+
+  write('');
   write('Diagnostics complete. ✅ green = live data via Netlify function. ❌ red = check key or function deploy.', '#4ade80');
 }
 
@@ -3002,6 +3027,230 @@ function exportPredictionsCard() {
 }
 
 // ============================================================
+// API-FOOTBALL PROXY HELPER
+// ============================================================
+async function afFetch(path, params = {}) {
+  const qs = new URLSearchParams({ path, ...params }).toString();
+  try {
+    const r = await fetch('/.netlify/functions/af-proxy?' + qs);
+    if (!r.ok) { console.warn('afFetch HTTP', r.status, path); return null; }
+    const d = await r.json();
+    if (d.errors && Object.keys(d.errors).length) {
+      console.warn('afFetch API error:', JSON.stringify(d.errors));
+      return null;
+    }
+    return d.response || null;
+  } catch(e) {
+    console.warn('afFetch exception:', e.message, path);
+    return null;
+  }
+}
+
+// ============================================================
+// API-FOOTBALL: PLAYER BOOKINGS (yellow/red cards per player)
+// ============================================================
+async function afFetchPlayerCards(leagueKey) {
+  const leagueId = AF_LEAGUES[leagueKey];
+  if (!leagueId) return null;
+  try {
+    // Top players by yellow cards
+    const data = await afFetch('/players/topyellowcards', { league: leagueId, season: AF_SEASON });
+    if (!data || !data.length) return null;
+    return data.slice(0, 15).map(item => ({
+      player: item.player.name,
+      team:   normTeam(item.statistics?.[0]?.team?.name || ''),
+      league: leagueKey,
+      yellow: item.statistics?.[0]?.cards?.yellow || 0,
+      red:    (item.statistics?.[0]?.cards?.yellowred || 0) + (item.statistics?.[0]?.cards?.red || 0),
+      games:  item.statistics?.[0]?.games?.appearences || 0,
+      rate:   0,
+    }));
+  } catch(e) { return null; }
+}
+
+// ============================================================
+// API-FOOTBALL: PREDICTIONS for a fixture
+// ============================================================
+async function afFetchPredictions(fixtureId) {
+  const data = await afFetch('/predictions', { fixture: fixtureId });
+  if (!data || !data.length) return null;
+  const p = data[0];
+  return {
+    winner:    p.predictions?.winner?.name || null,
+    winOrDraw: p.predictions?.win_or_draw || false,
+    underOver: p.predictions?.under_over || null,
+    goals:     p.predictions?.goals || {},
+    advice:    p.predictions?.advice || '',
+    percent:   p.predictions?.percent || {},
+  };
+}
+
+// ============================================================
+// API-FOOTBALL: HEAD-TO-HEAD
+// ============================================================
+async function afFetchH2H(team1Id, team2Id) {
+  const data = await afFetch('/fixtures/headtohead', { h2h: team1Id + '-' + team2Id, last: 5 });
+  if (!data || !data.length) return null;
+  return data.map(m => ({
+    date:  m.fixture.date.slice(0,10),
+    home:  normTeam(m.teams.home.name),
+    away:  normTeam(m.teams.away.name),
+    score: { h: m.goals.home, a: m.goals.away },
+  }));
+}
+
+// ============================================================
+// API-FOOTBALL: UPCOMING FIXTURES WITH TEAM IDs (for H2H + predictions)
+// ============================================================
+async function afFetchUpcomingFixtures(leagueKey) {
+  const leagueId = AF_LEAGUES[leagueKey];
+  if (!leagueId) return null;
+  const dateFrom = new Date().toISOString().slice(0,10);
+  const dateTo   = new Date(Date.now() + 10*86400000).toISOString().slice(0,10);
+  const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+  if (!data || !data.length) return null;
+  return data.map(m => ({
+    fixtureId: m.fixture.id,
+    home:      normTeam(m.teams.home.name),
+    away:      normTeam(m.teams.away.name),
+    homeId:    m.teams.home.id,
+    awayId:    m.teams.away.id,
+    date:      m.fixture.date.slice(0,10),
+    referee:   m.fixture.referee || null,
+  }));
+}
+
+// ============================================================
+// API-FOOTBALL: REFEREE STATS
+// ============================================================
+async function afFetchRefereeStats(leagueKey) {
+  // API-Football doesn't have a dedicated referee stats endpoint on free plan
+  // but we get referee name per fixture — we aggregate from fixture data
+  const leagueId = AF_LEAGUES[leagueKey];
+  if (!leagueId) return null;
+  const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, last: 50 });
+  if (!data || !data.length) return null;
+  const refs = {};
+  data.forEach(m => {
+    const name = m.fixture.referee;
+    if (!name) return;
+    const cleanName = name.replace(/, [A-Z]+$/, '').trim();
+    if (!refs[cleanName]) refs[cleanName] = { name: cleanName, games: 0, yellow: 0, red: 0 };
+    refs[cleanName].games++;
+    refs[cleanName].yellow += (m.score?.halftime ? 0 : 0); // cards not in fixture list endpoint
+  });
+  // Return what we have — at minimum referee names with game counts
+  return Object.values(refs).filter(r => r.games >= 2).sort((a,b) => b.games - a.games);
+}
+
+// ============================================================
+// MAIN API-FOOTBALL ENRICHMENT ORCHESTRATOR
+// ============================================================
+async function fetchAfData() {
+  console.log('%c📊 API-Football: starting enrichment fetch…', 'color:#f5c842');
+  let afOk = false;
+
+  // ── 1. Player card leaders across all leagues ──
+  const allCardPlayers = [];
+  for (const key of ['pl','ll','sa','bl','l1']) {
+    const players = await afFetchPlayerCards(key);
+    if (players && players.length) {
+      allCardPlayers.push(...players);
+      afOk = true;
+    }
+  }
+  if (allCardPlayers.length) {
+    // Sort by yellows, update DEMO
+    DEMO.bookedPlayers = allCardPlayers.sort((a,b) => b.yellow - a.yellow).slice(0,20);
+    // Rebuild risk players from live data
+    DEMO.riskPlayers = DEMO.bookedPlayers.slice(0,8).map(p => {
+      const threshold = 5;
+      const remaining = threshold - p.yellow;
+      const risk = remaining <= 1 ? 94 : remaining === 2 ? 80 : remaining === 3 ? 60 : 40;
+      return {
+        player: p.player, team: p.team, risk,
+        reasons: p.yellow + 'Y this season · ' + (remaining <= 1 ? 'ONE away from ban' : remaining + ' from ban'),
+        next: 'Next fixture',
+      };
+    });
+    console.log('%c🟨 Live card data loaded:', 'color:#f5c842', allCardPlayers.length, 'players');
+  }
+
+  // ── 2. Upcoming fixtures with predictions + H2H ──
+  for (const key of ['pl','ll','sa','bl','l1']) {
+    const fixtures = await afFetchUpcomingFixtures(key);
+    if (!fixtures || !fixtures.length) continue;
+    afOk = true;
+
+    // Attach referee names to DEMO fixtures
+    fixtures.forEach(af => {
+      const fx = (DEMO.fixtures[key] || []).find(f =>
+        f.home === af.home && f.away === af.away
+      );
+      if (fx && af.referee) fx.referee = af.referee;
+    });
+
+    // Fetch predictions for first 3 upcoming fixtures per league
+    const upcoming = fixtures.slice(0, 3);
+    for (const af of upcoming) {
+      const pred = await afFetchPredictions(af.fixtureId);
+      if (!pred) continue;
+      // Parse percent strings like "45%"
+      const ph = parseInt(pred.percent.home) || 0;
+      const pd = parseInt(pred.percent.draw) || 0;
+      const pa = parseInt(pred.percent.away) || 0;
+      // Update or add to DEMO.predictions
+      const existing = DEMO.predictions.find(p => p.home === af.home && p.away === af.away);
+      const predData = {
+        league: key, leagueTag: LEAGUES[key].tag,
+        home: af.home, away: af.away,
+        date: af.date, time: '15:00',
+        pick: pred.advice || (pred.winner ? 'Back ' + pred.winner : 'Draw likely'),
+        probH: ph, probD: pd, probA: pa,
+        expGoals: pred.goals?.home != null ? (pred.goals.home + '-' + pred.goals.away) : '2-1',
+        expYellow: 3, expRed: 0,
+        confidence: ph > 65 || pa > 65 ? 'high' : ph > 50 || pa > 50 ? 'medium' : 'low',
+        playerToBook: DEMO.riskPlayers[0]?.player + ' — suspension risk' || 'Booking risk TBC',
+        reasoning: pred.advice || 'API-Football prediction',
+        note: '',
+      };
+      if (existing) {
+        Object.assign(existing, predData);
+      } else {
+        DEMO.predictions.unshift(predData);
+      }
+
+      // Fetch H2H
+      const h2h = await afFetchH2H(af.homeId, af.awayId);
+      if (h2h && h2h.length) {
+        const h2hKey = af.home + '_' + af.away;
+        DEMO.h2h[h2hKey] = h2h.map(m => ({
+          d: m.date, h: m.home, a: m.away, r: m.score,
+        }));
+      }
+    }
+  }
+
+  // ── 3. Status update ──
+  if (afOk) {
+    setStatus('afStatus', 'afLabel', 'API-Football ✓ Live', true);
+    console.log('%c⚽ API-Football: enrichment complete', 'color:#4ade80');
+    // Re-render active tab
+    const tab = state.activeTab;
+    if (tab === 'bookings')     renderBookings();
+    if (tab === 'suspensions')  renderSuspensions();
+    if (tab === 'predictions')  renderPredictions();
+    if (tab === 'fixtures')     renderFixtures();
+    if (tab === 'overview')     renderOverview();
+    // Always re-render overview KPIs
+    renderOverview();
+  } else {
+    setStatus('afStatus', 'afLabel', 'API-Football (check key)', false);
+    console.warn('⚠️ API-Football: no data returned');
+  }
+}
+
+// ============================================================
 // LIVE SCORERS — fetch from football-data.org /scorers endpoint
 // ============================================================
 async function fetchLiveScorers() {
@@ -3085,9 +3334,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Start live data fetch
   setTimeout(async () => {
     await fetchLiveData();
-    // After live data, fetch scorers and referee assignments
+    // After live data, fetch scorers and referee assignments from football-data.org
     await fetchLiveScorers();
     await fetchRefereeAssignments();
+    // API-Football enrichment: bookings, predictions, H2H
+    await fetchAfData();
     // Update last-updated timestamp
     const el = document.getElementById('lastUpdated');
     if (el) el.textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
@@ -3102,6 +3353,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show 'connecting' status immediately — live fetch running
   setStatus('fdStatus','fdLabel','Football-Data.org — Connecting…', false);
   setStatus('bzStatus','bzLabel','Bzzoiro Sports API — Connecting…', false);
+  setStatus('afStatus','afLabel','API-Football — Connecting…', false);
 
   console.log('⚽ Football Oracle — 2025-26 Season Analytics');
   console.log('🔑 football-data.org key:', CONFIG.fdKey ? '✓ set' : '✗ missing');
