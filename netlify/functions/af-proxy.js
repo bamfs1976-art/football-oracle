@@ -1,5 +1,5 @@
 // Netlify serverless function — API-Football proxy
-// Endpoint: /.netlify/functions/af-proxy?path=/fixtures&league=39&season=2025
+// Endpoint: /.netlify/functions/af-proxy?path=/fixtures&league=39&season=2024
 // All API-Football v3 calls go through here — key never exposed in browser
 //
 // Auth: api-sports.io direct endpoint uses ONLY x-apisports-key header.
