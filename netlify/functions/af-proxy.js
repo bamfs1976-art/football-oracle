@@ -6,7 +6,7 @@
 // Do NOT send x-rapidapi-key or x-rapidapi-host — they conflict and cause
 // empty responses even when the HTTP status is 200.
 
-const AF_KEY  = 'feaf41f2026c5d8b1a2256a52b7c2061';
+const AF_KEY  = '047aaa8a05f7ade8abbb4c91bc8dff1f';
 const AF_BASE = 'https://v3.football.api-sports.io';
 
 exports.handler = async (event) => {
