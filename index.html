@@ -129,6 +129,260 @@
   .pwa-install-btn:hover { opacity:.85; }
   .pwa-dismiss { background:none; border:none; color:var(--white-dim); font-size:1.1rem; cursor:pointer; padding:0 4px; flex-shrink:0; }
 
+  /* ══════════════════════════════════════════════
+     WORLD CUP SECTION
+  ══════════════════════════════════════════════ */
+  .wc-hero {
+    background: linear-gradient(135deg, #0a1a08 0%, #0d2a10 40%, #0a1a08 100%);
+    border: 1px solid rgba(245,200,66,.2);
+    border-radius: 14px;
+    padding: 36px 32px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .wc-hero::before {
+    content: '⚽';
+    position: absolute;
+    right: -10px; top: -20px;
+    font-size: 140px;
+    opacity: .04;
+    pointer-events: none;
+  }
+  .wc-hero-title {
+    font-family: 'Barlow Condensed'; font-weight: 900; font-size: 2.8rem;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--gold);
+    line-height: 1; margin-bottom: 6px;
+  }
+  .wc-hero-sub {
+    font-family: 'Barlow Condensed'; font-size: 1rem; letter-spacing: 2px;
+    color: var(--white-dim); text-transform: uppercase; margin-bottom: 24px;
+  }
+  .wc-hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+  }
+  .wc-hero-stat {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(245,200,66,.12);
+    border-radius: 10px; padding: 14px 16px; text-align: center;
+  }
+  .wc-hero-stat-val {
+    font-family: 'Barlow Condensed'; font-weight: 700; font-size: 1.9rem;
+    color: var(--gold); line-height: 1; margin-bottom: 4px;
+  }
+  .wc-hero-stat-label {
+    font-family: 'Barlow Condensed'; font-size: .72rem; letter-spacing: 1.5px;
+    color: var(--white-dim); text-transform: uppercase;
+  }
+
+  /* Filter bar */
+  .wc-filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .wc-filter-btn {
+    font-family: 'Barlow Condensed'; font-size: .8rem; letter-spacing: 1px;
+    text-transform: uppercase; padding: 6px 16px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05);
+    color: var(--white-dim); cursor: pointer; transition: all .2s;
+  }
+  .wc-filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .wc-filter-btn.active { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 700; }
+
+  /* Champions bar */
+  .wc-champions-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin-bottom: 24px;
+  }
+  .wc-champion-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(245,200,66,.1);
+    border-radius: 12px; padding: 16px 14px; text-align: center;
+    transition: border-color .2s, transform .2s; cursor: default;
+  }
+  .wc-champion-card:hover { border-color: rgba(245,200,66,.4); transform: translateY(-2px); }
+  .wc-champion-flag { font-size: 2rem; margin-bottom: 6px; }
+  .wc-champion-country {
+    font-family: 'Barlow Condensed'; font-weight: 700; font-size: 1rem;
+    color: var(--white); letter-spacing: .5px;
+  }
+  .wc-champion-titles {
+    font-family: 'Barlow Condensed'; font-size: .78rem; color: var(--gold);
+    letter-spacing: 1px; margin: 4px 0 8px;
+  }
+  .wc-champion-years {
+    font-size: .7rem; color: var(--white-dim); line-height: 1.5;
+  }
+  .wc-title-dot {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gold); margin: 0 2px;
+  }
+
+  /* Tournament timeline table */
+  .wc-section-title {
+    font-family: 'Barlow Condensed'; font-weight: 700; font-size: 1.1rem;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--gold);
+    margin: 28px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(245,200,66,.2);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .wc-table-wrap { overflow-x: auto; margin-bottom: 28px; border-radius: 10px; }
+  .wc-table {
+    width: 100%; border-collapse: collapse; font-family: 'Barlow Condensed';
+    font-size: .88rem; min-width: 700px;
+  }
+  .wc-table th {
+    background: rgba(245,200,66,.1); color: var(--gold); font-size: .72rem;
+    letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 12px;
+    text-align: left; border-bottom: 1px solid rgba(245,200,66,.2);
+    white-space: nowrap;
+  }
+  .wc-table td {
+    padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,.05);
+    color: var(--white); vertical-align: middle;
+  }
+  .wc-table tr:hover td { background: rgba(255,255,255,.03); }
+  .wc-table tr.wc-row-hidden { display: none; }
+  .wc-year-badge {
+    background: rgba(245,200,66,.12); color: var(--gold); font-weight: 700;
+    font-size: .8rem; padding: 3px 8px; border-radius: 5px;
+    display: inline-block; white-space: nowrap;
+  }
+  .wc-winner-chip {
+    background: rgba(245,200,66,.15); border: 1px solid rgba(245,200,66,.3);
+    color: var(--gold); font-weight: 700; padding: 2px 10px; border-radius: 12px;
+    display: inline-block; white-space: nowrap;
+  }
+  .wc-score-pill {
+    background: rgba(255,255,255,.07); border-radius: 6px;
+    padding: 3px 9px; font-weight: 700; color: var(--white);
+    white-space: nowrap; font-size: .83rem;
+  }
+  .wc-pen-tag {
+    font-size: .68rem; color: var(--accent); margin-left: 4px;
+    background: rgba(79,195,247,.1); padding: 1px 5px; border-radius: 4px;
+  }
+  .wc-aet-tag {
+    font-size: .68rem; color: var(--white-dim); margin-left: 4px;
+    background: rgba(255,255,255,.08); padding: 1px 5px; border-radius: 4px;
+  }
+  .wc-goals-num { color: var(--accent); font-weight: 700; }
+  .wc-era-tag {
+    font-size: .68rem; letter-spacing: .5px; padding: 2px 7px; border-radius: 4px;
+    font-weight: 600;
+  }
+  .wc-era-early   { background: rgba(168,168,154,.1); color: var(--white-dim); }
+  .wc-era-classic { background: rgba(79,195,247,.1);  color: var(--accent); }
+  .wc-era-modern  { background: rgba(74,222,128,.1);  color: #4ade80; }
+  .wc-era-recent  { background: rgba(245,200,66,.1);  color: var(--gold); }
+
+  /* Top scorers */
+  .wc-scorers-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px; margin-bottom: 28px;
+  }
+  .wc-scorer-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px; padding: 14px 16px; display: flex; gap: 12px;
+    align-items: flex-start; transition: border-color .2s;
+  }
+  .wc-scorer-card:hover { border-color: rgba(245,200,66,.25); }
+  .wc-scorer-rank {
+    font-family: 'Barlow Condensed'; font-weight: 900; font-size: 1.5rem;
+    color: rgba(245,200,66,.25); line-height: 1; min-width: 28px;
+  }
+  .wc-scorer-name {
+    font-family: 'Barlow Condensed'; font-weight: 700; font-size: .95rem;
+    color: var(--white); margin-bottom: 2px;
+  }
+  .wc-scorer-meta {
+    font-size: .75rem; color: var(--white-dim); margin-bottom: 6px;
+  }
+  .wc-scorer-goals {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(245,200,66,.12); border: 1px solid rgba(245,200,66,.2);
+    color: var(--gold); font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: .82rem; padding: 2px 9px; border-radius: 10px;
+  }
+
+  /* Hosts map */
+  .wc-hosts-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px; margin-bottom: 28px;
+  }
+  .wc-host-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 10px; padding: 12px 14px; transition: border-color .2s;
+  }
+  .wc-host-card:hover { border-color: rgba(79,195,247,.3); }
+  .wc-host-country {
+    font-family: 'Barlow Condensed'; font-weight: 700; font-size: .95rem;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .wc-host-years {
+    font-size: .75rem; color: var(--white-dim); margin-bottom: 6px;
+  }
+  .wc-host-badge {
+    font-size: .7rem; letter-spacing: .8px; font-family: 'Barlow Condensed';
+    padding: 2px 8px; border-radius: 4px; font-weight: 600;
+  }
+  .wc-host-multi { background: rgba(79,195,247,.1); color: var(--accent); }
+  .wc-host-once  { background: rgba(255,255,255,.07); color: var(--white-dim); }
+
+  /* Rankings table */
+  .wc-rankings-table { min-width: 500px; }
+  .wc-rank-pos {
+    font-family: 'Barlow Condensed'; font-weight: 900; font-size: 1.1rem;
+    color: rgba(255,255,255,.3);
+  }
+  .wc-rank-pos.top3 { color: var(--gold); }
+  .wc-conf-badge {
+    font-size: .65rem; padding: 2px 6px; border-radius: 4px; font-weight: 600;
+    font-family: 'Barlow Condensed'; letter-spacing: .5px;
+  }
+  .wc-conf-UEFA     { background: rgba(79,195,247,.12); color: var(--accent); }
+  .wc-conf-CONMEBOL { background: rgba(245,200,66,.12); color: var(--gold); }
+  .wc-conf-CAF      { background: rgba(74,222,128,.12); color: #4ade80; }
+  .wc-conf-AFC      { background: rgba(168,168,154,.12); color: var(--white-dim); }
+  .wc-conf-CONCACAF { background: rgba(255,80,80,.12);  color: #ff8080; }
+  .wc-conf-OFC      { background: rgba(200,80,255,.12); color: #cc80ff; }
+
+  /* Records panel */
+  .wc-records-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px; margin-bottom: 28px;
+  }
+  .wc-record-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .wc-record-icon { font-size: 1.5rem; margin-bottom: 8px; }
+  .wc-record-val {
+    font-family: 'Barlow Condensed'; font-weight: 900; font-size: 1.6rem;
+    color: var(--gold); line-height: 1; margin-bottom: 3px;
+  }
+  .wc-record-label {
+    font-family: 'Barlow Condensed'; font-size: .78rem; color: var(--white-dim);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .wc-record-detail { font-size: .78rem; color: var(--white-dim); line-height: 1.5; }
+
+  /* 2026 teaser */
+  .wc-2026-banner {
+    background: linear-gradient(135deg, rgba(245,200,66,.08) 0%, rgba(79,195,247,.05) 100%);
+    border: 1px solid rgba(245,200,66,.25); border-radius: 14px;
+    padding: 24px 28px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .wc-2026-label {
+    font-family: 'Barlow Condensed'; font-weight: 900; font-size: 2.2rem;
+    color: var(--gold); letter-spacing: 3px;
+  }
+  .wc-2026-sub { font-family: 'Barlow Condensed'; font-size: .9rem; color: var(--white-dim); margin-top: 4px; }
+  .wc-2026-hosts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .wc-2026-host-chip {
+    background: rgba(255,255,255,.07); border-radius: 20px; padding: 4px 14px;
+    font-family: 'Barlow Condensed'; font-size: .82rem; color: var(--white);
+  }
+
   /* ── iOS Add-to-Home-Screen hint sheet ── */
   .ios-hint-sheet {
     position: fixed;
@@ -1452,6 +1706,7 @@
       <div class="nav-tab" onclick="switchTab('wrap')">📰 Weekend Wrap</div>
       <div class="nav-tab" onclick="switchTab('favourites')">⭐ My Teams</div>
       <div class="nav-tab" onclick="switchTab('referees')">👮 Referees</div>
+      <div class="nav-tab" onclick="switchTab('worldcup')">🌍 World Cup</div>
       <div class="nav-tab" onclick="switchTab('suspensions')">🚨 Suspensions</div>
       <div class="nav-tab" onclick="switchTab('standings')">🏆 Standings</div>
     </div>
@@ -1968,6 +2223,123 @@
     </div>
 
     <!-- STANDINGS TAB -->
+    <!-- ═══════════════════════════════════════════════
+         WORLD CUP TAB
+    ═══════════════════════════════════════════════ -->
+    <div class="tab-content" id="tab-worldcup">
+      <div class="wc-hero">
+        <div class="wc-hero-title">FIFA World Cup</div>
+        <div class="wc-hero-sub">1930 &ndash; 2022 &middot; 22 Tournaments &middot; 8 Nations &middot; The Greatest Show on Earth</div>
+        <div class="wc-hero-stats">
+          <div class="wc-hero-stat"><div class="wc-hero-stat-val">22</div><div class="wc-hero-stat-label">Tournaments</div></div>
+          <div class="wc-hero-stat"><div class="wc-hero-stat-val">8</div><div class="wc-hero-stat-label">Champions</div></div>
+          <div class="wc-hero-stat"><div class="wc-hero-stat-val">18</div><div class="wc-hero-stat-label">Host Nations</div></div>
+          <div class="wc-hero-stat"><div class="wc-hero-stat-val">2,548</div><div class="wc-hero-stat-label">Goals Scored</div></div>
+          <div class="wc-hero-stat"><div class="wc-hero-stat-val">900+</div><div class="wc-hero-stat-label">Matches Played</div></div>
+          <div class="wc-hero-stat"><div class="wc-hero-stat-val">3.64</div><div class="wc-hero-stat-label">Avg Goals/Match</div></div>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="wc-filter-bar" id="wcFilterBar">
+        <button class="wc-filter-btn active" onclick="wcFilter('all',this)">All Tournaments</button>
+        <button class="wc-filter-btn" onclick="wcFilter('history',this)">📜 Full History</button>
+        <button class="wc-filter-btn" onclick="wcFilter('champions',this)">🏆 Champions</button>
+        <button class="wc-filter-btn" onclick="wcFilter('scorers',this)">⚽ Top Scorers</button>
+        <button class="wc-filter-btn" onclick="wcFilter('hosts',this)">🌍 Hosts</button>
+        <button class="wc-filter-btn" onclick="wcFilter('records',this)">📊 Records</button>
+        <button class="wc-filter-btn" onclick="wcFilter('rankings',this)">🌐 FIFA Rankings</button>
+      </div>
+
+      <!-- ── FULL HISTORY TABLE ── -->
+      <div id="wc-section-history">
+        <div class="wc-section-title">📜 Tournament History — All 22 World Cups</div>
+        <div class="wc-table-wrap">
+          <table class="wc-table" id="wcHistoryTable">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Host</th>
+                <th>Winner</th>
+                <th>Runner-Up</th>
+                <th>Final Score</th>
+                <th>3rd Place</th>
+                <th>4th Place</th>
+                <th>Teams</th>
+                <th>Matches</th>
+                <th>Goals</th>
+                <th>Per Game</th>
+                <th>Attendance</th>
+                <th>Top Scorer</th>
+                <th>Era</th>
+              </tr>
+            </thead>
+            <tbody id="wcHistoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── CHAMPIONS ── -->
+      <div id="wc-section-champions">
+        <div class="wc-section-title">🏆 World Cup Champions — All-Time</div>
+        <div class="wc-champions-grid" id="wcChampionsGrid"></div>
+      </div>
+
+      <!-- ── TOP SCORERS ── -->
+      <div id="wc-section-scorers">
+        <div class="wc-section-title">⚽ Golden Boot — Tournament Top Scorers</div>
+        <div class="wc-scorers-grid" id="wcScorersGrid"></div>
+      </div>
+
+      <!-- ── HOSTS ── -->
+      <div id="wc-section-hosts">
+        <div class="wc-section-title">🌍 Host Nations</div>
+        <div class="wc-hosts-grid" id="wcHostsGrid"></div>
+      </div>
+
+      <!-- ── RECORDS ── -->
+      <div id="wc-section-records">
+        <div class="wc-section-title">📊 Tournament Records &amp; Milestones</div>
+        <div class="wc-records-grid" id="wcRecordsGrid"></div>
+      </div>
+
+      <!-- ── FIFA RANKINGS ── -->
+      <div id="wc-section-rankings">
+        <div class="wc-section-title">🌐 FIFA World Rankings — January 2026</div>
+        <div class="wc-table-wrap">
+          <table class="wc-table wc-rankings-table" id="wcRankingsTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nation</th>
+                <th>Confederation</th>
+                <th>Points</th>
+                <th>WC Titles</th>
+                <th>Best Finish</th>
+              </tr>
+            </thead>
+            <tbody id="wcRankingsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 2026 TEASER ── -->
+      <div class="wc-2026-banner">
+        <div>
+          <div class="wc-2026-label">🇺🇸🇨🇦🇲🇽 FIFA World Cup 2026</div>
+          <div class="wc-2026-sub">48 Teams · 104 Matches · First tri-host tournament in history</div>
+          <div class="wc-2026-hosts">
+            <span class="wc-2026-host-chip">🇺🇸 United States</span>
+            <span class="wc-2026-host-chip">🇨🇦 Canada</span>
+            <span class="wc-2026-host-chip">🇲🇽 Mexico</span>
+            <span class="wc-2026-host-chip">16 Host Cities</span>
+            <span class="wc-2026-host-chip">June–July 2026</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end tab-worldcup -->
+
     <div class="tab-content" id="tab-standings">
       <div class="section-header">
         <span class="section-title">League Tables</span>
@@ -2638,6 +3010,7 @@ function renderOverview() {
 
   // Fav next fixtures on overview
   renderFavNextFixtures();
+  renderWorldCup();
 }
 
 function renderFixtures() {
@@ -3054,7 +3427,8 @@ function switchTab(tab) {
     if (tab === 'predictions') renderPredictions();
     if (tab === 'bookings') renderBookings();
     if (tab === 'referees') renderReferees();
-    if (tab === 'standings') renderStandings();
+    if (tab === 'standings')  renderStandings();
+  if (tab === 'worldcup')   renderWorldCup();
   }
 }
 
@@ -4675,6 +5049,299 @@ function initPwa() {
   } else if (isIos()) {
     console.log('ℹ️ iOS hint suppressed (already dismissed or installed)');
   }
+}
+
+// ============================================================
+// WORLD CUP DATA & RENDER ENGINE
+// ============================================================
+
+const WC_HISTORY = [
+  { year:1930, host:'Uruguay',           winner:'Uruguay',       runnerUp:'Argentina',     third:'United States', fourth:'Yugoslavia',   finalScore:'4–2',              goals:70,  matches:18, teams:13, goalsPerMatch:3.89, attendance:590549,   topScorer:'Guillermo Stábile (ARG)',  scorerGoals:8,  era:'early' },
+  { year:1934, host:'Italy',             winner:'Italy',         runnerUp:'Czechoslovakia',third:'Germany',       fourth:'Austria',      finalScore:'2–1 (aet)',        goals:70,  matches:17, teams:16, goalsPerMatch:4.12, attendance:363000,   topScorer:'Oldřich Nejedlý (CZE)',   scorerGoals:5,  era:'early' },
+  { year:1938, host:'France',            winner:'Italy',         runnerUp:'Hungary',       third:'Brazil',        fourth:'Sweden',       finalScore:'4–2',              goals:84,  matches:18, teams:15, goalsPerMatch:4.67, attendance:375700,   topScorer:'Leônidas (BRA)',           scorerGoals:7,  era:'early' },
+  { year:1950, host:'Brazil',            winner:'Uruguay',       runnerUp:'Brazil',        third:'Sweden',        fourth:'Spain',        finalScore:'2–1',              goals:88,  matches:22, teams:13, goalsPerMatch:4.0,  attendance:1045246,  topScorer:'Ademir (BRA)',             scorerGoals:8,  era:'early' },
+  { year:1954, host:'Switzerland',       winner:'West Germany',  runnerUp:'Hungary',       third:'Austria',       fourth:'Uruguay',      finalScore:'3–2',              goals:140, matches:26, teams:16, goalsPerMatch:5.38, attendance:768607,   topScorer:'Sándor Kocsis (HUN)',      scorerGoals:11, era:'classic' },
+  { year:1958, host:'Sweden',            winner:'Brazil',        runnerUp:'Sweden',        third:'France',        fourth:'West Germany', finalScore:'5–2',              goals:126, matches:35, teams:16, goalsPerMatch:3.60, attendance:819810,   topScorer:'Just Fontaine (FRA)',      scorerGoals:13, era:'classic' },
+  { year:1962, host:'Chile',             winner:'Brazil',        runnerUp:'Czechoslovakia',third:'Chile',         fourth:'Yugoslavia',   finalScore:'3–1',              goals:89,  matches:32, teams:16, goalsPerMatch:2.78, attendance:893172,   topScorer:'Garrincha / Vavá (4 each)',scorerGoals:4,  era:'classic' },
+  { year:1966, host:'England',           winner:'England',       runnerUp:'West Germany',  third:'Portugal',      fourth:'Soviet Union', finalScore:'4–2 (aet)',        goals:89,  matches:32, teams:16, goalsPerMatch:2.78, attendance:1563135,  topScorer:'Eusébio (POR)',            scorerGoals:9,  era:'classic' },
+  { year:1970, host:'Mexico',            winner:'Brazil',        runnerUp:'Italy',         third:'West Germany',  fourth:'Uruguay',      finalScore:'4–1',              goals:95,  matches:32, teams:16, goalsPerMatch:2.97, attendance:1603975,  topScorer:'Gerd Müller (WGR)',        scorerGoals:10, era:'classic' },
+  { year:1974, host:'West Germany',      winner:'West Germany',  runnerUp:'Netherlands',   third:'Poland',        fourth:'Brazil',       finalScore:'2–1',              goals:97,  matches:38, teams:16, goalsPerMatch:2.55, attendance:1865753,  topScorer:'Grzegorz Lato (POL)',      scorerGoals:7,  era:'classic' },
+  { year:1978, host:'Argentina',         winner:'Argentina',     runnerUp:'Netherlands',   third:'Brazil',        fourth:'Italy',        finalScore:'3–1 (aet)',        goals:102, matches:38, teams:16, goalsPerMatch:2.68, attendance:1545791,  topScorer:'Mario Kempes (ARG)',       scorerGoals:6,  era:'modern' },
+  { year:1982, host:'Spain',             winner:'Italy',         runnerUp:'West Germany',  third:'Poland',        fourth:'France',       finalScore:'3–1',              goals:146, matches:52, teams:24, goalsPerMatch:2.81, attendance:2109723,  topScorer:'Paolo Rossi (ITA)',        scorerGoals:6,  era:'modern' },
+  { year:1986, host:'Mexico',            winner:'Argentina',     runnerUp:'West Germany',  third:'France',        fourth:'Belgium',      finalScore:'3–2',              goals:132, matches:52, teams:24, goalsPerMatch:2.54, attendance:2394031,  topScorer:'Gary Lineker (ENG)',       scorerGoals:6,  era:'modern' },
+  { year:1990, host:'Italy',             winner:'West Germany',  runnerUp:'Argentina',     third:'Italy',         fourth:'England',      finalScore:'1–0',              goals:115, matches:52, teams:24, goalsPerMatch:2.21, attendance:2516215,  topScorer:'Salvatore Schillaci (ITA)',scorerGoals:6,  era:'modern' },
+  { year:1994, host:'United States',     winner:'Brazil',        runnerUp:'Italy',         third:'Sweden',        fourth:'Bulgaria',     finalScore:'0–0 (3–2 pen.)',   goals:141, matches:52, teams:24, goalsPerMatch:2.71, attendance:3587538,  topScorer:'Salenko / Stoichkov (6)',  scorerGoals:6,  era:'modern' },
+  { year:1998, host:'France',            winner:'France',        runnerUp:'Brazil',        third:'Croatia',       fourth:'Netherlands',  finalScore:'3–0',              goals:171, matches:64, teams:32, goalsPerMatch:2.67, attendance:2785100,  topScorer:'Davor Šuker (CRO)',        scorerGoals:6,  era:'recent' },
+  { year:2002, host:'South Korea/Japan', winner:'Brazil',        runnerUp:'Germany',       third:'Turkey',        fourth:'South Korea',  finalScore:'2–0',              goals:161, matches:64, teams:32, goalsPerMatch:2.52, attendance:2705197,  topScorer:'Ronaldo (BRA)',            scorerGoals:8,  era:'recent' },
+  { year:2006, host:'Germany',           winner:'Italy',         runnerUp:'France',        third:'Germany',       fourth:'Portugal',     finalScore:'1–1 (5–3 pen.)',   goals:147, matches:64, teams:32, goalsPerMatch:2.30, attendance:3359439,  topScorer:'Miroslav Klose (GER)',     scorerGoals:5,  era:'recent' },
+  { year:2010, host:'South Africa',      winner:'Spain',         runnerUp:'Netherlands',   third:'Germany',       fourth:'Uruguay',      finalScore:'1–0 (aet)',        goals:145, matches:64, teams:32, goalsPerMatch:2.27, attendance:3178856,  topScorer:'Thomas Müller (GER)',      scorerGoals:5,  era:'recent' },
+  { year:2014, host:'Brazil',            winner:'Germany',       runnerUp:'Argentina',     third:'Netherlands',   fourth:'Brazil',       finalScore:'1–0 (aet)',        goals:171, matches:64, teams:32, goalsPerMatch:2.67, attendance:3429873,  topScorer:'James Rodríguez (COL)',    scorerGoals:6,  era:'recent' },
+  { year:2018, host:'Russia',            winner:'France',        runnerUp:'Croatia',       third:'Belgium',       fourth:'England',      finalScore:'4–2',              goals:169, matches:64, teams:32, goalsPerMatch:2.64, attendance:3031768,  topScorer:'Harry Kane (ENG)',         scorerGoals:6,  era:'recent' },
+  { year:2022, host:'Qatar',             winner:'Argentina',     runnerUp:'France',        third:'Croatia',       fourth:'Morocco',      finalScore:'3–3 (4–2 pen.)',   goals:172, matches:64, teams:32, goalsPerMatch:2.69, attendance:3404252,  topScorer:'Kylian Mbappé (FRA)',      scorerGoals:8,  era:'recent' },
+];
+
+const WC_CHAMPIONS = [
+  { country:'Brazil',       flag:'🇧🇷', titles:5, years:'1958, 1962, 1970, 1994, 2002' },
+  { country:'Germany',      flag:'🇩🇪', titles:4, years:'1954, 1974, 1990, 2014', note:'incl. 3 as West Germany' },
+  { country:'Italy',        flag:'🇮🇹', titles:4, years:'1934, 1938, 1982, 2006' },
+  { country:'Argentina',    flag:'🇦🇷', titles:3, years:'1978, 1986, 2022' },
+  { country:'France',       flag:'🇫🇷', titles:2, years:'1998, 2018' },
+  { country:'Uruguay',      flag:'🇺🇾', titles:2, years:'1930, 1950' },
+  { country:'England',      flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', titles:1, years:'1966' },
+  { country:'Spain',        flag:'🇪🇸', titles:1, years:'2010' },
+];
+
+const WC_SCORERS = [
+  { year:1930, player:'Guillermo Stábile',   country:'Argentina',  flag:'🇦🇷', goals:8  },
+  { year:1934, player:'Oldřich Nejedlý',     country:'Czechoslovakia', flag:'🇨🇿', goals:5 },
+  { year:1938, player:'Leônidas',            country:'Brazil',     flag:'🇧🇷', goals:7  },
+  { year:1950, player:'Ademir',              country:'Brazil',     flag:'🇧🇷', goals:8  },
+  { year:1954, player:'Sándor Kocsis',       country:'Hungary',    flag:'🇭🇺', goals:11 },
+  { year:1958, player:'Just Fontaine',       country:'France',     flag:'🇫🇷', goals:13 },
+  { year:1962, player:'Garrincha / Vavá',    country:'Brazil',     flag:'🇧🇷', goals:4  },
+  { year:1966, player:'Eusébio',             country:'Portugal',   flag:'🇵🇹', goals:9  },
+  { year:1970, player:'Gerd Müller',         country:'West Germany', flag:'🇩🇪', goals:10 },
+  { year:1974, player:'Grzegorz Lato',       country:'Poland',     flag:'🇵🇱', goals:7  },
+  { year:1978, player:'Mario Kempes',        country:'Argentina',  flag:'🇦🇷', goals:6  },
+  { year:1982, player:'Paolo Rossi',         country:'Italy',      flag:'🇮🇹', goals:6  },
+  { year:1986, player:'Gary Lineker',        country:'England',    flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', goals:6 },
+  { year:1990, player:'Salvatore Schillaci', country:'Italy',      flag:'🇮🇹', goals:6  },
+  { year:1994, player:'Oleg Salenko / Hristo Stoichkov', country:'Russia / Bulgaria', flag:'🇷🇺', goals:6 },
+  { year:1998, player:'Davor Šuker',         country:'Croatia',    flag:'🇭🇷', goals:6  },
+  { year:2002, player:'Ronaldo',             country:'Brazil',     flag:'🇧🇷', goals:8  },
+  { year:2006, player:'Miroslav Klose',      country:'Germany',    flag:'🇩🇪', goals:5  },
+  { year:2010, player:'Thomas Müller',       country:'Germany',    flag:'🇩🇪', goals:5  },
+  { year:2014, player:'James Rodríguez',     country:'Colombia',   flag:'🇨🇴', goals:6  },
+  { year:2018, player:'Harry Kane',          country:'England',    flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', goals:6 },
+  { year:2022, player:'Kylian Mbappé',       country:'France',     flag:'🇫🇷', goals:8  },
+];
+
+const WC_HOSTS = [
+  { country:'Brazil',           flag:'🇧🇷', times:2, years:'1950, 2014',  wonAsHost:false },
+  { country:'France',           flag:'🇫🇷', times:2, years:'1938, 1998',  wonAsHost:true  },
+  { country:'Mexico',           flag:'🇲🇽', times:2, years:'1970, 1986',  wonAsHost:false },
+  { country:'Italy',            flag:'🇮🇹', times:2, years:'1934, 1990',  wonAsHost:true  },
+  { country:'Uruguay',          flag:'🇺🇾', times:1, years:'1930',        wonAsHost:true  },
+  { country:'Switzerland',      flag:'🇨🇭', times:1, years:'1954',        wonAsHost:false },
+  { country:'Sweden',           flag:'🇸🇪', times:1, years:'1958',        wonAsHost:false },
+  { country:'Chile',            flag:'🇨🇱', times:1, years:'1962',        wonAsHost:false },
+  { country:'England',          flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', times:1, years:'1966',       wonAsHost:true  },
+  { country:'West Germany',     flag:'🇩🇪', times:1, years:'1974',        wonAsHost:true  },
+  { country:'Argentina',        flag:'🇦🇷', times:1, years:'1978',        wonAsHost:true  },
+  { country:'Spain',            flag:'🇪🇸', times:1, years:'1982',        wonAsHost:false },
+  { country:'United States',    flag:'🇺🇸', times:1, years:'1994',        wonAsHost:false },
+  { country:'South Korea/Japan',flag:'🇰🇷', times:1, years:'2002',        wonAsHost:false },
+  { country:'Germany',          flag:'🇩🇪', times:1, years:'2006',        wonAsHost:false },
+  { country:'South Africa',     flag:'🇿🇦', times:1, years:'2010',        wonAsHost:false },
+  { country:'Russia',           flag:'🇷🇺', times:1, years:'2018',        wonAsHost:false },
+  { country:'Qatar',            flag:'🇶🇦', times:1, years:'2022',        wonAsHost:false },
+];
+
+const WC_RANKINGS = [
+  { rank:1,  country:'Spain',          flag:'🇪🇸', conf:'UEFA',     pts:'1877.18', titles:1, best:'Champions (2010)'   },
+  { rank:2,  country:'Argentina',      flag:'🇦🇷', conf:'CONMEBOL', pts:'1873.33', titles:3, best:'Champions (2022)'   },
+  { rank:3,  country:'France',         flag:'🇫🇷', conf:'UEFA',     pts:'1870.00', titles:2, best:'Champions (2018)'   },
+  { rank:4,  country:'England',        flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', conf:'UEFA',    pts:'1834.12', titles:1, best:'Champions (1966)'  },
+  { rank:5,  country:'Brazil',         flag:'🇧🇷', conf:'CONMEBOL', pts:'1760.46', titles:5, best:'Champions (2002)'   },
+  { rank:6,  country:'Portugal',       flag:'🇵🇹', conf:'UEFA',     pts:'1760.38', titles:0, best:'3rd Place (1966)'   },
+  { rank:7,  country:'Netherlands',    flag:'🇳🇱', conf:'UEFA',     pts:'1756.27', titles:0, best:'Runner-Up (2010)'   },
+  { rank:8,  country:'Morocco',        flag:'🇲🇦', conf:'CAF',      pts:'1736.57', titles:0, best:'4th Place (2022)'   },
+  { rank:9,  country:'Belgium',        flag:'🇧🇪', conf:'UEFA',     pts:'1730.71', titles:0, best:'3rd Place (2018)'   },
+  { rank:10, country:'Germany',        flag:'🇩🇪', conf:'UEFA',     pts:'1724.15', titles:4, best:'Champions (2014)'   },
+  { rank:11, country:'Croatia',        flag:'🇭🇷', conf:'UEFA',     pts:'1716.88', titles:0, best:'Runner-Up (2018)'   },
+  { rank:12, country:'Senegal',        flag:'🇸🇳', conf:'CAF',      pts:'1706.83', titles:0, best:'QF (2002)'          },
+  { rank:13, country:'Italy',          flag:'🇮🇹', conf:'UEFA',     pts:'1702.06', titles:4, best:'Champions (2006)'   },
+  { rank:14, country:'Colombia',       flag:'🇨🇴', conf:'CONMEBOL', pts:'1701.30', titles:0, best:'QF (2014)'          },
+  { rank:15, country:'United States',  flag:'🇺🇸', conf:'CONCACAF', pts:'1681.88', titles:0, best:'3rd Place (1930)'   },
+  { rank:16, country:'Mexico',         flag:'🇲🇽', conf:'CONCACAF', pts:'1675.75', titles:0, best:'QF (1970, 1986)'    },
+  { rank:17, country:'Uruguay',        flag:'🇺🇾', conf:'CONMEBOL', pts:'1672.62', titles:2, best:'Champions (1950)'   },
+  { rank:18, country:'Switzerland',    flag:'🇨🇭', conf:'UEFA',     pts:'1654.69', titles:0, best:'QF (1934–54)'       },
+  { rank:19, country:'Japan',          flag:'🇯🇵', conf:'AFC',      pts:'1650.12', titles:0, best:'R16 (2002–2022)'    },
+  { rank:20, country:'Iran',           flag:'🇮🇷', conf:'AFC',      pts:'1617.02', titles:0, best:'Group Stage'        },
+  { rank:21, country:'United States',  flag:'🇺🇸', conf:'CONCACAF', pts:'1600.00', titles:0, best:'3rd (1930)'         },
+  { rank:22, country:'Australia',      flag:'🇦🇺', conf:'AFC',      pts:'1595.40', titles:0, best:'R16 (2006, 2022)'   },
+  { rank:23, country:'Ecuador',        flag:'🇪🇨', conf:'CONMEBOL', pts:'1581.20', titles:0, best:'R16 (2002)'         },
+  { rank:24, country:'Ukraine',        flag:'🇺🇦', conf:'UEFA',     pts:'1577.10', titles:0, best:'QF (2006)'          },
+  { rank:25, country:'Poland',         flag:'🇵🇱', conf:'UEFA',     pts:'1571.80', titles:0, best:'3rd Place (1974)'   },
+  { rank:26, country:'Hungary',        flag:'🇭🇺', conf:'UEFA',     pts:'1566.50', titles:0, best:'Runner-Up (1954)'   },
+  { rank:27, country:'Turkey',         flag:'🇹🇷', conf:'UEFA',     pts:'1554.30', titles:0, best:'3rd Place (2002)'   },
+  { rank:28, country:'South Korea',    flag:'🇰🇷', conf:'AFC',      pts:'1541.60', titles:0, best:'4th Place (2002)'   },
+  { rank:29, country:'Saudi Arabia',   flag:'🇸🇦', conf:'AFC',      pts:'1529.80', titles:0, best:'R16 (1994)'         },
+  { rank:30, country:'Tunisia',        flag:'🇹🇳', conf:'CAF',      pts:'1518.40', titles:0, best:'Group Stage'        },
+];
+
+const WC_RECORDS = [
+  { icon:'⚽', val:'13', label:'Most Goals in a Tournament', detail:'Just Fontaine (France) — 1958 World Cup in Sweden. An all-time record unlikely to ever be broken.' },
+  { icon:'🏆', val:'5', label:'Most World Cup Titles', detail:'Brazil — won in 1958, 1962, 1970, 1994 and 2002. The only nation to have competed in every World Cup.' },
+  { icon:'🎯', val:'16', label:'Most Goals in One Match', detail:'Austria 7–5 Switzerland (1954). The highest-scoring game in World Cup history.' },
+  { icon:'📺', val:'3,587,538', label:'Highest Total Attendance', detail:'USA 1994 — still the most attended World Cup, drawing over 3.5 million fans across 52 matches.' },
+  { icon:'📉', val:'2.21', label:'Lowest Goals Per Game', detail:'Italy 1990 — the most defensively dominated tournament with just 2.21 goals per match.' },
+  { icon:'📈', val:'5.38', label:'Highest Goals Per Game', detail:'Switzerland 1954 — the most prolific tournament ever with 5.38 goals per match and 140 total goals.' },
+  { icon:'🥇', val:'4', label:'Most Final Appearances', detail:'Germany / West Germany have appeared in 8 finals (1954, 1966, 1974, 1982, 1986, 1990, 2002, 2014).' },
+  { icon:'👑', val:'2022', label:'Most Recent Winner', detail:'Argentina beat France 3–3 (4–2 pens) in Lusail Stadium, Qatar. Lionel Messi&#39;s crowning glory.' },
+  { icon:'🌍', val:'8', label:'Nations to Win the World Cup', detail:'Brazil, Germany, Italy, Argentina, France, Uruguay, England and Spain are the only champions.' },
+  { icon:'📅', val:'1930', label:'First World Cup', detail:'Uruguay hosted and won the inaugural tournament in Montevideo. 13 teams, 70 goals, 590,549 fans.' },
+  { icon:'🥅', val:'172', label:'Most Goals in One Tournament', detail:'Qatar 2022 — 172 goals in 64 matches, breaking the previous record shared with 1998 and 2014.' },
+  { icon:'🌟', val:'1966', label:'Host Nation Victory (Last)', detail:'England are the last host nation to win the World Cup, beating West Germany 4–2 at Wembley.' },
+];
+
+// ── Active filter state ──
+let wcActiveFilter = 'all';
+
+function wcFilter(filter, btn) {
+  wcActiveFilter = filter;
+  document.querySelectorAll('.wc-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const sections = ['history','champions','scorers','hosts','records','rankings'];
+  sections.forEach(s => {
+    const el = document.getElementById('wc-section-' + s);
+    if (!el) return;
+    if (filter === 'all' || filter === s) {
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
+// ── Era label ──
+function wcEraTag(era) {
+  const map = {
+    early:   ['EARLY ERA',    'wc-era-early'],
+    classic: ['CLASSIC ERA',  'wc-era-classic'],
+    modern:  ['MODERN ERA',   'wc-era-modern'],
+    recent:  ['RECENT ERA',   'wc-era-recent'],
+  };
+  const [label, cls] = map[era] || ['', ''];
+  return `<span class="wc-era-tag ${cls}">${label}</span>`;
+}
+
+// ── Format score for display ──
+function wcFormatScore(score) {
+  if (score.includes('pen')) {
+    const base = score.split('(')[0].trim();
+    const pen  = score.match(/\(([^)]+)\)/)?.[1] || '';
+    return `${base} <span class="wc-pen-tag">PEN</span>`;
+  }
+  if (score.includes('aet')) {
+    const base = score.replace('(aet)','').trim();
+    return `${base} <span class="wc-aet-tag">AET</span>`;
+  }
+  return score;
+}
+
+// ── Render history table ──
+function renderWcHistory() {
+  const tbody = document.getElementById('wcHistoryBody');
+  if (!tbody) return;
+  tbody.innerHTML = WC_HISTORY.slice().reverse().map(t => `
+    <tr>
+      <td><span class="wc-year-badge">${t.year}</span></td>
+      <td>${t.host}</td>
+      <td><span class="wc-winner-chip">🏆 ${t.winner}</span></td>
+      <td>${t.runnerUp}</td>
+      <td><span class="wc-score-pill">${wcFormatScore(t.finalScore)}</span></td>
+      <td style="color:var(--white-dim)">${t.third}</td>
+      <td style="color:var(--white-dim);font-size:.8rem">${t.fourth}</td>
+      <td style="text-align:center">${t.teams}</td>
+      <td style="text-align:center">${t.matches}</td>
+      <td style="text-align:center"><span class="wc-goals-num">${t.goals}</span></td>
+      <td style="text-align:center;color:var(--white-dim)">${t.goalsPerMatch.toFixed(2)}</td>
+      <td style="font-size:.78rem;color:var(--white-dim)">${(t.attendance/1000000).toFixed(2)}M</td>
+      <td style="font-size:.8rem;color:var(--accent)">${t.topScorer}</td>
+      <td>${wcEraTag(t.era)}</td>
+    </tr>
+  `).join('');
+}
+
+// ── Render champions ──
+function renderWcChampions() {
+  const el = document.getElementById('wcChampionsGrid');
+  if (!el) return;
+  el.innerHTML = WC_CHAMPIONS.map(c => `
+    <div class="wc-champion-card">
+      <div class="wc-champion-flag">${c.flag}</div>
+      <div class="wc-champion-country">${c.country}</div>
+      <div class="wc-champion-titles">${'⭐'.repeat(c.titles)} ${c.titles} TITLE${c.titles > 1 ? 'S' : ''}</div>
+      <div class="wc-champion-years">${c.years}${c.note ? '<br><span style="font-size:.65rem;opacity:.6">' + c.note + '</span>' : ''}</div>
+    </div>
+  `).join('');
+}
+
+// ── Render scorers ──
+function renderWcScorers() {
+  const el = document.getElementById('wcScorersGrid');
+  if (!el) return;
+  el.innerHTML = WC_SCORERS.slice().reverse().map((s, i) => `
+    <div class="wc-scorer-card">
+      <div class="wc-scorer-rank">${WC_SCORERS.length - i}</div>
+      <div style="flex:1">
+        <div class="wc-scorer-name">${s.flag} ${s.player}</div>
+        <div class="wc-scorer-meta">${s.country} · ${s.year}</div>
+        <span class="wc-scorer-goals">⚽ ${s.goals} goals</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Render hosts ──
+function renderWcHosts() {
+  const el = document.getElementById('wcHostsGrid');
+  if (!el) return;
+  // Sort: multi-host first, then alpha
+  const sorted = [...WC_HOSTS].sort((a,b) => b.times - a.times || a.country.localeCompare(b.country));
+  el.innerHTML = sorted.map(h => `
+    <div class="wc-host-card">
+      <div class="wc-host-country">${h.flag} ${h.country}</div>
+      <div class="wc-host-years">${h.years}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="wc-host-badge ${h.times > 1 ? 'wc-host-multi' : 'wc-host-once'}">${h.times}× Hosted</span>
+        ${h.wonAsHost ? '<span class="wc-host-badge" style="background:rgba(245,200,66,.12);color:var(--gold)">🏆 Won as Host</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Render records ──
+function renderWcRecords() {
+  const el = document.getElementById('wcRecordsGrid');
+  if (!el) return;
+  el.innerHTML = WC_RECORDS.map(r => `
+    <div class="wc-record-card">
+      <div class="wc-record-icon">${r.icon}</div>
+      <div class="wc-record-val">${r.val}</div>
+      <div class="wc-record-label">${r.label}</div>
+      <div class="wc-record-detail">${r.detail}</div>
+    </div>
+  `).join('');
+}
+
+// ── Render rankings ──
+function renderWcRankings() {
+  const tbody = document.getElementById('wcRankingsBody');
+  if (!tbody) return;
+  tbody.innerHTML = WC_RANKINGS.map(r => `
+    <tr>
+      <td><span class="wc-rank-pos${r.rank <= 3 ? ' top3' : ''}">${r.rank}</span></td>
+      <td style="font-family:'Barlow Condensed';font-weight:700">${r.flag} ${r.country}</td>
+      <td><span class="wc-conf-badge wc-conf-${r.conf}">${r.conf}</span></td>
+      <td style="color:var(--gold);font-family:'Barlow Condensed';font-weight:700">${r.pts}</td>
+      <td style="text-align:center">${r.titles > 0 ? `<span style="color:var(--gold)">🏆 ${r.titles}</span>` : '<span style="color:var(--white-dim)">—</span>'}</td>
+      <td style="font-size:.8rem;color:var(--white-dim)">${r.best}</td>
+    </tr>
+  `).join('');
+}
+
+// ── Master render for World Cup tab ──
+function renderWorldCup() {
+  renderWcHistory();
+  renderWcChampions();
+  renderWcScorers();
+  renderWcHosts();
+  renderWcRecords();
+  renderWcRankings();
+  wcFilter(wcActiveFilter, null);
 }
 
 // ============================================================
