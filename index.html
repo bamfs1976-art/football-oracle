@@ -3126,7 +3126,9 @@ async function runApiDiagnostics() {
         const top = table[0];
         write(`     ✅ ${ms}ms — P1: ${top.team.name} ${top.points}pts (${top.all.played} played)`, '#4ade80');
       } else {
-        write(`     ❌ No standings data`, '#e63946');
+        const errs = d.errors ? Object.values(d.errors).join(', ') : 'empty response array';
+        write(`     ❌ No standings data — ${errs}`, '#e63946');
+        if (d.response !== undefined) write(`     Raw response length: ${d.response?.length ?? 'null'}`, '#a8a89a');
       }
     } catch(e) {
       write(`     ❌ ERROR — ${e.message}`, '#e63946');
@@ -3188,10 +3190,21 @@ async function runApiDiagnostics() {
     if (r.ok) {
       const d = await r.json();
       const sub = d.response?.subscription;
-      if (sub) {
-        write(`  ✅ ${ms}ms — Plan: ${sub.plan} · Requests today: ${d.response?.requests?.current || 0}/${d.response?.requests?.limit_day || 100}`, '#4ade80');
+      const req = d.response?.requests;
+      const errs = d.errors ? Object.values(d.errors).join(', ') : null;
+      if (errs) {
+        write(`  ❌ ${ms}ms — API error: ${errs}`, '#e63946');
+        write(`     → Check that the API key in af-proxy.js is valid`, '#f5c842');
+      } else if (sub) {
+        write(`  ✅ ${ms}ms — Plan: ${sub.plan} · Requests today: ${req?.current || 0}/${req?.limit_day || 100} · Remaining: ${(req?.limit_day||100) - (req?.current||0)}`, '#4ade80');
+        if ((req?.current || 0) >= (req?.limit_day || 100)) {
+          write(`  ⚠️  Daily quota exhausted — data will not load until midnight UTC`, '#f5c842');
+        }
+      } else if (d.response === null || d.response === undefined) {
+        write(`  ⚠️  ${ms}ms — Proxy reachable but API key not recognised (response is null)`, '#f5c842');
+        write(`     → Verify key in netlify/functions/af-proxy.js. Raw: ${JSON.stringify(d).slice(0,120)}`, '#a8a89a');
       } else {
-        write(`  ✅ ${ms}ms — Connected (no subscription info returned)`, '#4ade80');
+        write(`  ✅ ${ms}ms — Connected · Raw: ${JSON.stringify(d.response).slice(0,80)}`, '#4ade80');
       }
     } else {
       write(`  ❌ HTTP ${r.status}`, '#e63946');
