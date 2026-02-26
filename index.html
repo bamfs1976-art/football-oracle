@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0d1a0f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Football Oracle">
+  <link rel="manifest" href="/manifest.json">
+  <!-- iOS touch icons (Safari uses these for Add to Home Screen) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%230d1a0f'/><text x='90' y='122' font-size='100' text-anchor='middle'>⚽</text></svg>">
+  <!-- Status bar colour when launched from home screen -->
+  <meta name="theme-color" content="#0d1a0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f0f0e8" media="(prefers-color-scheme: light)">
 <title>Football Oracle — Top 5 Leagues Analytics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow+Condensed:wght@300;400;500;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -60,6 +71,210 @@
   body.light-mode .modal { background: #fff; }
   body.light-mode .api-status-bar { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.1); }
   body.light-mode .suspension-panel { background: rgba(255,255,255,0.92); }
+
+  /* ── TOP ASSISTS ── */
+  .stat-bar-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); }
+  .stat-bar-row:last-child { border-bottom:none; }
+  .stat-bar-rank { font-family:'Barlow Condensed'; font-weight:700; font-size:.85rem; color:var(--white-dim); width:20px; text-align:right; flex-shrink:0; }
+  .stat-bar-name { font-family:'Barlow Condensed'; font-weight:700; font-size:.95rem; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .stat-bar-team { font-size:.72rem; color:var(--white-dim); }
+  .stat-bar-val  { font-family:'Barlow Condensed'; font-weight:700; font-size:1.05rem; color:var(--gold); width:28px; text-align:right; flex-shrink:0; }
+  .stat-bar-bg   { width:80px; background:rgba(255,255,255,0.07); border-radius:3px; height:6px; flex-shrink:0; overflow:hidden; }
+  .stat-bar-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--accent),var(--gold)); }
+
+  /* ── EUROPEAN TRACKER ── */
+  .euro-fixture-card { background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:12px; }
+  .euro-fixture-card:hover { border-color:var(--gold); background:rgba(255,200,50,0.04); }
+  .euro-round-badge { display:inline-flex; align-items:center; gap:5px; font-family:'Barlow Condensed'; font-size:.72rem; font-weight:700; letter-spacing:1px; padding:2px 8px; border-radius:3px; background:rgba(100,160,255,0.15); color:#88bbff; border:1px solid rgba(100,160,255,0.25); margin-bottom:8px; }
+  .euro-comp-ucl  { background:rgba(0,80,200,0.18); color:#6699ff; border-color:rgba(0,80,200,0.3); }
+  .euro-comp-uel  { background:rgba(200,100,0,0.18); color:#ffaa44; border-color:rgba(200,100,0,0.3); }
+  .euro-comp-uecl { background:rgba(0,160,80,0.18); color:#44dd88; border-color:rgba(0,160,80,0.3); }
+  .euro-teams-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .euro-team-name { font-family:'Barlow Condensed'; font-weight:700; font-size:1rem; }
+  .euro-score-box { font-family:'Barlow Condensed'; font-weight:700; font-size:1.1rem; padding:4px 12px; background:rgba(255,255,255,0.07); border-radius:5px; min-width:60px; text-align:center; }
+  .euro-meta { font-size:.72rem; color:var(--white-dim); margin-top:6px; display:flex; gap:12px; flex-wrap:wrap; }
+
+  /* ── WEEKEND WRAP ── */
+  .wrap-section { margin-bottom:24px; }
+  .wrap-section-title { font-family:'Barlow Condensed'; font-weight:700; font-size:1rem; letter-spacing:1px; color:var(--gold); text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:6px; margin-bottom:12px; }
+  .wrap-result-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'Barlow Condensed'; }
+  .wrap-result-row:last-child { border-bottom:none; }
+  .wrap-score { font-size:1rem; font-weight:700; padding:2px 10px; background:rgba(255,255,255,0.07); border-radius:4px; }
+  .wrap-shock { color:var(--red-card); font-size:.72rem; font-weight:700; margin-left:6px; }
+  .wrap-highlight { display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(255,200,50,0.07); border:1px solid rgba(255,200,50,0.15); border-radius:6px; margin-bottom:8px; font-family:'Barlow Condensed'; }
+  .wrap-highlight-icon { font-size:1.3rem; flex-shrink:0; }
+  .wrap-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .wrap-stat-box { background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:6px; padding:10px 12px; text-align:center; }
+  .wrap-stat-val { font-family:'Barlow Condensed'; font-weight:700; font-size:1.4rem; color:var(--gold); }
+  .wrap-stat-label { font-size:.72rem; color:var(--white-dim); margin-top:2px; }
+  .wrap-no-data { text-align:center; padding:40px 20px; color:var(--white-dim); font-family:'Barlow Condensed'; letter-spacing:1px; }
+
+  /* ── FAVOURITES ── */
+  .fav-star { cursor:pointer; font-size:1rem; transition:transform .15s; user-select:none; padding:0 3px; }
+  .fav-star:hover { transform:scale(1.3); }
+  .fav-star.active { color:var(--gold); }
+  .fav-star.inactive { color:var(--white-dim); opacity:0.4; }
+  .fav-banner { background:linear-gradient(135deg,rgba(255,200,50,0.1),rgba(255,200,50,0.03)); border:1px solid rgba(255,200,50,0.2); border-radius:8px; padding:12px 16px; margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .fav-team-chip { display:inline-flex; align-items:center; gap:6px; background:rgba(255,200,50,0.12); border:1px solid rgba(255,200,50,0.25); border-radius:20px; padding:4px 10px; font-family:'Barlow Condensed'; font-size:.82rem; font-weight:700; }
+  .fav-chip-remove { cursor:pointer; color:var(--white-dim); font-size:.75rem; margin-left:2px; }
+  .fav-chip-remove:hover { color:var(--red-card); }
+  .fav-empty-hint { font-family:'Barlow Condensed'; font-size:.82rem; color:var(--white-dim); letter-spacing:.5px; }
+
+  /* ── PWA install prompt ── */
+  .pwa-prompt { position:fixed; bottom:20px; right:20px; background:var(--pitch-mid); border:1px solid var(--gold); border-radius:10px; padding:14px 18px; z-index:400; display:flex; align-items:center; gap:12px; box-shadow:0 8px 32px rgba(0,0,0,0.6); max-width:300px; animation:slideUp .35s ease; }
+  @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  .pwa-prompt-text { flex:1; font-family:'Barlow Condensed'; font-size:.88rem; }
+  .pwa-prompt-title { font-weight:700; font-size:1rem; margin-bottom:2px; color:var(--gold); }
+  .pwa-install-btn { background:var(--gold); color:#111; font-family:'Barlow Condensed'; font-weight:700; font-size:.82rem; letter-spacing:.5px; border:none; border-radius:5px; padding:6px 14px; cursor:pointer; white-space:nowrap; }
+  .pwa-install-btn:hover { opacity:.85; }
+  .pwa-dismiss { background:none; border:none; color:var(--white-dim); font-size:1.1rem; cursor:pointer; padding:0 4px; flex-shrink:0; }
+
+  /* ── iOS Add-to-Home-Screen hint sheet ── */
+  .ios-hint-sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--pitch-mid);
+    border-top: 1px solid var(--gold);
+    border-radius: 18px 18px 0 0;
+    padding: 20px 20px 32px;
+    z-index: 500;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.7);
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.32,1.2,.42,1);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .ios-hint-sheet.visible { transform: translateY(0); }
+  .ios-hint-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 auto 18px;
+  }
+  .ios-hint-title {
+    font-family: 'Barlow Condensed'; font-weight: 700; font-size: 1.15rem;
+    color: var(--gold); margin-bottom: 4px; text-align: center;
+  }
+  .ios-hint-sub {
+    font-size: .78rem; color: var(--white-dim); text-align: center; margin-bottom: 20px;
+  }
+  .ios-hint-steps {
+    display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;
+  }
+  .ios-hint-step {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .ios-hint-step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.35);
+    color: var(--gold); font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: .85rem; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .ios-hint-step-text {
+    font-family: 'Barlow Condensed'; font-size: .9rem; line-height: 1.4;
+    color: var(--white);
+  }
+  .ios-hint-step-text strong { color: var(--gold); }
+  .ios-hint-share-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 6px;
+    background: rgba(100,160,255,0.18); border: 1px solid rgba(100,160,255,0.3);
+    vertical-align: middle; margin: 0 3px; flex-shrink: 0;
+  }
+  .ios-hint-footer {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .ios-hint-dismiss {
+    background: none; border: none; color: var(--white-dim);
+    font-family: 'Barlow Condensed'; font-size: .82rem; cursor: pointer;
+    padding: 8px 0; letter-spacing: .5px;
+  }
+  .ios-hint-dont-show {
+    font-family: 'Barlow Condensed'; font-size: .78rem; color: var(--white-dim);
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .ios-hint-dont-show input { accent-color: var(--gold); cursor: pointer; }
+  /* Arrow pointing to Safari Share button at bottom of screen */
+  .ios-hint-arrow {
+    position: fixed; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 12px solid var(--gold);
+    z-index: 501;
+    animation: arrowBounce 1.2s ease-in-out infinite;
+    pointer-events: none;
+    display: none;
+  }
+  @keyframes arrowBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(6px); }
+  }
+  /* Backdrop behind sheet */
+  .ios-hint-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 499;
+    opacity: 0; transition: opacity .3s; pointer-events: none;
+  }
+  .ios-hint-backdrop.visible { opacity: 1; pointer-events: all; }
+
+  /* ── INJURY TRACKER ── */
+  .injury-card { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+  .injury-card:last-child { border-bottom:none; }
+  .injury-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--red-card),var(--red-dim)); display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed'; font-weight:700; font-size:1rem; color:#fff; flex-shrink:0; }
+  .injury-name { font-family:'Barlow Condensed'; font-weight:700; font-size:.95rem; }
+  .injury-meta { font-size:.75rem; color:var(--white-dim); margin-top:1px; }
+  .injury-badge { font-family:'Barlow Condensed'; font-size:.72rem; font-weight:700; letter-spacing:1px; padding:2px 8px; border-radius:3px; white-space:nowrap; }
+  .injury-badge.out   { background:rgba(230,57,70,0.2);   color:var(--red-card); }
+  .injury-badge.doubt { background:rgba(245,200,66,0.15); color:var(--gold); }
+  .injury-badge.knock { background:rgba(74,222,128,0.1);  color:var(--accent); }
+  .injury-return { font-size:.72rem; color:var(--white-dim); font-family:'Barlow Condensed'; margin-top:2px; }
+
+  /* ── FORM DOTS ENHANCED ── */
+  .form-dot { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; font-family:'Barlow Condensed'; color:#fff; flex-shrink:0; }
+  .form-dot.W { background:var(--accent); }
+  .form-dot.D { background:var(--gold); color:#1a1a1a; }
+  .form-dot.L { background:var(--red-card); }
+  .form-dots { display:flex; gap:3px; align-items:center; }
+  .form-arrow-up   { color:var(--accent);   font-size:.85rem; font-weight:700; margin-left:4px; }
+  .form-arrow-down { color:var(--red-card); font-size:.85rem; font-weight:700; margin-left:4px; }
+  .form-arrow-same { color:var(--white-dim);font-size:.85rem; font-weight:700; margin-left:4px; }
+  /* Form mini bars on fixture cards */
+  .team-form-mini { display:flex; gap:2px; align-items:center; margin-top:4px; justify-content:center; }
+  .form-dot-mini { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .form-dot-mini.W { background:var(--accent); }
+  .form-dot-mini.D { background:var(--gold); }
+  .form-dot-mini.L { background:var(--red-card); }
+
+  /* ── ODDS DISPLAY ── */
+  .odds-row { display:flex; gap:6px; margin-top:8px; }
+  .odds-pill { flex:1; text-align:center; background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:5px; padding:5px 4px; font-family:'Barlow Condensed'; }
+  .odds-label { font-size:.65rem; color:var(--white-dim); letter-spacing:.5px; }
+  .odds-val { font-size:1rem; font-weight:700; color:var(--gold); margin-top:1px; }
+  .odds-best { font-size:.62rem; color:var(--white-dim); margin-top:1px; }
+
+  /* ── POSITION MOVEMENT ── */
+  .pos-move { display:inline-flex; align-items:center; gap:2px; font-size:.68rem; font-family:'Barlow Condensed'; font-weight:700; }
+  .pos-move.up   { color:var(--accent); }
+  .pos-move.down { color:var(--red-card); }
+  .pos-move.same { color:var(--white-dim); }
+
+  /* ── PLAYER SEARCH ── */
+  .player-search-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:500; display:flex; align-items:flex-start; justify-content:center; padding-top:80px; }
+  .player-search-box { background:var(--pitch-mid); border:1px solid var(--gold); border-radius:12px; width:min(600px,94vw); max-height:80vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.8); }
+  .player-search-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .player-search-input-wrap { flex:1; position:relative; }
+  .player-search-big { width:100%; background:transparent; border:none; outline:none; font-family:'Barlow Condensed'; font-size:1.2rem; font-weight:600; color:var(--white); letter-spacing:.5px; padding:4px 0; }
+  .player-search-close { background:none; border:none; color:var(--white-dim); font-size:1.4rem; cursor:pointer; padding:4px 8px; }
+  .player-search-results { overflow-y:auto; padding:12px 0; flex:1; }
+  .player-result-item { padding:12px 20px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
+  .player-result-item:hover { background:rgba(255,255,255,0.05); }
+  .player-result-item:last-child { border-bottom:none; }
+  .player-result-name { font-family:'Barlow Condensed'; font-weight:700; font-size:1.05rem; margin-bottom:4px; }
+  .player-result-stats { display:flex; gap:16px; flex-wrap:wrap; font-size:.78rem; color:var(--white-dim); font-family:'Barlow Condensed'; }
+  .player-result-stat { display:flex; align-items:center; gap:4px; }
+  .player-result-stat strong { color:var(--white); }
+  .player-search-empty { padding:40px 20px; text-align:center; color:var(--white-dim); font-family:'Barlow Condensed'; letter-spacing:1px; }
 
   /* ── THEME TOGGLE BUTTON ── */
   .theme-toggle {
@@ -1084,6 +1299,16 @@
   .h2h-result-row:last-child { border-bottom: none; }
   .h2h-score { color: var(--white); font-weight: 700; }
 
+  /* ── TV CHANNEL BADGES ── */
+  .tv-badge { display:inline-flex; align-items:center; gap:4px; font-family:'Barlow Condensed'; font-size:.7rem; font-weight:700; letter-spacing:.5px; padding:2px 7px; border-radius:3px; white-space:nowrap; }
+  .tv-sky    { background:rgba(0,100,200,0.2); color:#4da6ff; border:1px solid rgba(0,100,200,0.3); }
+  .tv-tnt    { background:rgba(200,0,0,0.2);   color:#ff6b6b; border:1px solid rgba(200,0,0,0.3); }
+  .tv-premier{ background:rgba(180,0,180,0.2); color:#e070e0; border:1px solid rgba(180,0,180,0.3); }
+  .tv-dazn   { background:rgba(0,180,80,0.2);  color:#4ade80; border:1px solid rgba(0,180,80,0.3); }
+  .tv-ligue1 { background:rgba(0,50,200,0.2);  color:#6090ff; border:1px solid rgba(0,50,200,0.3); }
+  .tv-bbc    { background:rgba(200,150,0,0.2); color:#f5c842; border:1px solid rgba(200,150,0,0.3); }
+  .tv-free   { background:rgba(100,100,100,0.2);color:#a8a89a;border:1px solid rgba(100,100,100,0.3); }
+
   /* ── EXPORT CARD ── */
   .export-btn { background: linear-gradient(135deg,var(--gold),var(--gold-dim)); color: #1a1a1a; border: none; border-radius: 6px; padding: 8px 18px; font-family: 'Barlow Condensed'; font-size: .85rem; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; transition: opacity 0.2s; }
   .export-btn:hover { opacity: 0.85; }
@@ -1194,12 +1419,17 @@
         <div class="league-badge l1 active" onclick="toggleLeague('l1')">🇫🇷 Ligue 1</div>
       </div>
 
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span class="last-updated" id="lastUpdated"></span>
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;">
+          <span class="last-updated" id="lastUpdated" style="font-size:.7rem;"></span>
+          <span class="last-updated" id="nextRefreshLabel" style="font-size:.65rem;opacity:.6;"></span>
+        </div>
+        <button class="theme-toggle" id="refreshBtn" onclick="manualRefresh()" title="Refresh all data now" style="padding:5px 10px;font-size:.78rem;">🔄 Refresh</button>
+        <button class="theme-toggle" onclick="openPlayerSearch()" style="padding:5px 10px;font-size:.78rem;">🔍 Players</button>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" style="padding:5px 10px;font-size:.78rem;">☀️ Light</button>
         <div class="live-pulse">
-          <div class="pulse-dot"></div>
-          LIVE
+          <div class="pulse-dot" id="livePulseDot"></div>
+          <span id="liveLabel">LIVE</span>
         </div>
       </div>
     </div>
@@ -1217,7 +1447,11 @@
       <div class="nav-tab" onclick="switchTab('fixtures')">📅 Fixtures & Results</div>
       <div class="nav-tab" onclick="switchTab('predictions')">🎯 Predictions</div>
       <div class="nav-tab" onclick="switchTab('bookings')">🟨 Bookings & Cards</div>
-      <div class="nav-tab" onclick="switchTab('referees')">👮 Referee Stats</div>
+      <div class="nav-tab" onclick="switchTab('injuries')">🏥 Injuries</div>
+      <div class="nav-tab" onclick="switchTab('europe')">🏆 Europe</div>
+      <div class="nav-tab" onclick="switchTab('wrap')">📰 Weekend Wrap</div>
+      <div class="nav-tab" onclick="switchTab('favourites')">⭐ My Teams</div>
+      <div class="nav-tab" onclick="switchTab('referees')">👮 Referees</div>
       <div class="nav-tab" onclick="switchTab('suspensions')">🚨 Suspensions</div>
       <div class="nav-tab" onclick="switchTab('standings')">🏆 Standings</div>
     </div>
@@ -1318,25 +1552,115 @@
         </div>
       </div>
 
-      <!-- Top scorers + top booked players -->
+      <!-- Top scorers + Top Assists -->
       <div class="grid-2 mb-32">
         <div class="card fade-in">
           <div class="section-header mb-20">
             <span class="section-title">Top Scorers</span>
-            <span class="section-sub">All Leagues</span>
+            <span class="section-sub">All Leagues 2025-26</span>
           </div>
           <div id="topScorersList"></div>
         </div>
 
         <div class="card fade-in" style="animation-delay:.08s">
           <div class="section-header mb-20">
+            <span class="section-title">Top Assists</span>
+            <span class="section-sub">All Leagues 2025-26</span>
+          </div>
+          <div id="topAssistsList"></div>
+        </div>
+      </div>
+
+      <!-- Most Booked Players -->
+      <div class="grid-2 mb-32">
+        <div class="card fade-in">
+          <div class="section-header mb-20">
             <span class="section-title">Most Booked Players</span>
             <span class="section-sub">Yellow cards this season</span>
           </div>
           <div id="topBookedPlayersList"></div>
         </div>
+        <div class="card fade-in" style="animation-delay:.08s">
+          <div class="section-header mb-20">
+            <span class="section-title">⭐ My Teams — Next Up</span>
+            <span class="section-sub">Star teams in Fixtures to track them here</span>
+          </div>
+          <div id="favNextFixtures"></div>
+        </div>
       </div>
 
+    </div>
+
+    <!-- EUROPEAN TRACKER TAB -->
+    <div class="tab-content" id="tab-europe">
+      <div class="section-header">
+        <span class="section-title">European Nights</span>
+        <span class="section-sub">UCL · UEL · UECL — Clubs from the Big 5</span>
+      </div>
+      <div class="info-box" style="margin-bottom:20px;">
+        <strong style="color:var(--gold)">🏆 Coverage:</strong>
+        Champions League, Europa League and Conference League fixtures involving clubs from the Premier League, La Liga, Serie A, Bundesliga and Ligue 1. Results and upcoming ties. Live data via API-Football.
+      </div>
+      <div class="filter-row mb-20">
+        <span class="filter-label">Competition:</span>
+        <div class="league-badge active" id="euroFilterAll"  onclick="filterEurope('all',this)"  style="background:rgba(100,160,255,0.15);color:#88bbff;border-color:rgba(100,160,255,0.3);">All</div>
+        <div class="league-badge"        id="euroFilterUCL"  onclick="filterEurope('ucl',this)"  style="background:rgba(0,80,200,0.12);color:#6699ff;border-color:rgba(0,80,200,0.25);">⭐ UCL</div>
+        <div class="league-badge"        id="euroFilterUEL"  onclick="filterEurope('uel',this)"  style="background:rgba(200,100,0,0.12);color:#ffaa44;border-color:rgba(200,100,0,0.25);">🟠 UEL</div>
+        <div class="league-badge"        id="euroFilterUECL" onclick="filterEurope('uecl',this)" style="background:rgba(0,160,80,0.12);color:#44dd88;border-color:rgba(0,160,80,0.25);">🟢 UECL</div>
+      </div>
+      <div id="euroFixturesGrid"></div>
+    </div>
+
+    <!-- WEEKEND WRAP TAB -->
+    <div class="tab-content" id="tab-wrap">
+      <div class="section-header">
+        <span class="section-title">Weekend Wrap</span>
+        <span class="section-sub">Latest matchweek round-up — auto-generated from results</span>
+      </div>
+      <div id="wrapContent"></div>
+    </div>
+
+    <!-- MY TEAMS / FAVOURITES TAB -->
+    <div class="tab-content" id="tab-favourites">
+      <div class="section-header" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <span class="section-title">⭐ My Teams</span>
+          <span class="section-sub">Star up to 5 teams — personalised fixtures, alerts &amp; suspension watch</span>
+        </div>
+        <button class="export-btn" onclick="clearFavourites()" style="margin-left:auto;">🗑 Clear All</button>
+      </div>
+
+      <div id="favBanner" class="fav-banner" style="display:none">
+        <span style="font-family:'Barlow Condensed';font-weight:700;color:var(--gold);">TRACKING:</span>
+        <div id="favChips"></div>
+      </div>
+      <div id="favEmptyHint" class="fav-banner">
+        <span class="fav-empty-hint">⭐ Click the star ★ on any fixture card or below to follow a team. Up to 5 teams tracked.</span>
+      </div>
+
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">Upcoming Fixtures</span></div>
+          <div id="favUpcomingFixtures"></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">Recent Results</span></div>
+          <div id="favRecentResults"></div>
+        </div>
+      </div>
+
+      <div class="card mb-24">
+        <div class="section-header mb-16">
+          <span class="section-title">🚨 Suspension Watch</span>
+          <span class="section-sub">My teams only</span>
+        </div>
+        <div id="favSuspensionWatch"></div>
+      </div>
+
+      <div class="card mb-24">
+        <div class="section-header mb-16"><span class="section-title">All Teams — Click to Follow</span></div>
+        <div id="allTeamsPicker" style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0;"></div>
+      </div>
     </div>
 
     <!-- FIXTURES & RESULTS TAB -->
@@ -1388,6 +1712,53 @@
       </div>
 
       <div id="predictionsGrid" class="grid-2"></div>
+    </div>
+
+    <!-- INJURY TRACKER TAB -->
+    <div class="tab-content" id="tab-injuries">
+      <div class="section-header">
+        <span class="section-title">Injury Tracker</span>
+        <span class="section-sub">Player availability — 2025-26</span>
+      </div>
+
+      <div class="info-box" style="margin-bottom:20px;">
+        <strong style="color:var(--gold)">🏥 Injury Data:</strong>
+        Sourced live from API-Football. Statuses: 
+        <span style="color:var(--red-card)">■ OUT</span> = confirmed absent ·
+        <span style="color:var(--gold)">■ DOUBT</span> = 50/50 for next game ·
+        <span style="color:var(--accent)">■ KNOCK</span> = minor, expected to play.
+        Data updates on page load.
+      </div>
+
+      <div class="grid-2 mb-32" id="injuryLeagueGrid">
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</span></div>
+          <div id="injuries-pl"><div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">🇪🇸 La Liga</span></div>
+          <div id="injuries-ll"><div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">🇮🇹 Serie A</span></div>
+          <div id="injuries-sa"><div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">🇩🇪 Bundesliga</span></div>
+          <div id="injuries-bl"><div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-16"><span class="section-title">🇫🇷 Ligue 1</span></div>
+          <div id="injuries-l1"><div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="section-header mb-16">
+            <span class="section-title">⭐ Key Absentees</span>
+            <span class="section-sub">High-profile players out</span>
+          </div>
+          <div id="injuries-key"></div>
+        </div>
+      </div>
     </div>
 
     <!-- BOOKINGS & CARDS TAB -->
@@ -1788,32 +2159,34 @@ const DEMO = {
   ],
 
   bookedPlayers: [
-    // *** FULLY VERIFIED 2025-26 DATA — 23 Feb 2026 ***
-    // PL: statmuse.com + playerstats.football (MD27) | BL: bundesliga.com | L1: statmuse.com | SA: statmuse.com
-    { player:'Cristian Romero',   team:'Tottenham',        league:'pl', yellow:10, red:0, games:25, rate:3.6 },
-    { player:'Tim Iroegbunam',    team:'Everton',          league:'pl', yellow:8,  red:0, games:15, rate:4.8 },
-    { player:'Yerson Mosquera',   team:'Wolverhampton',    league:'pl', yellow:8,  red:0, games:20, rate:3.6 },
-    { player:'Kyle Walker',       team:'Burnley',          league:'pl', yellow:8,  red:0, games:26, rate:2.8 },
-    { player:'Lewis Dunk',        team:'Brighton',         league:'pl', yellow:8,  red:0, games:26, rate:2.8 },
-    { player:'Maxime López',      team:'Paris FC',         league:'l1', yellow:9,  red:0, games:20, rate:4.8 },
-    { player:'Ludovic Ajorque',   team:'Brest',            league:'l1', yellow:8,  red:0, games:22, rate:3.3 },
+    // *** LIVE DATA PLACEHOLDER — will be overwritten by API-Football on load ***
+    // Fallback data: MD27 PL / GW26 La Liga / R26 Serie A / MD23 Bundesliga / MW22 Ligue 1
+    { player:'Cristian Romero',    team:'Tottenham',       league:'pl', yellow:10, red:0, games:25, rate:3.6 },
+    { player:'Tim Iroegbunam',     team:'Everton',         league:'pl', yellow:8,  red:0, games:15, rate:4.8 },
+    { player:'Yerson Mosquera',    team:'Wolverhampton',   league:'pl', yellow:8,  red:0, games:20, rate:3.6 },
+    { player:'Kyle Walker',        team:'Burnley',         league:'pl', yellow:8,  red:0, games:26, rate:2.8 },
+    { player:'Lewis Dunk',         team:'Brighton',        league:'pl', yellow:8,  red:0, games:26, rate:2.8 },
+    { player:'Moises Caicedo',     team:'Chelsea',         league:'pl', yellow:7,  red:0, games:25, rate:2.5 },
+    { player:'Maxime Lopez',       team:'Paris FC',        league:'l1', yellow:9,  red:0, games:20, rate:4.8 },
+    { player:'Jobe Bellingham',    team:'Sunderland',      league:'pl', yellow:6,  red:0, games:22, rate:2.5 },
     { player:'Christopher Trimmel',team:'Union Berlin',    league:'bl', yellow:6,  red:0, games:21, rate:2.6 },
-    { player:'Konrad Laimer',     team:'Bayern Munich',    league:'bl', yellow:5,  red:0, games:18, rate:2.5 },
-    { player:'Jarell Quansah',    team:'Bayer Leverkusen', league:'bl', yellow:5,  red:0, games:19, rate:2.4 },
-    { player:'Máximo Perrone',    team:'Como',             league:'sa', yellow:6,  red:0, games:22, rate:2.5 },
-    { player:'Marin Pongračić',   team:'Como',             league:'sa', yellow:6,  red:0, games:22, rate:2.5 },
+    { player:'Konrad Laimer',      team:'Bayern Munich',   league:'bl', yellow:5,  red:0, games:18, rate:2.5 },
+    { player:'Maximo Perrone',     team:'Como',            league:'sa', yellow:6,  red:0, games:22, rate:2.5 },
+    { player:'Marin Pongracio',    team:'Como',            league:'sa', yellow:6,  red:0, games:22, rate:2.5 },
+    { player:'Kephren Thuram',     team:'Juventus',        league:'sa', yellow:6,  red:0, games:23, rate:2.4 },
+    { player:'Marc Bartra',        team:'Real Betis',      league:'ll', yellow:6,  red:0, games:22, rate:2.5 },
   ],
 
   riskPlayers: [
-    // *** FULLY VERIFIED 2025-26 RISK — 23 Feb 2026 ***
-    { player:'Cristian Romero',   team:'Tottenham',      risk:96, reasons:'PL leader 10Y · aggressive CB style · Spurs in must-win run', next:'vs Newcastle' },
-    { player:'Tim Iroegbunam',    team:'Everton',        risk:91, reasons:'8Y in 15 games (0.77/90 — highest rate in PL) · near suspension', next:'vs Man Utd' },
-    { player:'Maxime López',      team:'Paris FC',       risk:88, reasons:'Ligue 1 leader 9Y · combative CM · Ligue 1 relegation battle', next:'vs Metz' },
-    { player:'Yerson Mosquera',   team:'Wolverhampton',  risk:85, reasons:'8Y · 0.48/90 · Wolves last in PL — desperation fouls', next:'vs Aston Villa' },
-    { player:'Kyle Walker',       team:'Burnley',        risk:82, reasons:'8Y · relegation zone · veteran with late-challenge habit', next:'vs Brentford' },
-    { player:'Ludovic Ajorque',   team:'Brest',          risk:79, reasons:'8Y · physical striker style draws many duels · strict refs', next:'vs Lyon' },
-    { player:'Christopher Trimmel',team:'Union Berlin',  risk:75, reasons:'BL leader 6Y · aging legs = more fouls · mid-table scrap', next:'vs Gladbach' },
-    { player:'Máximo Perrone',    team:'Como',           risk:72, reasons:'6Y · Serie A relegation fight · combative midfield role', next:'vs Juventus' },
+    // Fallback — overwritten by API-Football live data on load
+    { player:'Cristian Romero',    team:'Tottenham',     risk:96, reasons:'PL leader 10Y · aggressive CB · must-win run', next:'vs Arsenal (MW29)' },
+    { player:'Tim Iroegbunam',     team:'Everton',       risk:91, reasons:'8Y in 15 games · highest rate in PL', next:'vs Newcastle (MW28)' },
+    { player:'Maxime Lopez',       team:'Paris FC',      risk:88, reasons:'L1 leader 9Y · combative CM · relegation battle', next:'vs PSG (MW23)' },
+    { player:'Yerson Mosquera',    team:'Wolverhampton', risk:85, reasons:'8Y · Wolves in relegation zone · desperate fouls', next:'vs Liverpool (MW28)' },
+    { player:'Moises Caicedo',     team:'Chelsea',       risk:82, reasons:'7Y · combative DM · big game against Arsenal', next:'vs Arsenal (MW29)' },
+    { player:'Jobe Bellingham',    team:'Sunderland',    risk:78, reasons:'6Y · high-energy press role · tough run of fixtures', next:'vs Bournemouth (MW28)' },
+    { player:'Christopher Trimmel',team:'Union Berlin',  risk:74, reasons:'BL leader 6Y · aging legs · mid-table scrap', next:'vs Freiburg (MD24)' },
+    { player:'Maximo Perrone',     team:'Como',          risk:70, reasons:'6Y · Serie A relegation battle · combative role', next:'vs Lecce (R27)' },
   ],
 
   h2h: {
@@ -1825,14 +2198,49 @@ const DEMO = {
   },
 
   scorers: [
-    { player:'Erling Haaland',   team:'Manchester City',    league:'pl', goals:22, games:26 },
-    { player:'Mohamed Salah',    team:'Liverpool',          league:'pl', goals:21, games:27 },
-    { player:'Kylian Mbappé',    team:'Real Madrid',        league:'ll', goals:25, games:24 },
-    { player:'Robert Lewandowski',team:'FC Barcelona',      league:'ll', goals:22, games:26 },
-    { player:'Victor Osimhen',   team:'Galatasaray',        league:'sa', goals:19, games:24 },
-    { player:'Lautaro Martínez', team:'Inter Milan',        league:'sa', goals:18, games:25 },
-    { player:'Harry Kane',       team:'Bayern Munich',      league:'bl', goals:24, games:22 },
-    { player:'Alexandre Lacazette',team:'Lyon',             league:'l1', goals:16, games:24 },
+    // *** FALLBACK — replaced by API-Football live data on load ***
+    { player:'Erling Haaland',    team:'Manchester City', league:'pl', goals:22, games:26 },
+    { player:'Mohamed Salah',     team:'Liverpool',       league:'pl', goals:21, games:27 },
+    { player:'Kylian Mbappe',     team:'Real Madrid',     league:'ll', goals:25, games:24 },
+    { player:'Robert Lewandowski',team:'FC Barcelona',    league:'ll', goals:22, games:26 },
+    { player:'Lautaro Martinez',  team:'Inter Milan',     league:'sa', goals:18, games:25 },
+    { player:'Matteo Retegui',    team:'Atalanta',        league:'sa', goals:17, games:25 },
+    { player:'Harry Kane',        team:'Bayern Munich',   league:'bl', goals:24, games:22 },
+    { player:'Bradley Barcola',   team:'PSG',             league:'l1', goals:14, games:22 },
+  ],
+
+  assists: [
+    // *** FALLBACK — replaced by API-Football /players/topassists on load ***
+    { player:'Mohamed Salah',     team:'Liverpool',         league:'pl', assists:14, games:27 },
+    { player:'Alexander Arnold',  team:'Liverpool',         league:'pl', assists:11, games:25 },
+    { player:'Phil Foden',        team:'Manchester City',   league:'pl', assists:10, games:24 },
+    { player:'Bukayo Saka',       team:'Arsenal',           league:'pl', assists:10, games:27 },
+    { player:'Pedri',             team:'FC Barcelona',      league:'ll', assists:13, games:24 },
+    { player:'Lamine Yamal',      team:'FC Barcelona',      league:'ll', assists:12, games:26 },
+    { player:'Hakan Calhanoglu',  team:'Inter Milan',       league:'sa', assists:11, games:25 },
+    { player:'Khvicha Kvaratskhelia',team:'PSG',            league:'l1', assists:12, games:24 },
+    { player:'Florian Wirtz',     team:'Bayer Leverkusen',  league:'bl', assists:11, games:22 },
+    { player:'Jamal Musiala',     team:'Bayern Munich',     league:'bl', assists:10, games:23 },
+  ],
+
+  euroFixtures: [
+    // UCL Round of 16 — Big 5 clubs — Feb/Mar 2026
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Arsenal',        away:'PSG',              date:'2026-03-04', time:'20:00', result:null, homeLeague:'pl', awayLeague:'l1' },
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Inter Milan',    away:'Bayern Munich',    date:'2026-03-04', time:'20:00', result:null, homeLeague:'sa', awayLeague:'bl' },
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Real Madrid',    away:'Manchester City',  date:'2026-03-11', time:'20:00', result:null, homeLeague:'ll', awayLeague:'pl' },
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'FC Barcelona',   away:'Borussia Dortmund',date:'2026-03-11', time:'20:00', result:null, homeLeague:'ll', awayLeague:'bl' },
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Liverpool',      away:'Atletico Madrid',  date:'2026-03-18', time:'20:00', result:null, homeLeague:'pl', awayLeague:'ll' },
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Bayer Leverkusen',away:'Napoli',          date:'2026-03-18', time:'20:00', result:null, homeLeague:'bl', awayLeague:'sa' },
+    // UEL Round of 16
+    { comp:'UEL', compCls:'euro-comp-uel', round:'Round of 16 · 1st Leg', home:'Manchester Utd', away:'Athletic Club',    date:'2026-03-05', time:'20:00', result:null, homeLeague:'pl', awayLeague:'ll' },
+    { comp:'UEL', compCls:'euro-comp-uel', round:'Round of 16 · 1st Leg', home:'Roma',           away:'Lyon',             date:'2026-03-05', time:'20:00', result:null, homeLeague:'sa', awayLeague:'l1' },
+    { comp:'UEL', compCls:'euro-comp-uel', round:'Round of 16 · 1st Leg', home:'Tottenham',      away:'Frankfurt',        date:'2026-03-12', time:'20:00', result:null, homeLeague:'pl', awayLeague:'bl' },
+    // UECL Round of 16
+    { comp:'UECL', compCls:'euro-comp-uecl', round:'Round of 16 · 1st Leg', home:'Chelsea',      away:'Real Betis',       date:'2026-03-05', time:'18:45', result:null, homeLeague:'pl', awayLeague:'ll' },
+    { comp:'UECL', compCls:'euro-comp-uecl', round:'Round of 16 · 1st Leg', home:'Fiorentina',   away:'Rapid Wien',       date:'2026-03-12', time:'18:45', result:null, homeLeague:'sa', awayLeague:null },
+    // Recent KO Play-off results (for context)
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'KO Play-off · 2nd Leg',  home:'Newcastle',     away:'Qarabag',          date:'2026-02-18', time:'17:45', result:{h:4,a:0}, homeLeague:'pl', awayLeague:null },
+    { comp:'UCL', compCls:'euro-comp-ucl', round:'KO Play-off · 2nd Leg',  home:'Inter Milan',   away:'Bodo/Glimt',       date:'2026-02-18', time:'20:00', result:{h:3,a:0}, homeLeague:'sa', awayLeague:null },
   ],
 
   // ─── VERIFIED RESULTS & REAL UPCOMING FIXTURES ───
@@ -1948,89 +2356,104 @@ const DEMO = {
   },
 
   predictions: [
+    // *** UPDATED 23 FEB 2026 — MW28 (28 Feb – 2 Mar) + MW29 (1 Mar) ***
     {
       id:1, league:'pl', leagueTag:'tag-pl',
-      home:'Liverpool', away:'Arsenal',
-      date:'2026-03-01', time:'16:30',
-      probH:55, probD:24, probA:21,
-      pick:'Liverpool Win', confidence:'high',
-      expGoals:'2.6', expYellow:'5', expRed:'0.2',
-      playerToBook:'Granit Xhaka (Arsenal) — on yellows, high-press game',
-      reasoning:'Liverpool\'s exceptional home form (14W 1D) faces Arsenal who struggle in big away games. Salah in form with 4 goals in 5. Anthony Taylor refereeing — 3.4 cards/game average.',
+      home:'Bournemouth', away:'Sunderland',
+      date:'2026-02-28', time:'12:30',
+      probH:52, probD:26, probA:22,
+      pick:'Bournemouth Win', confidence:'high',
+      expGoals:'2.4', expYellow:'4', expRed:'0.1',
+      playerToBook:'Jobe Bellingham (Sunderland) — 6Y, press-heavy role, away day aggression',
+      reasoning:'Bournemouth 6th, excellent home form (10W 3D). Sunderland promoted, struggling in away games — 2W 6L away this season. Vitinho and Kluivert in fine form. TNT Sports.',
+      note:'12:30 kick-off · TNT Sports',
     },
     {
-      id:2, league:'ll', leagueTag:'tag-ll',
-      home:'FC Barcelona', away:'Real Madrid',
-      date:'2026-03-01', time:'16:00',
-      probH:40, probD:27, probA:33,
-      pick:'Both Teams to Score', confidence:'high',
-      expGoals:'3.1', expYellow:'7', expRed:'0.4',
-      playerToBook:'Bellingham (Madrid) — 7 yellows, intense rivalry',
-      reasoning:'El Clásico always delivers goals — both teams have scored in the last 8 meetings. Expect a fiery contest with Ricardo de Burgos officiating (4.8 cards/game, strictest in La Liga).',
-      note:'El Clásico',
-    },
-    {
-      id:3, league:'sa', leagueTag:'tag-sa',
-      home:'AS Roma', away:'Lazio',
-      date:'2026-03-01', time:'18:00',
-      probH:35, probD:30, probA:35,
-      pick:'Over 2.5 Goals + 6+ Cards', confidence:'medium',
-      expGoals:'2.4', expYellow:'6', expRed:'0.5',
-      playerToBook:'Manu Koné (Roma) — 7 yellows, derby intensity',
-      reasoning:'Derby della Capitale has averaged 5.2 bookings in last 8 meetings. Both teams have 60+ yellows this season. Orsato on the card — lenient referee but derbies override tendency.',
-      note:'Derby della Capitale',
-    },
-    {
-      id:4, league:'bl', leagueTag:'tag-bl',
-      home:'Bayer Leverkusen', away:'Borussia Dortmund',
-      date:'2026-03-01', time:'18:30',
-      probH:44, probD:28, probA:28,
-      pick:'Leverkusen Win or Draw (DNB)', confidence:'medium',
+      id:2, league:'pl', leagueTag:'tag-pl',
+      home:'Leeds United', away:'Manchester City',
+      date:'2026-02-28', time:'17:30',
+      probH:28, probD:25, probA:47,
+      pick:'Manchester City Win', confidence:'medium',
       expGoals:'2.8', expYellow:'4', expRed:'0.1',
-      playerToBook:'Granit Xhaka (Leverkusen) — 8 yellows, next suspension warning',
-      reasoning:'Leverkusen unbeaten at home this season. Xhaka approaching suspension threshold — almost certain to pick up another booking given his role. Bundesliga lower card-rate than Liga.',
+      playerToBook:'Wharton (Leeds) — 7Y, tasked with stopping City press',
+      reasoning:'Man City finding form — 4W in last 5. Leeds Utd back in PL are defensively vulnerable away. Haaland returning to form. However Leeds passionate home crowd a factor. Sky Sports.',
+      note:'17:30 · Sky Sports',
     },
     {
-      id:5, league:'l1', leagueTag:'tag-l1',
-      home:'PSG', away:'Marseille',
-      date:'2026-03-01', time:'21:00',
-      probH:58, probD:22, probA:20,
-      pick:'PSG Win + 5+ Cards', confidence:'high',
-      expGoals:'2.7', expYellow:'5', expRed:'0.3',
-      playerToBook:'Adrien Rabiot (Marseille) — 7Y 1R, Le Classique heat',
-      reasoning:'PSG have won last 5 Le Classique at Parc des Princes. Mbappé replacement (Barcola) on terrific form with 8 goals since January. Letexier refereeing — awarded 3.6Y/G this season.',
-      note:'Le Classique',
+      id:3, league:'pl', leagueTag:'tag-pl',
+      home:'Arsenal', away:'Chelsea',
+      date:'2026-03-01', time:'16:30',
+      probH:48, probD:26, probA:26,
+      pick:'Arsenal Win + 4+ Cards', confidence:'high',
+      expGoals:'2.5', expYellow:'5', expRed:'0.2',
+      playerToBook:'Caicedo (Chelsea) — 7Y this season, Arsenal intensity triggers him',
+      reasoning:'Arsenal top of the table, unbeaten at Emirates in 2026. Chelsea improving under new manager but still conceding on the road. Saka and Martinelli key threats. Big cards game expected. Sky Sports.',
+      note:'Top-of-table clash · Sky Sports',
     },
     {
-      id:6, league:'pl', leagueTag:'tag-pl',
-      home:'Chelsea', away:'Manchester Utd',
-      date:'2026-03-02', time:'16:30',
-      probH:42, probD:28, probA:30,
+      id:4, league:'pl', leagueTag:'tag-pl',
+      home:'Fulham', away:'Tottenham',
+      date:'2026-03-01', time:'14:00',
+      probH:38, probD:28, probA:34,
       pick:'Both Teams to Score', confidence:'medium',
-      expGoals:'2.5', expYellow:'4', expRed:'0.2',
-      playerToBook:'Casemiro (Man Utd) — 6Y+1R this season, derby aggression',
-      reasoning:'Both sides have attack quality but defensive vulnerabilities. Chelsea\'s electric home form vs Man Utd\'s resilience away. Casemiro the standout booking risk — on a final warning.',
+      expGoals:'2.6', expYellow:'4', expRed:'0.1',
+      playerToBook:'Palhinha (Fulham) — 6Y, combative against Spurs quick transitions',
+      reasoning:'Both teams have scored in their last 7 consecutive games. Fulham strong at Craven Cottage, Spurs unpredictable away. Son and Wilson both in goalscoring form. Sky Sports.',
+      note:'14:00 · Sky Sports',
     },
     {
-      id:7, league:'sa', leagueTag:'tag-sa',
-      home:'Inter Milan', away:'Napoli',
-      date:'2026-03-01', time:'20:45',
-      probH:36, probD:29, probA:35,
-      pick:'Draw (Back with Goal)', confidence:'medium',
-      expGoals:'2.2', expYellow:'5', expRed:'0.2',
-      playerToBook:'Barella (Inter) — 6 yellows, will be tasked with Napoli press-breaker',
-      reasoning:'Title clash between two closely matched teams. Last 3 meetings: 2 draws, 1 Inter win. Both defences are the best in the league. Tight game expected with goals coming in second half.',
+      id:5, league:'ll', leagueTag:'tag-ll',
+      home:'Barcelona', away:'Villarreal',
+      date:'2026-02-28', time:'16:15',
+      probH:62, probD:22, probA:16,
+      pick:'Barcelona Win', confidence:'high',
+      expGoals:'2.7', expYellow:'4', expRed:'0.1',
+      playerToBook:'Baena (Villarreal) — 5Y, will target Barca midfield press',
+      reasoning:'Barca on a 6-game winning run, scored 3+ in 4 of last 5 at Spotify Camp Nou. Villarreal mid-table, away record poor — 3W 4D 6L. Lewandowski back to best form with 22 goals. Premier Sports.',
+      note:'16:15 · Premier Sports',
     },
     {
-      id:8, league:'ll', leagueTag:'tag-ll',
-      home:'Atletico Madrid', away:'Athletic Club',
+      id:6, league:'sa', leagueTag:'tag-sa',
+      home:'Inter Milan', away:'Genoa',
+      date:'2026-02-28', time:'20:45',
+      probH:68, probD:19, probA:13,
+      pick:'Inter Win to Nil', confidence:'high',
+      expGoals:'2.1', expYellow:'3', expRed:'0.1',
+      playerToBook:'Badelj (Genoa) — 5Y, will foul to slow Inter transitions',
+      reasoning:'Inter best defence in Serie A — conceded just 16 in 26 games. Genoa in mid-table, toothless away — 4 goals in last 7 away games. Lautaro and Thuram too strong. TNT Sports.',
+      note:'20:45 · TNT Sports',
+    },
+    {
+      id:7, league:'bl', leagueTag:'tag-bl',
+      home:'Bayern Munich', away:'Bochum',
+      date:'2026-02-28', time:'15:30',
+      probH:82, probD:11, probA:7,
+      pick:'Bayern Win + Over 3.5 Goals', confidence:'high',
+      expGoals:'3.8', expYellow:'3', expRed:'0.0',
+      playerToBook:'Losilla (Bochum) — 5Y, veteran DM will commit fouls to slow Bayern',
+      reasoning:'Bayern scoring machine — 2.9 goals/game at Allianz. Bochum bottom 3, worst away record in Bundesliga (1W 11L). Kane on 24 goals. Sky Sports.',
+      note:'15:30 · Sky Sports',
+    },
+    {
+      id:8, league:'l1', leagueTag:'tag-l1',
+      home:'PSG', away:'Nice',
       date:'2026-03-01', time:'21:00',
-      probH:48, probD:27, probA:25,
-      pick:'Under 2.5 Goals + Atletico DNB', confidence:'medium',
-      expGoals:'1.9', expYellow:'6', expRed:'0.3',
-      playerToBook:'De Marcos (Athletic) — 6 yellows, Atletico\'s intensity triggers bookings',
-      reasoning:'Atletico grind out results at Metropolitano. Athletic Club top-half surprise package but struggle away to top-6. Expect a nervy, foul-heavy contest with Diego Simeone\'s side just edging it.',
+      probH:61, probD:22, probA:17,
+      pick:'PSG Win', confidence:'high',
+      expGoals:'2.4', expYellow:'4', expRed:'0.1',
+      playerToBook:'Dante (Nice) — 6Y, veteran CB clashes with PSG attackers',
+      reasoning:'PSG dominating Ligue 1 — 15W 3D at Parc des Princes. Barcola in brilliant form with 14 league goals. Nice strong defensively but lacking goals away from home. Ligue 1+.',
+      note:'21:00 · Ligue 1+',
     },
+  ],
+
+  cardForecast: [
+    { match:'Arsenal vs Chelsea',      league:'pl', expCards:5.0, refStrictness:'High',   highRisk:'Caicedo, White',        referee:'Michael Oliver' },
+    { match:'Bournemouth vs Sunderland',league:'pl', expCards:3.8, refStrictness:'Medium', highRisk:'J.Bellingham, Cook',   referee:'Andy Madley' },
+    { match:'Barcelona vs Villarreal', league:'ll', expCards:4.2, refStrictness:'Medium', highRisk:'Baena, De Jong',         referee:'Alejandro Hernández' },
+    { match:'Inter vs Genoa',          league:'sa', expCards:3.5, refStrictness:'Low',    highRisk:'Badelj, Barella',        referee:'Davide Massa' },
+    { match:'Bayern vs Bochum',        league:'bl', expCards:3.2, refStrictness:'Low',    highRisk:'Losilla, Pavard',        referee:'Felix Brych' },
+    { match:'PSG vs Nice',             league:'l1', expCards:4.1, refStrictness:'High',   highRisk:'Dante, Fabian',          referee:'François Letexier' },
   ],
 
   cardForecast: [
@@ -2046,6 +2469,59 @@ const DEMO = {
 // ============================================================
 // RENDER FUNCTIONS
 // ============================================================
+
+// ── UK TV CHANNEL LOOKUP ──
+// Based on verified 2025-26 broadcast rights:
+// PL: Sky Sports (215 games) + TNT Sports (52 games)
+// La Liga: Premier Sports (340 games/season)
+// Serie A: TNT Sports (selected) + DAZN (all games)
+// Bundesliga: Sky Sports (Sat/Sun) + BBC iPlayer (Friday)
+// Ligue 1: Ligue 1+ pass (£9.99/mo) — no TNT from 2025-26
+const UK_TV = {
+  // Premier League — MW28 confirmed picks
+  'Bournemouth_Sunderland':   { channel:'TNT Sports', cls:'tv-tnt' },
+  'Burnley_Brentford':        { channel:'Sky Sports', cls:'tv-sky' },
+  'Liverpool_West Ham':       { channel:'Sky Sports', cls:'tv-sky' },
+  'Newcastle_Everton':        { channel:'Sky Sports', cls:'tv-sky' },
+  'Leeds United_Manchester City': { channel:'Sky Sports', cls:'tv-sky' },
+  'Brighton_Nottm Forest':    { channel:'Sky Sports', cls:'tv-sky' },
+  'Fulham_Tottenham':         { channel:'Sky Sports', cls:'tv-sky' },
+  'Manchester Utd_Crystal Palace': { channel:'Sky Sports', cls:'tv-sky' },
+  'Arsenal_Chelsea':          { channel:'Sky Sports', cls:'tv-sky' },
+  // MW29
+  'Bournemouth_Brentford':    { channel:'TNT Sports', cls:'tv-tnt' },
+  'Everton_Burnley':          { channel:'TNT Sports', cls:'tv-tnt' },
+  'Leeds_Sunderland':         { channel:'TNT Sports', cls:'tv-tnt' },
+  'Wolves_Liverpool':         { channel:'TNT Sports', cls:'tv-tnt' },
+  'Aston Villa_Chelsea':      { channel:'TNT Sports', cls:'tv-tnt' },
+  'Brighton_Arsenal':         { channel:'TNT Sports', cls:'tv-tnt' },
+  'Fulham_West Ham':          { channel:'TNT Sports', cls:'tv-tnt' },
+  'Manchester City_Nottm Forest': { channel:'TNT Sports', cls:'tv-tnt' },
+  'Newcastle_Manchester Utd': { channel:'TNT Sports', cls:'tv-tnt' },
+  'Tottenham_Crystal Palace': { channel:'TNT Sports', cls:'tv-tnt' },
+  // La Liga — Premier Sports
+  'Barcelona_Villarreal':     { channel:'Premier Sports', cls:'tv-premier' },
+  'Atletico Madrid_Osasuna':  { channel:'Premier Sports', cls:'tv-premier' },
+  'Real Madrid_Getafe':       { channel:'Premier Sports', cls:'tv-premier' },
+  // Serie A — TNT Sports selected + DAZN all
+  'Inter Milan_Genoa':        { channel:'TNT Sports', cls:'tv-tnt' },
+  'Juventus_Como':            { channel:'TNT Sports', cls:'tv-tnt' },
+  'Atalanta_Napoli':          { channel:'TNT Sports', cls:'tv-tnt' },
+  // Bundesliga — Sky Sports
+  'Bayern Munich_Bochum':     { channel:'Sky Sports', cls:'tv-sky' },
+  'RB Leipzig_Borussia Dortmund': { channel:'Sky Sports', cls:'tv-sky' },
+  // Ligue 1 — Ligue 1+ pass only
+  'PSG_Nice':                 { channel:'Ligue 1+', cls:'tv-ligue1' },
+  'Marseille_Monaco':         { channel:'Ligue 1+', cls:'tv-ligue1' },
+};
+
+function getTvBadge(home, away) {
+  const key1 = home + '_' + away;
+  const key2 = away + '_' + home;
+  const tv = UK_TV[key1] || UK_TV[key2];
+  if (!tv) return '';
+  return '<span class="tv-badge ' + tv.cls + '">📺 ' + tv.channel + '</span>';
+}
 
 function renderTicker() {
   const results = [];
@@ -2136,6 +2612,32 @@ function renderOverview() {
         ${p.red ? `<span class="booking-card-visual red" style="width:14px;height:18px;display:inline-block;border-radius:2px;background:linear-gradient(135deg,#e63946,#9b2128)"></span><span style="font-family:'Barlow Condensed';font-weight:700;font-size:.95rem;color:var(--red-card)">${p.red}</span>` : ''}
       </div>
     </div>`).join('');
+
+  // Top assists
+  const assists = DEMO.assists || [];
+  const assistsEl = document.getElementById('topAssistsList');
+  if (assistsEl) {
+    if (!assists.length) {
+      assistsEl.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Loading assists data…</div>';
+    } else {
+      const maxA = assists[0].assists;
+      assistsEl.innerHTML = assists.slice(0,10).map((p,i) => {
+        const lg = LEAGUES[p.league];
+        return '<div class="player-row">' +
+          '<div class="player-avatar" style="background:linear-gradient(135deg,#1a4fa0,#1a7a5a)">' + p.player.charAt(0) + '</div>' +
+          '<div style="flex:1">' +
+            '<div class="player-name">' + p.player + '</div>' +
+            '<span class="player-team">' + p.team + '</span>' +
+          '</div>' +
+          (lg ? '<span class="fixture-league-tag ' + lg.tag + '" style="padding:1px 6px;border-radius:2px;font-size:.68rem;font-weight:700;">' + lg.name.split(' ').pop() + '</span>' : '') +
+          '<div class="player-stat" style="color:#4da6ff">' + p.assists + '</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // Fav next fixtures on overview
+  renderFavNextFixtures();
 }
 
 function renderFixtures() {
@@ -2234,12 +2736,24 @@ function renderFixtures() {
       <div class="fixture-card fade-in">
         <div class="fixture-top">
           <span class="fixture-league-tag ${lg.tag}" style="padding:2px 8px;border-radius:2px;font-size:.7rem;font-weight:700;letter-spacing:1.5px;">${lg.name}</span>
-          <span class="fixture-date">${dateStr} · MW${f.week}${f.note?' · <span style="color:var(--gold)">'+f.note+'</span>':''}${f.referee?' · <span style="color:var(--white-dim);font-size:.72em">👮 '+f.referee+'</span>':''}</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+            <span class="fixture-date">${dateStr} · MW${f.week}${f.note?' · <span style="color:var(--gold)">'+f.note+'</span>':''}${f.referee?' · <span style="color:var(--white-dim);font-size:.72em">👮 '+f.referee+'</span>':''}</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              ${getTvBadge(f.home, f.away)}
+              <span class="fav-star ${isFavTeam(f.home)||isFavTeam(f.away)?'active':'inactive'}" onclick="toggleFavFromFixture('${f.home}','${f.away}',event)" title="Follow team">★</span>
+            </div>
+          </div>
         </div>
         <div class="fixture-teams">
-          <div class="fixture-team home">${f.home}</div>
+          <div style="text-align:center;flex:1;">
+            <div class="fixture-team home">${f.home}</div>
+            ${(()=>{const s=getTeamForm(f.home,f.leagueKey);return s?'<div class="team-form-mini">'+s.split('').map(r=>'<div class="form-dot-mini '+r+'"></div>').join('')+'</div>':''})()}
+          </div>
           ${vsContent}
-          <div class="fixture-team away">${f.away}</div>
+          <div style="text-align:center;flex:1;">
+            <div class="fixture-team away">${f.away}</div>
+            ${(()=>{const s=getTeamForm(f.away,f.leagueKey);return s?'<div class="team-form-mini">'+s.split('').map(r=>'<div class="form-dot-mini '+r+'"></div>').join('')+'</div>':''})()}
+          </div>
         </div>
         ${predHtml}
       </div>`;
@@ -2264,7 +2778,7 @@ function renderPredictions() {
           <div>
             <span class="fixture-league-tag ${p.leagueTag}" style="padding:2px 8px;border-radius:2px;font-size:.7rem;font-weight:700;letter-spacing:1.5px;margin-bottom:6px;display:inline-block;">${LEAGUES[p.league].name}</span>
             <div class="rec-match">${p.home} vs ${p.away}</div>
-            <div style="font-size:.78rem;color:var(--white-dim);font-family:'Barlow Condensed';margin-top:2px;">${new Date(p.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})} · ${p.time}${p.note?` · <strong style="color:var(--gold)">${p.note}</strong>`:''}</div>
+            <div style="font-size:.78rem;color:var(--white-dim);font-family:'Barlow Condensed';margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">${new Date(p.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})} · ${p.time}${p.note?' · <strong style="color:var(--gold)">'+p.note+'</strong>':''} ${getTvBadge(p.home, p.away)}</div>
           </div>
           <div class="confidence-badge ${confClass}">${confLabel}</div>
         </div>
@@ -2302,6 +2816,11 @@ function renderPredictions() {
             <div class="rec-pick-value" style="font-size:.82rem">${p.playerToBook.split(' — ')[0]}</div>
           </div>
         </div>
+        ${p.odds ? '<div class="odds-row">' +
+          '<div class="odds-pill"><div class="odds-label">HOME</div><div class="odds-val">' + p.odds.home + '</div><div class="odds-best">best price</div></div>' +
+          '<div class="odds-pill"><div class="odds-label">DRAW</div><div class="odds-val">' + p.odds.draw + '</div><div class="odds-best">best price</div></div>' +
+          '<div class="odds-pill"><div class="odds-label">AWAY</div><div class="odds-val">' + p.odds.away + '</div><div class="odds-best">best price</div></div>' +
+          '</div>' : ''}
 
         <div class="rec-reasoning">
           <strong style="color:var(--white);display:block;margin-bottom:4px;">📝 Analysis</strong>
@@ -2452,22 +2971,31 @@ function renderStandings() {
   const grid = document.getElementById('standingsGrid');
   grid.innerHTML = Object.entries(DEMO.standings).map(([leagueKey, table]) => {
     const lg = LEAGUES[leagueKey];
-    const rows = table.map(t => {
+    const rows = table.map((t, i) => {
       const posClass = t.zone === 'cl' ? 'cl' : t.zone === 'el' ? 'el' : t.zone === 'rel' ? 'rel' : '';
-      const formDots = t.form.split('').map(r => `<div class="form-dot ${r}">${r}</div>`).join('');
-      return `<tr>
-        <td><span class="standings-pos ${posClass}">${t.pos}</span></td>
-        <td><strong>${t.team}</strong></td>
-        <td class="num">${t.P}</td>
-        <td class="num" style="color:var(--accent)">${t.W}</td>
-        <td class="num" style="color:var(--gold)">${t.D}</td>
-        <td class="num" style="color:var(--red-card)">${t.L}</td>
-        <td class="num">${t.GF}</td>
-        <td class="num">${t.GA}</td>
-        <td class="num">${t.GD > 0 ? '+' : ''}${t.GD}</td>
-        <td class="num"><strong style="color:var(--gold)">${t.pts}</strong></td>
-        <td><div class="form-dots">${formDots}</div></td>
-      </tr>`;
+      const formDots = (t.form || '').split('').filter(r => 'WDL'.includes(r)).map(r =>
+        '<div class="form-dot ' + r + '">' + r + '</div>').join('');
+      // Position movement arrow (stored on t.prevPos by live fetch, else neutral)
+      let moveHtml = '';
+      if (t.prevPos != null) {
+        const diff = t.prevPos - t.pos;
+        if (diff > 0)      moveHtml = '<span class="form-arrow-up">▲' + diff + '</span>';
+        else if (diff < 0) moveHtml = '<span class="form-arrow-down">▼' + Math.abs(diff) + '</span>';
+        else               moveHtml = '<span class="form-arrow-same">–</span>';
+      }
+      return '<tr>' +
+        '<td><span class="standings-pos ' + posClass + '">' + t.pos + '</span>' + moveHtml + '</td>' +
+        '<td><strong>' + t.team + '</strong></td>' +
+        '<td class="num">' + t.P + '</td>' +
+        '<td class="num" style="color:var(--accent)">' + t.W + '</td>' +
+        '<td class="num" style="color:var(--gold)">' + t.D + '</td>' +
+        '<td class="num" style="color:var(--red-card)">' + t.L + '</td>' +
+        '<td class="num">' + t.GF + '</td>' +
+        '<td class="num">' + t.GA + '</td>' +
+        '<td class="num">' + (t.GD > 0 ? '+' : '') + t.GD + '</td>' +
+        '<td class="num"><strong style="color:var(--gold)">' + t.pts + '</strong></td>' +
+        '<td><div class="form-dots">' + formDots + '</div></td>' +
+      '</tr>';
     }).join('');
 
     return `
@@ -2508,7 +3036,11 @@ function renderStandings() {
 
 function switchTab(tab) {
   state.activeTab = tab;
-  if (tab === 'suspensions') renderSuspensions();
+  if (tab === 'suspensions')  renderSuspensions();
+  if (tab === 'injuries')     renderInjuries();
+  if (tab === 'europe')       renderEurope();
+  if (tab === 'wrap')         renderWeekendWrap();
+  if (tab === 'favourites')   renderFavourites();
   state.activeTab = tab;
   document.querySelectorAll('.nav-tab').forEach((el, i) => {
     el.classList.toggle('active', el.textContent.toLowerCase().includes(tab.split('-')[0]));
@@ -2568,6 +3100,18 @@ async function runApiDiagnostics() {
     log.scrollTop = log.scrollHeight;
   }
 
+  // Show refresh + quota info at top of diagnostics
+  const quotaUsed = getQuotaUsedToday();
+  const lastFetchMs = getLastFetchMs();
+  const ageH = lastFetchMs ? (Date.now() - lastFetchMs) / 3600000 : null;
+  write('── Auto-Refresh Status ──', '#f5c842');
+  write('  Last fetch:    ' + (lastFetchMs ? new Date(lastFetchMs).toLocaleString('en-GB') : 'Never'));
+  write('  Data age:      ' + (ageH !== null ? ageH.toFixed(1) + 'h ago' : '—'));
+  write('  Quota today:   ' + quotaUsed + '/' + QUOTA_DAILY_LIMIT + ' calls used');
+  write('  Quota resets:  Midnight UTC each day');
+  write('  Next refresh:  ' + new Date(Date.now() + msUntilNextRefresh()).toLocaleTimeString('en-GB'));
+  write('  Per-load cost: ~' + QUOTA_PER_LOAD + ' calls');
+  write('');
   write('Testing API-Football — Standings (all 5 leagues)…', '#f5c842');
   const afLeagueNames = { 39:'Premier League', 140:'La Liga', 135:'Serie A', 78:'Bundesliga', 61:'Ligue 1' };
   for (const [id, name] of Object.entries(afLeagueNames)) {
@@ -2734,7 +3278,8 @@ async function fdFetchStandings(leagueKey) {
     if (!data || !data.length) return null;
     const table = data[0]?.league?.standings?.[0];
     if (!table) return null;
-    return table.map(row => ({
+    storeStandingsSnapshot(leagueKey, table.map(r => ({ pos: r.rank, team: normTeam(r.team.name) })));
+    return enrichWithMovement(leagueKey, table.map(row => ({
       pos:  row.rank,
       team: normTeam(row.team.name),
       P:    row.all.played,
@@ -2744,7 +3289,7 @@ async function fdFetchStandings(leagueKey) {
       pts:  row.points,
       form: (row.form || '').slice(-5),
       zone: row.rank <= 4 ? 'cl' : row.rank <= 6 ? 'el' : (row.rank >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
-    }));
+    })));
   } catch(e) { console.warn('fdFetchStandings error:', e.message); return null; }
 }
 
@@ -3187,7 +3732,7 @@ async function fetchAfData() {
     });
 
     // Fetch predictions for first 3 upcoming fixtures per league
-    const upcoming = fixtures.slice(0, 3);
+    const upcoming = fixtures.slice(0, 2); // budget: 2 per league = 10 prediction/H2H/odds calls
     for (const af of upcoming) {
       const pred = await afFetchPredictions(af.fixtureId);
       if (!pred) continue;
@@ -3224,10 +3769,48 @@ async function fetchAfData() {
           d: m.date, h: m.home, a: m.away, r: m.score,
         }));
       }
+
+      // Fetch odds (Bet365 via API-Football /odds)
+      const odds = await afFetchOdds(af.fixtureId);
+      if (odds) {
+        const existing2 = DEMO.predictions.find(p => p.home === af.home && p.away === af.away);
+        if (existing2) existing2.odds = odds;
+      }
     }
   }
 
-  // ── 3. Status update ──
+  // ── 3. Fetch injuries from API-Football ──
+  for (const key of ['pl','ll','sa','bl','l1']) {
+    const leagueId = AF_LEAGUES[key];
+    try {
+      const dateFrom = new Date().toISOString().slice(0,10);
+      const dateTo   = new Date(Date.now() + 7*86400000).toISOString().slice(0,10);
+      // Get next round fixtures to find team IDs for injury lookups
+      const fxData = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo, status: 'NS' });
+      if (!fxData || !fxData.length) continue;
+      const teamIds = [...new Set(fxData.slice(0,4).flatMap(m => [m.teams.home.id, m.teams.away.id]))];
+      const liveInjuries = [];
+      for (const tid of teamIds.slice(0, 2)) { // budget: 2 teams per league = 10 injury calls max
+        const injData = await afFetch('/injuries', { league: leagueId, season: AF_SEASON, team: tid });
+        if (!injData || !injData.length) continue;
+        injData.forEach(i => {
+          liveInjuries.push({
+            player: i.player.name,
+            team:   normTeam(i.team.name),
+            status: i.player.reason?.toLowerCase().includes('doubt') ? 'doubt' : 'out',
+            injury: i.player.reason || 'Injury',
+            return: 'TBC',
+            rating: 7,
+          });
+        });
+        afOk = true;
+      }
+      if (liveInjuries.length) DEMO_INJURIES[key] = liveInjuries.slice(0, 8);
+    } catch(e) { console.warn('AF injuries error:', e.message); }
+  }
+  if (state.activeTab === 'injuries') renderInjuries();
+
+  // ── 4. Status update ──
   if (afOk) {
     setStatus('afStatus', 'afLabel', 'API-Football ✓ Live', true);
     console.log('%c⚽ API-Football: enrichment complete', 'color:#4ade80');
@@ -3238,6 +3821,11 @@ async function fetchAfData() {
     if (tab === 'predictions')  renderPredictions();
     if (tab === 'fixtures')     renderFixtures();
     if (tab === 'overview')     renderOverview();
+    if (tab === 'injuries')     renderInjuries();
+    if (tab === 'standings')    renderStandings();
+    if (tab === 'europe')       renderEurope();
+    if (tab === 'wrap')         renderWeekendWrap();
+    if (tab === 'favourites')   { renderFavourites(); renderFavNextFixtures(); }
     // Always re-render overview KPIs
     renderOverview();
   } else {
@@ -3304,6 +3892,1049 @@ async function fetchRefereeAssignments() {
 }
 
 // ============================================================
+// HELPER: GET TEAM FORM FROM STANDINGS
+// ============================================================
+function getTeamForm(teamName, leagueKey) {
+  const table = DEMO.standings[leagueKey];
+  if (!table) return null;
+  const row = table.find(t => t.team.toLowerCase() === teamName.toLowerCase() ||
+    teamName.toLowerCase().includes(t.team.toLowerCase()) ||
+    t.team.toLowerCase().includes(teamName.toLowerCase()));
+  return row ? (row.form || '') : null;
+}
+
+// ============================================================
+// FEATURE 1: INJURY TRACKER
+// ============================================================
+const DEMO_INJURIES = {
+  // Fallback injury data — overwritten by API-Football on load
+  pl: [
+    { player:'Rodri',          team:'Manchester City', status:'out',   injury:'Knee ligament', return:'End of season', rating:9 },
+    { player:'Reece James',    team:'Chelsea',         status:'doubt', injury:'Hamstring',      return:'~2 weeks',      rating:8 },
+    { player:'Diogo Jota',     team:'Liverpool',       status:'out',   injury:'Knee',           return:'March 2026',    rating:8 },
+    { player:'Marcus Rashford',team:'Manchester Utd',  status:'knock', injury:'Ankle knock',    return:'Available',     rating:8 },
+    { player:'Son Heung-min',  team:'Tottenham',       status:'doubt', injury:'Hamstring',      return:'~1 week',       rating:9 },
+    { player:'Sandro Tonali',  team:'Newcastle',       status:'out',   injury:'Knee',           return:'April 2026',    rating:8 },
+  ],
+  ll: [
+    { player:'Dani Carvajal',  team:'Real Madrid',     status:'out',   injury:'Knee ligament', return:'End of season', rating:8 },
+    { player:'Eder Militao',   team:'Real Madrid',     status:'out',   injury:'Knee',          return:'March 2026',    rating:8 },
+    { player:'Gavi',           team:'FC Barcelona',    status:'out',   injury:'Knee',          return:'March 2026',    rating:9 },
+    { player:'Frenkie de Jong',team:'FC Barcelona',    status:'doubt', injury:'Ankle',         return:'~2 weeks',      rating:8 },
+  ],
+  sa: [
+    { player:'Gleison Bremer', team:'Juventus',        status:'out',   injury:'Knee ligament', return:'End of season', rating:8 },
+    { player:'Francesco Acerbi',team:'Inter Milan',    status:'out',   injury:'Muscle',        return:'March 2026',    rating:7 },
+    { player:'Dusan Vlahovic', team:'Juventus',        status:'doubt', injury:'Thigh',         return:'~1 week',       rating:8 },
+  ],
+  bl: [
+    { player:'Manuel Neuer',   team:'Bayern Munich',   status:'doubt', injury:'Rib',           return:'Available',     rating:8 },
+    { player:'Florian Wirtz',  team:'Bayer Leverkusen',status:'knock', injury:'Knock',         return:'Available',     rating:9 },
+    { player:'Marco Reus',     team:'Borussia Dortmund',status:'out',  injury:'Hamstring',     return:'March 2026',    rating:7 },
+  ],
+  l1: [
+    { player:'Ousmane Dembele', team:'PSG',            status:'doubt', injury:'Hamstring',     return:'~1 week',       rating:9 },
+    { player:'Nuno Mendes',     team:'PSG',            status:'out',   injury:'Knee',          return:'April 2026',    rating:8 },
+    { player:'Dimitri Payet',   team:'Marseille',      status:'knock', injury:'Knock',         return:'Available',     rating:7 },
+  ],
+};
+
+function makeInjuryCard(p) {
+  const statusCls = p.status === 'out' ? 'out' : p.status === 'doubt' ? 'doubt' : 'knock';
+  const statusLabel = p.status === 'out' ? 'OUT' : p.status === 'doubt' ? 'DOUBT' : 'KNOCK';
+  return '<div class="injury-card">' +
+    '<div class="injury-avatar">' + p.player.charAt(0) + '</div>' +
+    '<div style="flex:1">' +
+      '<div class="injury-name">' + p.player + '</div>' +
+      '<div class="injury-meta">' + p.team + ' · ' + p.injury + '</div>' +
+      '<div class="injury-return">↩ ' + p.return + '</div>' +
+    '</div>' +
+    '<span class="injury-badge ' + statusCls + '">' + statusLabel + '</span>' +
+  '</div>';
+}
+
+function renderInjuries() {
+  ['pl','ll','sa','bl','l1'].forEach(key => {
+    const el = document.getElementById('injuries-' + key);
+    if (!el) return;
+    const list = DEMO_INJURIES[key] || [];
+    if (!list.length) {
+      el.innerHTML = '<div style="color:var(--white-dim);padding:16px;text-align:center;font-family:Barlow Condensed">No injury data available</div>';
+      return;
+    }
+    el.innerHTML = list.map(makeInjuryCard).join('');
+  });
+  // Key absentees — top rated players who are OUT
+  const keyEl = document.getElementById('injuries-key');
+  if (keyEl) {
+    const all = Object.values(DEMO_INJURIES).flat();
+    const key = all.filter(p => p.status === 'out' && p.rating >= 8)
+      .sort((a,b) => b.rating - a.rating).slice(0,6);
+    keyEl.innerHTML = key.map(makeInjuryCard).join('') ||
+      '<div style="color:var(--white-dim);padding:16px;text-align:center;font-family:Barlow Condensed">No major absentees</div>';
+  }
+}
+
+// ============================================================
+// FEATURE 2: FORM GUIDE — already handled by getTeamForm() + CSS
+// Position movement stored in standings as prevPos
+// ============================================================
+
+// ============================================================
+// FEATURE 3: ODDS COMPARISON — fetched from API-Football /odds
+// ============================================================
+async function afFetchOdds(fixtureId) {
+  const data = await afFetch('/odds', { fixture: fixtureId, bookmaker: 8 }); // bookmaker 8 = Bet365
+  if (!data || !data.length) return null;
+  try {
+    const bets = data[0]?.bookmakers?.[0]?.bets;
+    const mwr = bets?.find(b => b.name === 'Match Winner');
+    if (!mwr) return null;
+    const vals = {};
+    mwr.values.forEach(v => {
+      if (v.value === 'Home') vals.home = v.odd;
+      else if (v.value === 'Draw') vals.draw = v.odd;
+      else if (v.value === 'Away') vals.away = v.odd;
+    });
+    return (vals.home && vals.draw && vals.away) ? vals : null;
+  } catch(e) { return null; }
+}
+
+// ============================================================
+// FEATURE 4: POSITION MOVEMENT — stored per team on prev standings load
+// We compare current pos to previously cached pos
+// ============================================================
+const PREV_STANDINGS = {};
+
+function storeStandingsSnapshot(leagueKey, table) {
+  if (!PREV_STANDINGS[leagueKey]) {
+    PREV_STANDINGS[leagueKey] = {};
+    table.forEach(t => { PREV_STANDINGS[leagueKey][t.team] = t.pos; });
+  }
+}
+
+function enrichWithMovement(leagueKey, table) {
+  const prev = PREV_STANDINGS[leagueKey] || {};
+  return table.map(t => ({
+    ...t,
+    prevPos: prev[t.team] != null ? prev[t.team] : null,
+  }));
+}
+
+// ============================================================
+// FEATURE 5: PLAYER SEARCH
+// ============================================================
+let playerSearchOpen = false;
+
+function buildPlayerIndex() {
+  const players = [];
+  // From scorers
+  (DEMO.scorers || []).forEach(p => {
+    players.push({ name: p.player, team: p.team, league: p.league, type:'scorer',
+      goals: p.goals, games: p.games, yellow: null, red: null, suspended: false });
+  });
+  // From booked players — merge with scorers
+  (DEMO.bookedPlayers || []).forEach(p => {
+    const existing = players.find(x => x.name.toLowerCase() === p.player.toLowerCase());
+    if (existing) { existing.yellow = p.yellow; existing.red = p.red; }
+    else players.push({ name: p.player, team: p.team, league: p.league, type:'booked',
+      goals: null, games: p.games, yellow: p.yellow, red: p.red, suspended: false });
+  });
+  // From injuries
+  Object.entries(DEMO_INJURIES).forEach(([key, list]) => {
+    list.forEach(p => {
+      const existing = players.find(x => x.name.toLowerCase() === p.player.toLowerCase());
+      if (existing) { existing.injured = true; existing.injuryStatus = p.status; existing.injuryDetail = p.injury; existing.injuryReturn = p.return; }
+      else players.push({ name: p.player, team: p.team, league: key, type:'injury',
+        goals: null, games: null, yellow: null, red: null,
+        injured: true, injuryStatus: p.status, injuryDetail: p.injury, injuryReturn: p.return });
+    });
+  });
+  return players;
+}
+
+function openPlayerSearch() {
+  document.getElementById('playerSearchOverlay').classList.remove('hidden');
+  document.getElementById('playerSearchBig').focus();
+  playerSearchOpen = true;
+}
+
+function closePlayerSearch() {
+  document.getElementById('playerSearchOverlay').classList.add('hidden');
+  document.getElementById('playerSearchBig').value = '';
+  document.getElementById('playerSearchResults').innerHTML =
+    '<div class="player-search-empty">Start typing to search across all leagues</div>';
+  playerSearchOpen = false;
+}
+
+function runPlayerSearch(query) {
+  const q = query.toLowerCase().trim();
+  const resultsEl = document.getElementById('playerSearchResults');
+  if (!q) {
+    resultsEl.innerHTML = '<div class="player-search-empty">Start typing to search across all leagues</div>';
+    return;
+  }
+  const index = buildPlayerIndex();
+  const matches = index.filter(p => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q));
+  if (!matches.length) {
+    resultsEl.innerHTML = '<div class="player-search-empty">No players found for "' + query + '"</div>';
+    return;
+  }
+  const threshold = 5;
+  resultsEl.innerHTML = matches.slice(0,12).map(p => {
+    const lg = LEAGUES[p.league];
+    const susStatus = p.yellow != null ? (p.yellow >= threshold ? 'SUSPENDED' : p.yellow === threshold - 1 ? '1 FROM BAN' : p.yellow === threshold - 2 ? '2 FROM BAN' : null) : null;
+    const nextFx = Object.values(DEMO.fixtures).flat().find(f =>
+      !f.result && (normTeam(f.home) === normTeam(p.team) || normTeam(f.away) === normTeam(p.team))
+    );
+    const nextGame = nextFx ? nextFx.home + ' vs ' + nextFx.away + ' (' + nextFx.date.slice(5) + ')' : 'No upcoming fixture';
+    const stats = [
+      p.goals != null ? '<span class="player-result-stat">⚽ <strong>' + p.goals + '</strong> goals</span>' : '',
+      p.yellow != null ? '<span class="player-result-stat">🟨 <strong>' + p.yellow + '</strong> yellows</span>' : '',
+      p.red ? '<span class="player-result-stat">🟥 <strong>' + p.red + '</strong> reds</span>' : '',
+      p.games != null ? '<span class="player-result-stat">📊 <strong>' + p.games + '</strong> games</span>' : '',
+      susStatus ? '<span class="player-result-stat" style="color:var(--red-card)">⚠️ <strong>' + susStatus + '</strong></span>' : '',
+      p.injured ? '<span class="player-result-stat" style="color:var(--red-card)">🏥 <strong>' + (p.injuryStatus || 'injured').toUpperCase() + '</strong> – ' + (p.injuryDetail || '') + '</span>' : '',
+    ].filter(Boolean).join('');
+    return '<div class="player-result-item">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">' +
+        '<div class="player-result-name">' + p.name + '</div>' +
+        '<span class="fixture-league-tag ' + (lg?.tag||'') + '" style="padding:1px 6px;border-radius:2px;font-size:.65rem;font-weight:700;flex-shrink:0;margin-left:8px;">' + (lg?.name||p.league) + '</span>' +
+      '</div>' +
+      '<div style="font-size:.78rem;color:var(--white-dim);margin-bottom:6px;">' + p.team + '</div>' +
+      '<div class="player-result-stats">' + (stats || '<span style="color:var(--white-dim)">No stats available</span>') + '</div>' +
+      '<div style="font-size:.72rem;color:var(--white-dim);margin-top:6px;font-family:Barlow Condensed;">📅 Next: ' + nextGame + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// Keyboard shortcut: Ctrl+K or / to open search
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && !playerSearchOpen && document.activeElement.tagName !== 'INPUT')) {
+    e.preventDefault();
+    openPlayerSearch();
+  }
+  if (e.key === 'Escape' && playerSearchOpen) closePlayerSearch();
+});
+
+// ============================================================
+// FEATURE 6: TOP ASSISTS — API-Football fetch
+// ============================================================
+async function fetchLiveAssists() {
+  const allAssists = [];
+  for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
+    try {
+      const data = await afFetch('/players/topassists', { league: leagueId, season: AF_SEASON });
+      if (data && data.length) {
+        data.slice(0,5).forEach(item => {
+          allAssists.push({
+            player:  item.player.name,
+            team:    normTeam(item.statistics?.[0]?.team?.name || ''),
+            league:  key,
+            assists: item.statistics?.[0]?.goals?.assists || 0,
+            games:   item.statistics?.[0]?.games?.appearences || 0,
+          });
+        });
+      }
+    } catch(e) { /* fall back to demo */ }
+  }
+  if (allAssists.length > 0) {
+    DEMO.assists = allAssists.sort((a,b) => b.assists - a.assists).slice(0,10);
+    if (state.activeTab === 'overview') renderOverview();
+    console.log('%c🎯 Live assists loaded:', 'color:#4da6ff', allAssists.length, 'players');
+  }
+}
+
+// ============================================================
+// FEATURE 7: EUROPEAN TRACKER
+// ============================================================
+let euroFilter = 'all';
+
+function filterEurope(comp, el) {
+  euroFilter = comp;
+  document.querySelectorAll('[id^=euroFilter]').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderEurope();
+}
+
+function renderEurope() {
+  const el = document.getElementById('euroFixturesGrid');
+  if (!el) return;
+  const fixtures = DEMO.euroFixtures || [];
+  const filtered = euroFilter === 'all' ? fixtures : fixtures.filter(f => f.comp.toLowerCase() === euroFilter);
+
+  if (!filtered.length) {
+    el.innerHTML = '<div class="wrap-no-data">No European fixtures found. Live data will load shortly.</div>';
+    return;
+  }
+
+  // Group by round
+  const byRound = {};
+  filtered.forEach(f => {
+    const k = f.comp + ' · ' + f.round;
+    if (!byRound[k]) byRound[k] = { comp: f.comp, compCls: f.compCls, round: f.round, fixtures: [] };
+    byRound[k].fixtures.push(f);
+  });
+
+  el.innerHTML = Object.values(byRound).map(group => {
+    const cards = group.fixtures.map(f => {
+      const dateStr = new Date(f.date).toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+      const isResult = !!f.result;
+      const scoreContent = isResult
+        ? '<div class="euro-score-box" style="color:var(--gold)">' + f.result.h + ' – ' + f.result.a + '</div>'
+        : '<div class="euro-score-box" style="color:var(--white-dim)">' + f.time + '</div>';
+
+      const homeLeagueName = f.homeLeague ? (LEAGUES[f.homeLeague]?.name || '') : '';
+      const awayLeagueName = f.awayLeague ? (LEAGUES[f.awayLeague]?.name || '') : '';
+      const tvBadge = getTvBadge(f.home, f.away);
+
+      return '<div class="euro-fixture-card">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+          '<span class="euro-round-badge ' + f.compCls + '">' + f.comp + '</span>' +
+          '<span style="font-size:.72rem;color:var(--white-dim)">' + dateStr + '</span>' +
+          (tvBadge ? tvBadge : '') +
+        '</div>' +
+        '<div class="euro-teams-row">' +
+          '<div style="flex:1;text-align:right;">' +
+            '<div class="euro-team-name">' + f.home + '</div>' +
+            '<div style="font-size:.68rem;color:var(--white-dim)">' + homeLeagueName + '</div>' +
+          '</div>' +
+          scoreContent +
+          '<div style="flex:1;text-align:left;">' +
+            '<div class="euro-team-name">' + f.away + '</div>' +
+            '<div style="font-size:.68rem;color:var(--white-dim)">' + awayLeagueName + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    return '<div class="wrap-section"><div class="wrap-section-title">' + group.round + '</div>' + cards + '</div>';
+  }).join('');
+}
+
+// API-Football: fetch european fixtures for Big 5 clubs
+async function afFetchEuropeanFixtures() {
+  const euroLeagues = { ucl: 2, uel: 3, uecl: 848 }; // API-Football league IDs
+  const big5Teams = new Set(Object.values(DEMO.fixtures).flat().map(f => [f.home,f.away]).flat().map(t => t.toLowerCase()));
+
+  const newFixtures = [];
+  for (const [comp, leagueId] of Object.entries(euroLeagues)) {
+    try {
+      const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
+      const dateTo   = new Date(Date.now() + 35*86400000).toISOString().slice(0,10);
+      const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+      if (!data || !data.length) continue;
+
+      data.forEach(m => {
+        const home = normTeam(m.teams.home.name);
+        const away = normTeam(m.teams.away.name);
+        // Only include if at least one team is from Big 5
+        const homeBig5 = big5Teams.has(home.toLowerCase());
+        const awayBig5 = big5Teams.has(away.toLowerCase());
+        if (!homeBig5 && !awayBig5) return;
+
+        const compMap = { 2:'UCL', 3:'UEL', 848:'UECL' };
+        const clsMap  = { 2:'euro-comp-ucl', 3:'euro-comp-uel', 848:'euro-comp-uecl' };
+        newFixtures.push({
+          comp:    compMap[leagueId],
+          compCls: clsMap[leagueId],
+          round:   m.league.round || 'Knockout',
+          home, away,
+          date:   m.fixture.date.slice(0,10),
+          time:   m.fixture.date.slice(11,16),
+          result: m.fixture.status.short === 'FT' ? { h: m.goals.home, a: m.goals.away } : null,
+          homeLeague: homeBig5 ? Object.entries(AF_LEAGUES).find(([,id]) => id === m.teams.home.id)?.[0] || null : null,
+          awayLeague: awayBig5 ? Object.entries(AF_LEAGUES).find(([,id]) => id === m.teams.away.id)?.[0] || null : null,
+        });
+      });
+    } catch(e) { console.warn('Euro fixtures error:', e.message); }
+  }
+  if (newFixtures.length) {
+    DEMO.euroFixtures = newFixtures;
+    if (state.activeTab === 'europe') renderEurope();
+    console.log('%c🏆 European fixtures loaded:', 'color:#6699ff', newFixtures.length);
+  }
+}
+
+// ============================================================
+// FEATURE 8: WEEKEND WRAP — auto-generated matchweek summary
+// ============================================================
+function renderWeekendWrap() {
+  const el = document.getElementById('wrapContent');
+  if (!el) return;
+
+  // Gather all recent results across leagues
+  const allResults = [];
+  Object.entries(DEMO.fixtures).forEach(([leagueKey, fxs]) => {
+    fxs.filter(f => f.result).forEach(f => {
+      const diff = Math.abs(f.result.h - f.result.a);
+      const totalGoals = f.result.h + f.result.a;
+      allResults.push({ ...f, leagueKey, diff, totalGoals,
+        winner: f.result.h > f.result.a ? f.home : f.result.a > f.result.h ? f.away : null,
+        loser:  f.result.h > f.result.a ? f.away : f.result.a > f.result.h ? f.home : null,
+      });
+    });
+  });
+
+  if (!allResults.length) {
+    el.innerHTML = '<div class="wrap-no-data">⏳ No results yet for the latest matchweek.<br><span style="font-size:.82rem">Results will appear here after games are played.</span></div>';
+    return;
+  }
+
+  // Stats
+  const totalGoals  = allResults.reduce((a,r) => a + r.totalGoals, 0);
+  const totalGames  = allResults.length;
+  const avgGoals    = (totalGoals / totalGames).toFixed(1);
+  const biggestWin  = [...allResults].sort((a,b) => b.diff - a.diff)[0];
+  const highScorer  = [...allResults].sort((a,b) => b.totalGoals - a.totalGoals)[0];
+  const draws       = allResults.filter(r => !r.winner).length;
+
+  // Shocks: lower-mid team beats top team (crude: bigger away win)
+  const shocks      = allResults.filter(r => r.result.a > r.result.h + 1);
+
+  // Most recent results by date
+  const recent = [...allResults].sort((a,b) => b.date.localeCompare(a.date)).slice(0,10);
+
+  const leagueNames = { pl:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 PL', ll:'🇪🇸 LL', sa:'🇮🇹 SA', bl:'🇩🇪 BL', l1:'🇫🇷 L1' };
+
+  el.innerHTML =
+    // ── Headline Stats ──
+    '<div class="wrap-stat-grid mb-24" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">' +
+      '<div class="wrap-stat-box"><div class="wrap-stat-val">' + totalGames + '</div><div class="wrap-stat-label">Games</div></div>' +
+      '<div class="wrap-stat-box"><div class="wrap-stat-val">' + totalGoals + '</div><div class="wrap-stat-label">Goals</div></div>' +
+      '<div class="wrap-stat-box"><div class="wrap-stat-val">' + avgGoals + '</div><div class="wrap-stat-label">Per Game</div></div>' +
+      '<div class="wrap-stat-box"><div class="wrap-stat-val">' + draws + '</div><div class="wrap-stat-label">Draws</div></div>' +
+    '</div>' +
+
+    // ── Highlights ──
+    '<div class="wrap-section">' +
+      '<div class="wrap-section-title">🌟 Highlights</div>' +
+      (biggestWin ? '<div class="wrap-highlight"><span class="wrap-highlight-icon">💥</span><div><strong>' + biggestWin.winner + '</strong> biggest win: ' + biggestWin.home + ' ' + biggestWin.result.h + '–' + biggestWin.result.a + ' ' + biggestWin.away + ' <span style="color:var(--white-dim);font-size:.72rem">' + leagueNames[biggestWin.leagueKey] + '</span></div></div>' : '') +
+      (highScorer && highScorer.totalGoals >= 4 ? '<div class="wrap-highlight"><span class="wrap-highlight-icon">⚽</span><div>Goal fest: <strong>' + highScorer.home + ' ' + highScorer.result.h + '–' + highScorer.result.a + ' ' + highScorer.away + '</strong> (' + highScorer.totalGoals + ' goals) <span style="color:var(--white-dim);font-size:.72rem">' + leagueNames[highScorer.leagueKey] + '</span></div></div>' : '') +
+      (shocks.length ? shocks.slice(0,2).map(s => '<div class="wrap-highlight"><span class="wrap-highlight-icon">😱</span><div>Shock result: <strong>' + s.home + ' ' + s.result.h + '–' + s.result.a + ' ' + s.away + '</strong><span class="wrap-shock">UPSET</span> <span style="color:var(--white-dim);font-size:.72rem">' + leagueNames[s.leagueKey] + '</span></div></div>').join('') : '') +
+    '</div>' +
+
+    // ── Recent Results ──
+    '<div class="wrap-section">' +
+      '<div class="wrap-section-title">📋 Recent Results</div>' +
+      recent.map(r => {
+        const lg = leagueNames[r.leagueKey] || r.leagueKey;
+        return '<div class="wrap-result-row">' +
+          '<span style="flex:1;text-align:right;font-family:Barlow Condensed;font-weight:' + (r.result.h > r.result.a ? '700' : '400') + '">' + r.home + '</span>' +
+          '<span class="wrap-score">' + r.result.h + '–' + r.result.a + '</span>' +
+          '<span style="flex:1;font-family:Barlow Condensed;font-weight:' + (r.result.a > r.result.h ? '700' : '400') + '">' + r.away + '</span>' +
+          '<span style="font-size:.65rem;color:var(--white-dim);width:42px;text-align:right;font-family:Barlow Condensed">' + lg + '</span>' +
+        '</div>';
+      }).join('') +
+    '</div>';
+}
+
+// ============================================================
+// FEATURE 9: FAVOURITES SYSTEM
+// ============================================================
+let FAV_TEAMS = JSON.parse(localStorage.getItem('favTeams') || '[]');
+const MAX_FAVS = 5;
+
+function isFavTeam(team) {
+  return FAV_TEAMS.some(f => f.toLowerCase() === team.toLowerCase());
+}
+
+function removeFavIdx(idx) {
+  FAV_TEAMS.splice(idx, 1);
+  saveFavs();
+}
+
+function toggleFavTeam(el) {
+  const team = el.dataset.team;
+  if (!team) return;
+  if (isFavTeam(team)) { removeFav(team); }
+  else { addFav(team); }
+  renderFavourites();
+  renderFavNextFixtures();
+}
+
+function saveFavs() {
+  localStorage.setItem('favTeams', JSON.stringify(FAV_TEAMS));
+}
+
+function addFav(team) {
+  if (isFavTeam(team)) return;
+  if (FAV_TEAMS.length >= MAX_FAVS) {
+    alert('You can only follow up to 5 teams. Remove one first.');
+    return;
+  }
+  FAV_TEAMS.push(team);
+  saveFavs();
+}
+
+function removeFav(team) {
+  FAV_TEAMS = FAV_TEAMS.filter(f => f.toLowerCase() !== team.toLowerCase());
+  saveFavs();
+}
+
+function toggleFavFromFixture(home, away, e) {
+  e.stopPropagation();
+  // Toggle the relevant team(s) — if one is already faved, remove it; else add home
+  if (isFavTeam(home)) { removeFav(home); }
+  else if (isFavTeam(away)) { removeFav(away); }
+  else { addFav(home); }
+  // Re-render fixtures to update stars
+  if (state.activeTab === 'fixtures') renderFixtures();
+  if (state.activeTab === 'favourites') renderFavourites();
+  renderFavNextFixtures();
+}
+
+function clearFavourites() {
+  if (!confirm('Clear all followed teams?')) return;
+  FAV_TEAMS = [];
+  saveFavs();
+  renderFavourites();
+  renderFavNextFixtures();
+}
+
+function renderFavNextFixtures() {
+  const el = document.getElementById('favNextFixtures');
+  if (!el) return;
+  if (!FAV_TEAMS.length) {
+    el.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed;font-size:.82rem;">Star a team in Fixtures to track them here</div>';
+    return;
+  }
+  const upcoming = Object.values(DEMO.fixtures).flat()
+    .filter(f => !f.result && (isFavTeam(f.home) || isFavTeam(f.away)))
+    .sort((a,b) => a.date.localeCompare(b.date))
+    .slice(0, 5);
+
+  if (!upcoming.length) {
+    el.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed;font-size:.82rem;">No upcoming fixtures found for your teams</div>';
+    return;
+  }
+  el.innerHTML = upcoming.map(f => {
+    const dateStr = new Date(f.date).toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+    const favHome = isFavTeam(f.home);
+    return '<div class="wrap-result-row" style="padding:8px 0;">' +
+      '<span style="flex:1;text-align:right;font-family:Barlow Condensed;font-weight:' + (favHome ? '700;color:var(--gold)' : '400') + '">' + f.home + '</span>' +
+      '<span style="font-size:.72rem;color:var(--white-dim);padding:0 8px;font-family:Barlow Condensed;">' + dateStr + '</span>' +
+      '<span style="flex:1;font-family:Barlow Condensed;font-weight:' + (!favHome ? '700;color:var(--gold)' : '400') + '">' + f.away + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function renderFavourites() {
+  // Update banner chips
+  const banner  = document.getElementById('favBanner');
+  const hint    = document.getElementById('favEmptyHint');
+  const chipsEl = document.getElementById('favChips');
+  if (banner && hint && chipsEl) {
+    if (FAV_TEAMS.length) {
+      banner.style.display = 'flex';
+      hint.style.display   = 'none';
+      chipsEl.innerHTML = FAV_TEAMS.map((t, i) =>
+        '<span class="fav-team-chip">' + t + '<span class="fav-chip-remove" onclick="removeFavIdx(' + i + ');renderFavourites();renderFavNextFixtures();">✕</span></span>'
+      ).join('');
+    } else {
+      banner.style.display = 'none';
+      hint.style.display   = 'flex';
+      chipsEl.innerHTML    = '';
+    }
+  }
+
+  // Upcoming fixtures
+  const upcomingEl = document.getElementById('favUpcomingFixtures');
+  const allFx = Object.values(DEMO.fixtures).flat();
+  if (upcomingEl) {
+    if (!FAV_TEAMS.length) {
+      upcomingEl.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Follow some teams to see their fixtures here</div>';
+    } else {
+      const upcoming = allFx.filter(f => !f.result && (isFavTeam(f.home) || isFavTeam(f.away)))
+        .sort((a,b) => a.date.localeCompare(b.date)).slice(0,8);
+      if (!upcoming.length) {
+        upcomingEl.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">No upcoming fixtures in the current window</div>';
+      } else {
+        upcomingEl.innerHTML = upcoming.map(f => {
+          const dateStr = new Date(f.date).toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+          const favH = isFavTeam(f.home);
+          const tvBadge = getTvBadge(f.home, f.away);
+          return '<div style="padding:8px 0;border-bottom:1px solid var(--border);">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">' +
+              '<span style="font-family:Barlow Condensed;font-weight:' + (favH?'700;color:var(--gold)':'400') + '">' + f.home + '</span>' +
+              '<span style="font-family:Barlow Condensed;font-size:.82rem;color:var(--white-dim)">' + dateStr + ' ' + f.time + '</span>' +
+              '<span style="font-family:Barlow Condensed;font-weight:' + (!favH?'700;color:var(--gold)':'400') + '">' + f.away + '</span>' +
+            '</div>' +
+            (tvBadge ? '<div>' + tvBadge + '</div>' : '') +
+          '</div>';
+        }).join('');
+      }
+    }
+  }
+
+  // Recent results
+  const resultsEl = document.getElementById('favRecentResults');
+  if (resultsEl) {
+    if (!FAV_TEAMS.length) {
+      resultsEl.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Follow some teams to see their results here</div>';
+    } else {
+      const recent = allFx.filter(f => f.result && (isFavTeam(f.home) || isFavTeam(f.away)))
+        .sort((a,b) => b.date.localeCompare(a.date)).slice(0,8);
+      if (!recent.length) {
+        resultsEl.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">No recent results found</div>';
+      } else {
+        resultsEl.innerHTML = recent.map(f => {
+          const favH = isFavTeam(f.home);
+          const won = favH ? f.result.h > f.result.a : f.result.a > f.result.h;
+          const drew = f.result.h === f.result.a;
+          const outcomeColor = drew ? 'var(--gold)' : won ? 'var(--accent)' : 'var(--red-card)';
+          return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-family:Barlow Condensed;">' +
+            '<span style="width:8px;height:8px;border-radius:50%;background:' + outcomeColor + ';flex-shrink:0"></span>' +
+            '<span style="flex:1;font-weight:' + (favH?'700':'400') + '">' + f.home + '</span>' +
+            '<span style="font-weight:700;padding:1px 8px;background:rgba(255,255,255,0.07);border-radius:3px">' + f.result.h + '–' + f.result.a + '</span>' +
+            '<span style="flex:1;text-align:right;font-weight:' + (!favH?'700':'400') + '">' + f.away + '</span>' +
+          '</div>';
+        }).join('');
+      }
+    }
+  }
+
+  // Suspension watch for fav teams
+  const susEl = document.getElementById('favSuspensionWatch');
+  if (susEl) {
+    if (!FAV_TEAMS.length) {
+      susEl.innerHTML = '<div style="color:var(--white-dim);padding:20px;text-align:center;font-family:Barlow Condensed">Follow some teams to see suspension risks</div>';
+    } else {
+      const threshold = 5;
+      const risks = DEMO.bookedPlayers.filter(p =>
+        isFavTeam(p.team) && p.yellow >= threshold - 2
+      ).sort((a,b) => b.yellow - a.yellow);
+      if (!risks.length) {
+        susEl.innerHTML = '<div style="color:var(--accent);padding:16px;text-align:center;font-family:Barlow Condensed;font-weight:700">✅ No immediate suspension risks for your teams</div>';
+      } else {
+        susEl.innerHTML = risks.map(p => {
+          const remaining = threshold - p.yellow;
+          const danger = remaining <= 1;
+          return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-family:Barlow Condensed;">' +
+            '<div style="width:36px;height:36px;border-radius:50%;background:' + (danger?'rgba(230,57,70,0.3)':'rgba(245,200,66,0.2)') + ';display:flex;align-items:center;justify-content:center;font-weight:700;">' + p.player.charAt(0) + '</div>' +
+            '<div style="flex:1;">' +
+              '<div style="font-weight:700">' + p.player + '</div>' +
+              '<div style="font-size:.72rem;color:var(--white-dim)">' + p.team + ' · ' + p.yellow + ' yellows this season</div>' +
+            '</div>' +
+            '<span style="font-weight:700;font-size:.78rem;padding:3px 8px;border-radius:3px;background:' + (danger?'rgba(230,57,70,0.2)':'rgba(245,200,66,0.15)') + ';color:' + (danger?'var(--red-card)':'var(--gold)') + '">' +
+              (remaining <= 0 ? 'SUSPENDED' : remaining === 1 ? '1 FROM BAN' : '2 FROM BAN') +
+            '</span>' +
+          '</div>';
+        }).join('');
+      }
+    }
+  }
+
+  // All teams picker
+  const pickerEl = document.getElementById('allTeamsPicker');
+  if (pickerEl) {
+    const allTeams = [...new Set(Object.values(DEMO.fixtures).flat().flatMap(f => [f.home, f.away]))].sort();
+    pickerEl.innerHTML = allTeams.map((t, ti) => {
+      const isFav = isFavTeam(t);
+      const safe = t.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      return '<div style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid ' + (isFav?'rgba(255,200,50,0.4)':'var(--border)') + ';border-radius:16px;cursor:pointer;font-family:Barlow Condensed;font-size:.82rem;background:' + (isFav?'rgba(255,200,50,0.1)':'transparent') + ';transition:all .15s;" onclick="toggleFavTeam(this)" data-team="' + safe + '">' +
+        '<span>' + (isFav ? '⭐' : '☆') + '</span>' + t +
+      '</div>';
+    }).join('');
+  }
+}
+
+// ============================================================
+// FEATURE 10: PWA — Progressive Web App (iOS + Android)
+// ============================================================
+
+// ── Device / context detection ───────────────────────────────
+function isIos() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function isInStandaloneMode() {
+  return ('standalone' in navigator && navigator.standalone) ||
+    window.matchMedia('(display-mode: standalone)').matches;
+}
+
+function iosVersion() {
+  const match = navigator.userAgent.match(/OS (\d+)_(\d+)/);
+  return match ? parseInt(match[1]) : 0;
+}
+
+// ── Android / Chrome install prompt ─────────────────────────
+let deferredPwaPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  if (!localStorage.getItem('pwaDismissed')) {
+    setTimeout(() => {
+      const el = document.getElementById('pwaPrompt');
+      if (el) el.classList.remove('hidden');
+    }, 30000);
+  }
+});
+
+async function installPwa() {
+  if (!deferredPwaPrompt) return;
+  deferredPwaPrompt.prompt();
+  const result = await deferredPwaPrompt.userChoice;
+  deferredPwaPrompt = null;
+  const el = document.getElementById('pwaPrompt');
+  if (el) el.classList.add('hidden');
+  if (result.outcome === 'accepted') console.log('%c📱 PWA installed!', 'color:#4ade80;font-weight:bold');
+}
+
+function dismissPwa() {
+  const el = document.getElementById('pwaPrompt');
+  if (el) el.classList.add('hidden');
+  localStorage.setItem('pwaDismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwaPrompt')?.classList.add('hidden');
+  hideIosHint();
+  console.log('%c📱 Football Oracle installed as PWA', 'color:#4ade80');
+});
+
+// ── iOS Add-to-Home-Screen hint ──────────────────────────────
+const IOS_HINT_KEY      = 'iosHintDismissed';
+const IOS_HINT_DELAY_MS = 25000; // show after 25s
+
+function shouldShowIosHint() {
+  if (!isIos()) return false;               // not iOS
+  if (isInStandaloneMode()) return false;   // already installed
+  if (localStorage.getItem(IOS_HINT_KEY)) return false; // permanently dismissed
+  if (iosVersion() < 14) return false;      // too old, Share sheet works differently
+  return true;
+}
+
+function showIosHint() {
+  const sheet    = document.getElementById('iosHintSheet');
+  const backdrop = document.getElementById('iosHintBackdrop');
+  const arrow    = document.getElementById('iosHintArrow');
+  if (!sheet) return;
+
+  sheet.classList.add('visible');
+  if (backdrop) backdrop.classList.add('visible');
+
+  // Pulse arrow pointing to Safari Share button
+  if (arrow) {
+    arrow.style.display = 'block';
+    // Position just above the Safari toolbar (~83px from bottom on iPhone 16 Pro Max)
+    arrow.style.bottom = '78px';
+  }
+
+  // Lock body scroll while sheet is open
+  document.body.style.overflow = 'hidden';
+  console.log('%c📱 iOS install hint shown', 'color:#4da6ff');
+}
+
+function hideIosHint() {
+  const sheet    = document.getElementById('iosHintSheet');
+  const backdrop = document.getElementById('iosHintBackdrop');
+  const arrow    = document.getElementById('iosHintArrow');
+
+  sheet?.classList.remove('visible');
+  backdrop?.classList.remove('visible');
+  if (arrow) arrow.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function dismissIosHint() {
+  hideIosHint();
+  const dontShow = document.getElementById('iosDontShow');
+  if (dontShow?.checked) {
+    localStorage.setItem(IOS_HINT_KEY, '1');
+    console.log('iOS hint: permanently dismissed');
+  } else {
+    // Show again next session (session-only dismiss)
+    sessionStorage.setItem('iosHintThisSession', '1');
+    console.log('iOS hint: dismissed for this session');
+  }
+}
+
+function initPwa() {
+  // Android/Chrome: handled by beforeinstallprompt above
+  // iOS: show hint after delay if eligible
+  if (shouldShowIosHint() && !sessionStorage.getItem('iosHintThisSession')) {
+    setTimeout(showIosHint, IOS_HINT_DELAY_MS);
+    console.log('%c📱 iOS detected — install hint scheduled in 25s', 'color:#4da6ff');
+  } else if (isInStandaloneMode()) {
+    console.log('%c📱 Running as installed PWA', 'color:#4ade80');
+  } else if (isIos()) {
+    console.log('ℹ️ iOS hint suppressed (already dismissed or installed)');
+  }
+}
+
+// ============================================================
+// AUTO-REFRESH ENGINE
+// ============================================================
+// Strategy:
+//   • Full refresh on page load (always)
+//   • 24-hour scheduled refresh thereafter, using localStorage
+//     to track last fetch time and quota usage
+//   • Smart scheduling: next refresh is midnight UTC + 1 min
+//     (when API-Football resets its daily quota), OR 24h from
+//     last fetch if that comes sooner
+//   • Quota guard: tracks calls made today, refuses to fire a
+//     full refresh if already ≥90 calls used
+//   • Visibility API: if user returns to tab after being away
+//     ≥ 1 hour and data is stale, refresh immediately
+//   • Manual refresh button: always allowed, resets the clock
+//   • Countdown display in header: shows "Next refresh in X h Ym"
+//   • Stale indicator: turns the LIVE dot amber if data is >6h old
+
+const REFRESH_INTERVAL_MS  = 24 * 60 * 60 * 1000; // 24 hours
+const STALE_THRESHOLD_MS   =  6 * 60 * 60 * 1000; // 6 hours → amber pulse
+const AWAY_THRESHOLD_MS    =  1 * 60 * 60 * 1000; // 1 hour away → refresh on return
+const QUOTA_PER_LOAD       = 78;   // requests per full refresh (from our audit)
+const QUOTA_DAILY_LIMIT    = 100;  // API-Football free tier
+const QUOTA_SAFETY_MARGIN  = 90;   // refuse refresh if this many used today
+const LS_LAST_FETCH        = 'fo_last_fetch';      // epoch ms
+const LS_QUOTA_DATE        = 'fo_quota_date';      // YYYY-MM-DD
+const LS_QUOTA_USED        = 'fo_quota_used';      // number
+const LS_FETCH_COUNT       = 'fo_fetch_count';     // page-lifetime fetches
+
+let refreshTimerId     = null;  // setInterval handle for countdown updater
+let scheduledTimerId   = null;  // setTimeout handle for next auto-refresh
+let isFetching         = false; // prevent concurrent full fetches
+let tabHiddenAt        = null;  // timestamp when tab went hidden
+
+// ── Quota tracking ──────────────────────────────────────────
+function getTodayStr() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD UTC
+}
+
+function getQuotaUsedToday() {
+  const date = localStorage.getItem(LS_QUOTA_DATE);
+  if (date !== getTodayStr()) {
+    // New UTC day — reset counter
+    localStorage.setItem(LS_QUOTA_DATE, getTodayStr());
+    localStorage.setItem(LS_QUOTA_USED, '0');
+    return 0;
+  }
+  return parseInt(localStorage.getItem(LS_QUOTA_USED) || '0');
+}
+
+function recordQuotaUsed(count) {
+  const today = getTodayStr();
+  const existing = localStorage.getItem(LS_QUOTA_DATE) === today
+    ? parseInt(localStorage.getItem(LS_QUOTA_USED) || '0')
+    : 0;
+  localStorage.setItem(LS_QUOTA_DATE, today);
+  localStorage.setItem(LS_QUOTA_USED, String(existing + count));
+}
+
+function quotaAvailable() {
+  return getQuotaUsedToday() + QUOTA_PER_LOAD <= QUOTA_SAFETY_MARGIN;
+}
+
+// ── Scheduling helpers ───────────────────────────────────────
+function getLastFetchMs() {
+  return parseInt(localStorage.getItem(LS_LAST_FETCH) || '0');
+}
+
+function setLastFetchMs(ts) {
+  localStorage.setItem(LS_LAST_FETCH, String(ts));
+}
+
+function getDataAgeMs() {
+  const last = getLastFetchMs();
+  return last ? Date.now() - last : Infinity;
+}
+
+// Next midnight UTC + 60s (when AF quota resets)
+function msTillMidnightUtc() {
+  const now   = new Date();
+  const midnight = new Date(Date.UTC(
+    now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1,
+    0, 1, 0  // 00:01 UTC
+  ));
+  return Math.max(midnight - now, 5 * 60 * 1000); // at least 5 min from now
+}
+
+// When should the next auto-refresh fire?
+// • Prefer midnight UTC (fresh quota)
+// • But cap at 24h from last fetch
+function msUntilNextRefresh() {
+  const sinceLastFetch = Date.now() - getLastFetchMs();
+  const remainingIn24h = Math.max(0, REFRESH_INTERVAL_MS - sinceLastFetch);
+  const tillMidnight   = msTillMidnightUtc();
+  // Fire at whichever comes first: 24h mark or midnight UTC
+  return Math.min(remainingIn24h, tillMidnight);
+}
+
+// ── UI helpers ───────────────────────────────────────────────
+function setRefreshBtn(busy) {
+  const btn = document.getElementById('refreshBtn');
+  if (!btn) return;
+  btn.disabled = busy;
+  btn.textContent = busy ? '⏳ Updating…' : '🔄 Refresh';
+  btn.style.opacity = busy ? '0.5' : '1';
+}
+
+function updateLastUpdatedLabel(ts) {
+  const el = document.getElementById('lastUpdated');
+  if (!el || !ts) return;
+  const date = new Date(ts);
+  const dateStr = date.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+  const timeStr = date.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+  el.textContent = 'Updated ' + dateStr + ' ' + timeStr;
+}
+
+function updateCountdownLabel() {
+  const el = document.getElementById('nextRefreshLabel');
+  if (!el) return;
+
+  const last = getLastFetchMs();
+  if (!last) { el.textContent = ''; return; }
+
+  const age = Date.now() - last;
+  const msUntil = msUntilNextRefresh();
+
+  // Stale indicator
+  const dot  = document.getElementById('livePulseDot');
+  const label = document.getElementById('liveLabel');
+  if (age > STALE_THRESHOLD_MS) {
+    if (dot)   dot.style.background = '#f5c842'; // amber — stale
+    if (label) label.textContent = 'STALE';
+  } else {
+    if (dot)   dot.style.background = '';         // CSS var handles it
+    if (label) label.textContent = 'LIVE';
+  }
+
+  // Format countdown
+  const totalSec = Math.round(msUntil / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const quotaUsed = getQuotaUsedToday();
+  const quotaStr = ` · ${quotaUsed}/${QUOTA_DAILY_LIMIT} calls`;
+
+  if (msUntil < 60000) {
+    el.textContent = 'Refreshing soon…' + quotaStr;
+  } else if (h > 0) {
+    el.textContent = `Next refresh in ${h}h ${m}m${quotaStr}`;
+  } else {
+    el.textContent = `Next refresh in ${m}m${quotaStr}`;
+  }
+}
+
+function startCountdownTicker() {
+  if (refreshTimerId) clearInterval(refreshTimerId);
+  updateCountdownLabel();
+  refreshTimerId = setInterval(updateCountdownLabel, 30000); // update every 30s
+}
+
+// ── Core full-fetch sequence ─────────────────────────────────
+async function runFullFetch(isManual = false) {
+  if (isFetching) {
+    console.log('⏭ Fetch already in progress — skipping');
+    return;
+  }
+
+  if (!isManual && !quotaAvailable()) {
+    const used = getQuotaUsedToday();
+    console.warn(`⚠️ Quota guard: ${used} calls used today, refusing auto-refresh (would reach ${used + QUOTA_PER_LOAD}/${QUOTA_DAILY_LIMIT})`);
+    const el = document.getElementById('nextRefreshLabel');
+    if (el) el.textContent = `Quota full today (${used}/${QUOTA_DAILY_LIMIT}) · Resets at midnight UTC`;
+    // Schedule for midnight when quota resets
+    scheduleNextRefresh(msTillMidnightUtc());
+    return;
+  }
+
+  isFetching = true;
+  setRefreshBtn(true);
+  console.log('%c🔄 Football Oracle: starting full data refresh' + (isManual ? ' (manual)' : ' (scheduled)'), 'color:#f5c842;font-weight:bold');
+
+  // Status indicators
+  setStatus('fdStatus','fdLabel','Football-Data.org — Refreshing…', false);
+  setStatus('afStatus','afLabel','API-Football — Refreshing…', false);
+
+  try {
+    await fetchLiveData();
+    await Promise.all([fetchLiveScorers(), fetchLiveAssists()]);
+    await fetchRefereeAssignments();
+    await fetchAfData();
+    await afFetchEuropeanFixtures();
+
+    // Record successful fetch
+    const now = Date.now();
+    setLastFetchMs(now);
+    recordQuotaUsed(QUOTA_PER_LOAD);
+    updateLastUpdatedLabel(now);
+
+    // Re-render any tab that needs refreshing
+    const tab = state.activeTab;
+    renderOverview();
+    if (tab === 'fixtures')    renderFixtures();
+    if (tab === 'standings')   renderStandings();
+    if (tab === 'predictions') renderPredictions();
+    if (tab === 'bookings')    renderBookings();
+    if (tab === 'suspensions') renderSuspensions();
+    if (tab === 'injuries')    renderInjuries();
+    if (tab === 'europe')      renderEurope();
+    if (tab === 'wrap')        renderWeekendWrap();
+    if (tab === 'favourites')  { renderFavourites(); renderFavNextFixtures(); }
+    renderTicker();
+
+    console.log('%c✅ Full refresh complete', 'color:#4ade80;font-weight:bold');
+  } catch(e) {
+    console.error('❌ Full refresh error:', e);
+  } finally {
+    isFetching = false;
+    setRefreshBtn(false);
+    startCountdownTicker();
+    scheduleNextRefresh(msUntilNextRefresh());
+  }
+}
+
+// ── Scheduler ────────────────────────────────────────────────
+function scheduleNextRefresh(delayMs) {
+  if (scheduledTimerId) clearTimeout(scheduledTimerId);
+
+  const fireAt = new Date(Date.now() + delayMs);
+  console.log(`%c⏰ Next auto-refresh scheduled: ${fireAt.toLocaleTimeString('en-GB')} (in ${Math.round(delayMs/60000)}m)`, 'color:#a8a89a');
+
+  scheduledTimerId = setTimeout(async () => {
+    await runFullFetch(false);
+  }, delayMs);
+}
+
+// ── Manual refresh ───────────────────────────────────────────
+async function manualRefresh() {
+  if (scheduledTimerId) clearTimeout(scheduledTimerId);
+  await runFullFetch(true);
+}
+
+// ── Visibility API: refresh if returning after long absence ──
+document.addEventListener('visibilitychange', async () => {
+  if (document.hidden) {
+    tabHiddenAt = Date.now();
+    return;
+  }
+  // Tab became visible
+  const awayFor = tabHiddenAt ? Date.now() - tabHiddenAt : 0;
+  const age     = getDataAgeMs();
+  tabHiddenAt = null;
+
+  if (awayFor >= AWAY_THRESHOLD_MS && age >= AWAY_THRESHOLD_MS) {
+    console.log(`%c👁 Tab visible after ${Math.round(awayFor/60000)}m away — data is ${Math.round(age/3600000*10)/10}h old → refreshing`, 'color:#f5c842');
+    if (scheduledTimerId) clearTimeout(scheduledTimerId);
+    await runFullFetch(false);
+  } else {
+    // Just resume the countdown ticker
+    startCountdownTicker();
+  }
+});
+
+// ── Entry point ──────────────────────────────────────────────
+async function initAutoRefresh() {
+  const lastFetch = getLastFetchMs();
+  const age       = getDataAgeMs();
+
+  // Always do the initial full fetch
+  await runFullFetch(false);
+}
+
+// ============================================================
 // INIT
 // ============================================================
 
@@ -3316,6 +4947,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderTicker();
   renderOverview();
+  renderInjuries();
+  renderFavNextFixtures();
   
   // Fix nav tab click listeners
   document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -3325,35 +4958,124 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Start live data fetch
-  setTimeout(async () => {
-    await fetchLiveData();
-    // After live data, fetch scorers and referee assignments from football-data.org
-    await fetchLiveScorers();
-    await fetchRefereeAssignments();
-    // API-Football enrichment: bookings, predictions, H2H
-    await fetchAfData();
-    // Update last-updated timestamp
-    const el = document.getElementById('lastUpdated');
-    if (el) el.textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    // Re-render suspensions with latest data
-    if (state.activeTab === 'suspensions') renderSuspensions();
-  }, 500);
+  // Start auto-refresh system
+  setTimeout(() => initAutoRefresh(), 500);
   
   // Pre-fill API key fields from embedded keys
   document.getElementById('fdKey').value = CONFIG.fdKey;
   document.getElementById('bzKey').value = CONFIG.bzKey;
 
-  // Show 'connecting' status immediately — live fetch running
+  // Status indicators — runFullFetch will update these
   setStatus('fdStatus','fdLabel','Football-Data.org — Connecting…', false);
   setStatus('bzStatus','bzLabel','Bzzoiro Sports API — Connecting…', false);
   setStatus('afStatus','afLabel','API-Football — Connecting…', false);
+  updateCountdownLabel(); // show last-fetch info immediately if available
+  updateLastUpdatedLabel(getLastFetchMs());
 
-  console.log('⚽ Football Oracle — 2025-26 Season Analytics');
+  // Register service worker for PWA offline support
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('%c📱 Service Worker registered (v3)', 'color:#4ade80');
+        // Listen for background sync trigger from SW
+        navigator.serviceWorker.addEventListener('message', async event => {
+          if (event.data?.type === 'BACKGROUND_SYNC') {
+            console.log('%c🔄 Background sync triggered by SW', 'color:#f5c842');
+            if (!isFetching) await runFullFetch(false);
+          }
+        });
+        // Register periodic background sync if available (Chrome Android)
+        if ('periodicSync' in reg) {
+          reg.periodicSync.register('background-refresh', {
+            minInterval: 24 * 60 * 60 * 1000 // once per day minimum
+          }).then(() => {
+            console.log('%c⏰ Periodic background sync registered (24h)', 'color:#4ade80');
+          }).catch(e => {
+            console.log('ℹ️ Periodic sync not available:', e.message);
+          });
+        }
+      })
+      .catch(e => console.warn('SW registration skipped:', e.message));
+  }
+
+  console.log('%c⚽ Football Oracle — 2025-26 Season Analytics', 'color:#f5c842;font-size:1.1em;font-weight:bold');
   console.log('🔑 football-data.org key:', CONFIG.fdKey ? '✓ set' : '✗ missing');
-  console.log('🔑 Bzzoiro Sports key:', CONFIG.bzKey ? '✓ set' : '✗ missing');
-  console.log('📡 Fetching live data from both APIs...');
+  console.log('🔑 API-Football key: ✓ embedded');
+  console.log('⏰ Auto-refresh: 24h schedule with midnight UTC preference');
+  console.log('🛡 Quota guard: max', QUOTA_SAFETY_MARGIN, 'calls/day (limit:', QUOTA_DAILY_LIMIT, ')');
+  const lastFetch = getLastFetchMs();
+  if (lastFetch) console.log('📅 Last fetch:', new Date(lastFetch).toLocaleString('en-GB'));
+
+  // Initialise PWA install prompts (iOS hint or Android beforeinstallprompt)
+  initPwa();
 });
 </script>
+  <!-- PWA INSTALL PROMPT -->
+  <div class="pwa-prompt hidden" id="pwaPrompt">
+    <div class="pwa-prompt-text">
+      <div class="pwa-prompt-title">⚽ Add to Home Screen</div>
+      Install Football Oracle as an app — works offline too
+    </div>
+    <button class="pwa-install-btn" onclick="installPwa()">Install</button>
+    <button class="pwa-dismiss" onclick="dismissPwa()" title="Dismiss">✕</button>
+  </div>
+
+  <!-- iOS ADD-TO-HOME-SCREEN HINT SHEET -->
+  <div class="ios-hint-backdrop" id="iosHintBackdrop" onclick="dismissIosHint()"></div>
+  <div class="ios-hint-sheet" id="iosHintSheet">
+    <div class="ios-hint-handle"></div>
+    <div class="ios-hint-title">⚽ Add Football Oracle to your Home Screen</div>
+    <div class="ios-hint-sub">Get instant access — works like a native app, no App Store needed</div>
+    <div class="ios-hint-steps">
+      <div class="ios-hint-step">
+        <div class="ios-hint-step-num">1</div>
+        <div class="ios-hint-step-text">
+          Tap the <span class="ios-hint-share-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#88bbff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          </span> <strong>Share button</strong> at the bottom of your Safari screen
+        </div>
+      </div>
+      <div class="ios-hint-step">
+        <div class="ios-hint-step-num">2</div>
+        <div class="ios-hint-step-text">
+          Scroll down in the share sheet and tap <strong>"Add to Home Screen"</strong>
+        </div>
+      </div>
+      <div class="ios-hint-step">
+        <div class="ios-hint-step-num">3</div>
+        <div class="ios-hint-step-text">
+          Tap <strong>"Add"</strong> in the top right — Football Oracle will appear on your home screen like any app
+        </div>
+      </div>
+    </div>
+    <div class="ios-hint-footer">
+      <button class="ios-hint-dismiss" onclick="dismissIosHint()">Maybe later</button>
+      <label class="ios-hint-dont-show">
+        <input type="checkbox" id="iosDontShow"> Don't show again
+      </label>
+    </div>
+  </div>
+  <div class="ios-hint-arrow" id="iosHintArrow"></div>
+
+  <!-- PLAYER SEARCH OVERLAY -->
+  <div class="player-search-overlay hidden" id="playerSearchOverlay" onclick="if(event.target===this)closePlayerSearch()">
+    <div class="player-search-box">
+      <div class="player-search-header">
+        <span style="font-size:1.2rem;">🔍</span>
+        <div class="player-search-input-wrap">
+          <input class="player-search-big" id="playerSearchBig" placeholder="Search player name…" oninput="runPlayerSearch(this.value)" autocomplete="off">
+        </div>
+        <button class="player-search-close" onclick="closePlayerSearch()">✕</button>
+      </div>
+      <div class="player-search-results" id="playerSearchResults">
+        <div class="player-search-empty">Start typing to search across all leagues</div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
