@@ -25,3 +25,19 @@
   from = "/api/flashscore-fixtures"
   to = "/.netlify/functions/flashscore-fixtures"
   status = 200
+
+[functions."flashscore-matches"]
+  timeout = 26
+
+[functions."flashscore-standings"]
+  timeout = 26
+
+[[redirects]]
+  from = "/api/flashscore-matches"
+  to = "/.netlify/functions/flashscore-matches"
+  status = 200
+
+[[redirects]]
+  from = "/api/flashscore-standings"
+  to = "/.netlify/functions/flashscore-standings"
+  status = 200
