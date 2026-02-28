@@ -5978,44 +5978,55 @@ function renderLiveMatches() {
     <pre style="overflow:auto;max-height:300px;background:rgba(0,0,0,.4);padding:12px;border-radius:4px;margin-top:8px;">${JSON.stringify(items[0], null, 2)}</pre>
   </details>`;
 
-  // Group by status: live, finished, upcoming
-  const live = items.filter(m => m.status && /^\d+['']?$/.test(String(m.status).trim()) || String(m.status).toLowerCase().includes('live') || String(m.status) === 'HT');
-  const ft   = items.filter(m => String(m.status).toUpperCase() === 'FT' || String(m.status).toUpperCase() === 'AET' || String(m.status).toUpperCase() === 'PEN');
+  // Apify actor confirmed field names: home_team, away_team, home_score, away_score,
+  // status ("Live"), status_time ("2nd Half - 58'"), start_time, league,
+  // history[] with {kind, time, score, side, player, action}
+  const statusStr = m => String(m.status || '').toLowerCase();
+  const live  = items.filter(m => statusStr(m) === 'live' || statusStr(m) === 'ht' || /^\d+$/.test(statusStr(m)));
+  const ft    = items.filter(m => { const s = statusStr(m); return s === 'ft' || s === 'aet' || s === 'pen' || s === 'finished'; });
   const sched = items.filter(m => !live.includes(m) && !ft.includes(m));
 
   function matchCard(m) {
     const isLive = live.includes(m);
-    const isFT = ft.includes(m);
-    const cls = isLive ? 'live-now' : isFT ? 'finished' : 'upcoming';
+    const isFT   = ft.includes(m);
+    const cls    = isLive ? 'live-now' : isFT ? 'finished' : 'upcoming';
+    const statusCls = isLive ? 'live' : isFT ? 'ft' : 'sched';
 
-    let statusLabel = String(m.status || '—');
-    let statusCls = isLive ? 'live' : isFT ? 'ft' : 'sched';
-    if (isLive && /^\d+$/.test(statusLabel)) statusLabel = `${statusLabel}'`;
+    // status_time holds "2nd Half - 58'" for live matches
+    const statusLabel = isLive
+      ? (m.status_time || m.status || 'Live')
+      : isFT ? 'FT' : (m.status || '—');
 
-    const homeScore = m.homeScore ?? m.score?.split('-')[0] ?? '';
-    const awayScore = m.awayScore ?? m.score?.split('-')[1] ?? '';
-    const hasScore = homeScore !== '' && awayScore !== '';
+    // Confirmed field names
+    const homeScore = m.home_score ?? '';
+    const awayScore = m.away_score ?? '';
+    const hasScore  = homeScore !== '' && awayScore !== '' && homeScore !== null && awayScore !== null;
 
+    // history[] events: {kind:"event", action, player, time, side, score}
     let eventsHtml = '';
-    if (m.events && m.events.length) {
-      eventsHtml = '<div class="live-events">' + m.events.slice(0, 8).map(ev => {
-        const ecls = ev.type === 'goal' ? 'goal' : ev.type === 'red_card' ? 'red' : ev.type === 'yellow_card' ? 'yellow' : '';
-        const icon = ev.type === 'goal' ? '⚽' : ev.type === 'red_card' ? '🟥' : ev.type === 'yellow_card' ? '🟨' : '📋';
-        return `<span class="live-event-pill ${ecls}">${icon} ${ev.player || ''} ${ev.minute ? ev.minute + "'" : ''}</span>`;
+    const history = Array.isArray(m.history) ? m.history : [];
+    const events  = history.filter(e => e.kind === 'event').slice(0, 8);
+    if (events.length) {
+      eventsHtml = '<div class="live-events">' + events.map(ev => {
+        const action = String(ev.action || '').toLowerCase();
+        const ecls = action.includes('goal') ? 'goal' : action.includes('red') ? 'red' : action.includes('yellow') ? 'yellow' : '';
+        const icon = action.includes('goal') ? '⚽' : action.includes('red') ? '🟥' : action.includes('yellow') ? '🟨' : action.includes('subst') ? '🔄' : '📋';
+        const side = ev.side === 'home' ? ' 🏠' : ev.side === 'away' ? ' ✈️' : '';
+        return `<span class="live-event-pill ${ecls}">${icon}${side} ${ev.player || ''} ${ev.time ? ev.time + "'" : ''}</span>`;
       }).join('') + '</div>';
     }
 
     return `<div class="live-match-card ${cls}">
       <div class="live-match-header">
-        <span class="live-league-tag">${m.league || m.tournament || '—'}</span>
+        <span class="live-league-tag">${m.league || '—'}</span>
         <span class="live-status-badge ${statusCls}">${statusLabel}</span>
       </div>
       <div class="live-teams">
-        <div class="live-team-name home">${m.homeTeam || m.home || '—'}</div>
+        <div class="live-team-name home">${m.home_team || '—'}</div>
         ${hasScore
           ? `<div class="live-score">${homeScore} – ${awayScore}</div>`
-          : `<div class="live-score sched">${m.startTime || m.time || '--:--'}</div>`}
-        <div class="live-team-name away">${m.awayTeam || m.away || '—'}</div>
+          : `<div class="live-score sched">${m.start_time || '--:--'}</div>`}
+        <div class="live-team-name away">${m.away_team || '—'}</div>
       </div>
       ${eventsHtml}
     </div>`;
@@ -6138,10 +6149,10 @@ async function toggleFSForm(enabled) {
     if (items) {
       fsFormData = {};
       items.forEach(m => {
-        const hName = m.homeTeam || m.home || '';
-        const aName = m.awayTeam || m.away || '';
-        const hScore = parseInt(m.homeScore ?? (m.score || '').split('-')[0]);
-        const aScore = parseInt(m.awayScore ?? (m.score || '').split('-')[1]);
+        const hName  = m.home_team || '';
+        const aName  = m.away_team || '';
+        const hScore = parseInt(m.home_score ?? '');
+        const aScore = parseInt(m.away_score ?? '');
 
         if (hName && !isNaN(hScore) && !isNaN(aScore)) {
           const hResult = hScore > aScore ? 'W' : hScore === aScore ? 'D' : 'L';
