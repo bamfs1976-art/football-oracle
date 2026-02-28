@@ -1,25 +1,20 @@
 // Netlify serverless function — Apify FlashScore Scraper Live proxy
 // Endpoint: /.netlify/functions/flashscore  (POST)
-// Body: { leagueId: "england_premier-league" }  — optional, defaults to all top 5
+// Uses Apify synchronous run endpoint to avoid Netlify's 10s timeout issue.
+// Set APIFY_TOKEN in Netlify environment variables.
 
-const APIFY_TOKEN = process.env.APIFY_TOKEN;
-const ACTOR_ID    = 'statanow~flashscore-scraper-live';
-const POLL_INTERVAL_MS = 5000;
-const MAX_POLLS        = 24; // 2 minutes max
+const ACTOR_ID = 'statanow~flashscore-scraper-live';
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: corsHeaders(),
-      body: '',
-    };
+    return { statusCode: 204, headers: corsHeaders(), body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: corsHeaders(), body: JSON.stringify({ error: 'POST only' }) };
   }
 
+  const APIFY_TOKEN = process.env.APIFY_TOKEN;
   if (!APIFY_TOKEN) {
     return { statusCode: 500, headers: corsHeaders(), body: JSON.stringify({ error: 'APIFY_TOKEN environment variable not set' }) };
   }
@@ -27,8 +22,6 @@ exports.handler = async (event) => {
   let input = {};
   try { input = JSON.parse(event.body || '{}'); } catch (_) {}
 
-  // Build Apify actor run input
-  // The actor accepts sport/league filters — default to all top 5 leagues
   const actorInput = {
     sport: 'football',
     leagues: input.leagues || [
@@ -42,72 +35,30 @@ exports.handler = async (event) => {
   };
 
   try {
-    // 1. Start the actor run
-    const runRes = await fetch(
-      `https://api.apify.com/v2/acts/${encodeURIComponent(ACTOR_ID)}/runs?token=${APIFY_TOKEN}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(actorInput),
-      }
-    );
+    // Use the synchronous run-and-get-dataset-items endpoint.
+    // Apify runs the actor and streams results back directly — no polling needed.
+    // timeout=55 tells Apify to wait up to 55s (Netlify functions allow up to 26s on free, 
+    // but Pro/paid plans allow up to 26s too — bump netlify.toml if needed).
+    const url = `https://api.apify.com/v2/acts/${encodeURIComponent(ACTOR_ID)}/run-sync-get-dataset-items` +
+      `?token=${APIFY_TOKEN}&format=json&clean=true&timeout=25`;
 
-    if (!runRes.ok) {
-      const txt = await runRes.text();
-      console.error('Apify run start failed:', runRes.status, txt);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(actorInput),
+    });
+
+    if (!res.ok) {
+      const txt = await res.text();
+      console.error('Apify sync run failed:', res.status, txt);
       return {
         statusCode: 502,
         headers: corsHeaders(),
-        body: JSON.stringify({ error: 'Failed to start Apify actor', detail: txt }),
+        body: JSON.stringify({ error: 'Apify actor failed', status: res.status, detail: txt }),
       };
     }
 
-    const runData = await runRes.json();
-    const runId      = runData.data?.id;
-    const datasetId  = runData.data?.defaultDatasetId;
-
-    if (!runId || !datasetId) {
-      return {
-        statusCode: 502,
-        headers: corsHeaders(),
-        body: JSON.stringify({ error: 'No runId/datasetId from Apify', raw: runData }),
-      };
-    }
-
-    // 2. Poll until SUCCEEDED (or timeout)
-    let succeeded = false;
-    for (let i = 0; i < MAX_POLLS; i++) {
-      await sleep(POLL_INTERVAL_MS);
-
-      const statusRes = await fetch(
-        `https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`
-      );
-      const statusData = await statusRes.json();
-      const status = statusData.data?.status;
-
-      if (status === 'SUCCEEDED') { succeeded = true; break; }
-      if (status === 'FAILED' || status === 'ABORTED' || status === 'TIMED-OUT') {
-        return {
-          statusCode: 502,
-          headers: corsHeaders(),
-          body: JSON.stringify({ error: `Apify run ${status}`, runId }),
-        };
-      }
-    }
-
-    if (!succeeded) {
-      return {
-        statusCode: 504,
-        headers: corsHeaders(),
-        body: JSON.stringify({ error: 'Apify run timed out waiting for results', runId }),
-      };
-    }
-
-    // 3. Fetch dataset items
-    const dataRes = await fetch(
-      `https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_TOKEN}&format=json&clean=true`
-    );
-    const items = await dataRes.json();
+    const items = await res.json();
 
     return {
       statusCode: 200,
@@ -116,7 +67,7 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store',
       },
-      body: JSON.stringify({ ok: true, count: items.length, items }),
+      body: JSON.stringify({ ok: true, count: Array.isArray(items) ? items.length : 0, items }),
     };
 
   } catch (err) {
@@ -128,8 +79,6 @@ exports.handler = async (event) => {
     };
   }
 };
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function corsHeaders() {
   return {
