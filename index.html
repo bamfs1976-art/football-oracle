@@ -4102,38 +4102,226 @@ async function fdFetch(path) {
 }
 // ──────────────────────────────────────────────────────────────────────────
 
-async function fetchLiveData() {
-  let fdOk = false, bzOk = false;
+// ─── FlashScore / Apify league key mapping ───────────────────────────────
+// Maps internal keys (pl/ll/sa/bl/l1) to FlashScore league identifiers
+const FS_LEAGUE_MAP = {
+  pl:  'england_premier-league',
+  ll:  'spain_laliga',
+  sa:  'italy_serie-a',
+  bl:  'germany_bundesliga',
+  l1:  'france_ligue-1',
+};
 
-  // ── Football-Data.org: standings + fixtures for all leagues ──
-  for (const key of ['pl','ll','sa','bl','l1']) {
-    const [standings, matches] = await Promise.all([
-      fdFetchStandings(key),
-      fdFetchMatches(key),
-    ]);
-    if (standings) {
-      DEMO.standings[key] = standings;
-      fdOk = true;
-    }
-    if (matches && matches.length) {
-      // Keep our hand-verified results but prepend API matches as authoritative
-      const apiResults   = matches.filter(m => m.result);
-      const apiUpcoming  = matches.filter(m => !m.result);
-      // Replace demo fixtures with live data (keeping any demo notes)
-      if (apiResults.length || apiUpcoming.length) {
-        DEMO.fixtures[key] = [...apiResults.slice(-8), ...apiUpcoming.slice(0,10)];
+// Reverse map: FlashScore league id → internal key
+const FS_REVERSE_MAP = Object.fromEntries(
+  Object.entries(FS_LEAGUE_MAP).map(([k,v]) => [v, k])
+);
+
+// Map FlashScore match item → internal fixture format
+function fsMapMatch(item) {
+  // FlashScore extractor fields (extractify-labs~flashscore-extractor)
+  const home = normTeam(item.homeTeam || item.home_team || item.homeName || '');
+  const away = normTeam(item.awayTeam || item.away_team || item.awayName || '');
+  if (!home || !away) return null;
+
+  const startRaw = item.startTime || item.start_time || item.dateTime || item.date || '';
+  const dateStr  = startRaw ? startRaw.slice(0, 10) : '';
+  const timeStr  = startRaw.length >= 16 ? startRaw.slice(11, 16) : (item.time || '');
+
+  const isFinished = (item.status || '').toUpperCase() === 'FINISHED' ||
+                     item.homeScore !== undefined && item.awayScore !== undefined &&
+                     item.homeScore !== null && item.awayScore !== null &&
+                     (item.status || '').toUpperCase() !== 'SCHEDULED';
+
+  const hScore = parseInt(item.homeScore ?? item.home_score ?? item.scoreHome);
+  const aScore = parseInt(item.awayScore ?? item.away_score ?? item.scoreAway);
+
+  const roundStr = item.round || item.roundName || item.gameRound || '';
+  const weekNum  = roundStr ? (parseInt(roundStr.replace(/\D/g, '')) || 0) : 0;
+
+  const leagueId = item.leagueId || item.league_id || item.tournamentId || '';
+  const leagueKey = FS_REVERSE_MAP[leagueId] || null;
+
+  return {
+    home, away, date: dateStr, time: timeStr, week: weekNum,
+    result: isFinished && !isNaN(hScore) && !isNaN(aScore)
+      ? { h: hScore, a: aScore } : null,
+    referee: item.referee || null,
+    note: '',
+    _leagueKey: leagueKey,
+  };
+}
+
+// Map FlashScore standings item → internal standings row format
+function fsMapStandingsRow(item, leagueKey) {
+  const pos  = parseInt(item.position || item.rank || item.pos);
+  const team = normTeam(item.team || item.teamName || item.name || '');
+  if (!team || isNaN(pos)) return null;
+
+  const P  = parseInt(item.played  || item.matchesPlayed || item.gp  || 0);
+  const W  = parseInt(item.wins    || item.win || item.w  || 0);
+  const D  = parseInt(item.draws   || item.draw || item.d || 0);
+  const L  = parseInt(item.losses  || item.loss || item.l || 0);
+  const GF = parseInt(item.goalsFor     || item.goals_for    || item.gf || 0);
+  const GA = parseInt(item.goalsAgainst || item.goals_against || item.ga || 0);
+  const GD = parseInt(item.goalDiff     || item.goal_difference || GF - GA);
+  const pts = parseInt(item.points || item.pts || 0);
+  const form = (item.form || item.recentForm || '').toUpperCase().slice(-5);
+
+  const relZone = leagueKey === 'bl' ? 16 : 18;
+  const zone = pos <= 4 ? 'cl' : pos <= 6 ? 'el' : pos >= relZone ? 'rel' : '';
+
+  return { pos, team, P, W, D, L, GF, GA, GD, pts, form, zone };
+}
+
+// ── Primary data fetch: Apify / FlashScore ───────────────────────────────
+async function fetchFromApify() {
+  let matchesOk = false, standingsOk = false;
+
+  // 1. Fetch matches (results + upcoming fixtures) in parallel with standings
+  const [matchesRes, standingsRes] = await Promise.allSettled([
+    fetch('/.netlify/functions/flashscore-matches').then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('/.netlify/functions/flashscore-standings').then(r => r.ok ? r.json() : null).catch(() => null),
+  ]);
+
+  // Process matches
+  const matchData = matchesRes.status === 'fulfilled' ? matchesRes.value : null;
+  if (matchData?.ok) {
+    const allMatches = [
+      ...(matchData.results  || []),
+      ...(matchData.fixtures || []),
+    ];
+
+    // Group by league key
+    const byLeague = { pl:[], ll:[], sa:[], bl:[], l1:[] };
+    for (const item of allMatches) {
+      const mapped = fsMapMatch(item);
+      if (!mapped) continue;
+      // Try leagueKey from item; fall back to detecting from leagueId
+      let key = mapped._leagueKey;
+      if (!key) {
+        // Try to detect league from item.league or item.leagueName
+        const lg = (item.league || item.leagueName || item.tournamentName || '').toLowerCase();
+        if (lg.includes('premier'))   key = 'pl';
+        else if (lg.includes('liga') || lg.includes('laliga')) key = 'll';
+        else if (lg.includes('serie')) key = 'sa';
+        else if (lg.includes('bundesliga')) key = 'bl';
+        else if (lg.includes('ligue'))  key = 'l1';
       }
-      fdOk = true;
+      if (key && byLeague[key]) byLeague[key].push(mapped);
+    }
+
+    for (const key of ['pl','ll','sa','bl','l1']) {
+      const arr = byLeague[key];
+      if (!arr.length) continue;
+      const results  = arr.filter(m => m.result).slice(-8);
+      const upcoming = arr.filter(m => !m.result).slice(0, 10);
+      if (results.length || upcoming.length) {
+        DEMO.fixtures[key] = [...results, ...upcoming];
+        matchesOk = true;
+      }
+    }
+    console.log('%c⚡ Apify FlashScore: MATCHES LOADED', 'color:#4ade80;font-weight:bold',
+      `(${allMatches.length} total)`);
+  }
+
+  // Process standings
+  const standData = standingsRes.status === 'fulfilled' ? standingsRes.value : null;
+  if (standData?.ok && Array.isArray(standData.items)) {
+    // Group standings items by league
+    const byLeague = { pl:[], ll:[], sa:[], bl:[], l1:[] };
+    for (const item of standData.items) {
+      const leagueId = item.leagueId || item.league_id || item.tournamentId || '';
+      let key = FS_REVERSE_MAP[leagueId];
+      if (!key) {
+        const lg = (item.league || item.leagueName || '').toLowerCase();
+        if (lg.includes('premier'))   key = 'pl';
+        else if (lg.includes('liga') || lg.includes('laliga')) key = 'll';
+        else if (lg.includes('serie')) key = 'sa';
+        else if (lg.includes('bundesliga')) key = 'bl';
+        else if (lg.includes('ligue'))  key = 'l1';
+      }
+      if (key && byLeague[key]) byLeague[key].push(item);
+    }
+
+    for (const key of ['pl','ll','sa','bl','l1']) {
+      const rows = byLeague[key];
+      if (!rows.length) continue;
+      const mapped = rows.map(r => fsMapStandingsRow(r, key)).filter(Boolean);
+      if (mapped.length >= 10) {
+        mapped.sort((a,b) => a.pos - b.pos);
+        // Store snapshot for movement tracking then enrich
+        storeStandingsSnapshot(key, mapped.map(r => ({ pos: r.pos, team: r.team })));
+        DEMO.standings[key] = enrichWithMovement(key, mapped);
+        standingsOk = true;
+      }
+    }
+    if (standingsOk) {
+      console.log('%c📊 Apify FlashScore: STANDINGS LOADED', 'color:#4ade80;font-weight:bold');
     }
   }
 
-  // ── Bzzoiro: predictions enrichment ──
+  return { matchesOk, standingsOk };
+}
+
+async function fetchLiveData() {
+  let fdOk = false, bzOk = false;
+
+  // ── PRIMARY: Try Apify / FlashScore ──────────────────────────────────
+  let apifyMatchesOk = false, apifyStandingsOk = false;
+  try {
+    const result = await fetchFromApify();
+    apifyMatchesOk  = result.matchesOk;
+    apifyStandingsOk = result.standingsOk;
+    if (apifyMatchesOk || apifyStandingsOk) {
+      fdOk = true;
+      setStatus('fdStatus','fdLabel','Fixtures & Standings ✓ Apify Live', true);
+    }
+  } catch (e) {
+    console.warn('⚠️ Apify fetch failed, falling back to API-Football:', e.message);
+  }
+
+  // ── FALLBACK: API-Football (for any league that Apify didn't cover) ──
+  for (const key of ['pl','ll','sa','bl','l1']) {
+    const needsStandings = !apifyStandingsOk || !DEMO.standings[key]?.length;
+    const needsFixtures  = !apifyMatchesOk  || !DEMO.fixtures[key]?.length;
+    if (!needsStandings && !needsFixtures) continue;
+
+    try {
+      const [standings, matches] = await Promise.all([
+        needsStandings ? fdFetchStandings(key) : Promise.resolve(null),
+        needsFixtures  ? fdFetchMatches(key)   : Promise.resolve(null),
+      ]);
+      if (standings) {
+        DEMO.standings[key] = standings;
+        fdOk = true;
+      }
+      if (matches && matches.length) {
+        const apiResults  = matches.filter(m => m.result);
+        const apiUpcoming = matches.filter(m => !m.result);
+        if (apiResults.length || apiUpcoming.length) {
+          DEMO.fixtures[key] = [...apiResults.slice(-8), ...apiUpcoming.slice(0,10)];
+          fdOk = true;
+        }
+      }
+    } catch (e) {
+      console.warn(`⚠️ API-Football fallback failed for ${key}:`, e.message);
+    }
+  }
+
+  if (!fdOk) {
+    setStatus('fdStatus','fdLabel','Fixtures & Standings (demo data)', false);
+    console.warn('⚠️ All data sources failed — using demo data. Check API keys and Apify token.');
+  } else if (!apifyMatchesOk && !apifyStandingsOk) {
+    setStatus('fdStatus','fdLabel','Fixtures & Standings ✓ API-Football', true);
+    console.log('%c⚽ API-Football fallback: LIVE DATA ACTIVE', 'color:#f5c842;font-weight:bold');
+  }
+
+  // ── Bzzoiro: predictions enrichment ──────────────────────────────────
   for (const key of ['pl','ll','sa','bl','l1']) {
     const preds = await bzFetchPredictions(key);
     if (preds && preds.length) {
       bzOk = true;
-      // Merge Bzzoiro predictions into the demo predictions list
-      // (we keep demo predictions as fallback — just mark as enhanced)
       DEMO.predictions = DEMO.predictions.map(p => {
         const bzMatch = preds.find(bz =>
           bz.home_team && normTeam(bz.home_team) === p.home &&
@@ -4154,14 +4342,6 @@ async function fetchLiveData() {
     }
   }
 
-  // Update status bar indicators
-  if (fdOk) {
-    setStatus('fdStatus','fdLabel','Fixtures & Standings ✓ Live', true);
-    console.log('%c⚽ Football-Data.org: LIVE DATA ACTIVE', 'color:#4ade80;font-weight:bold');
-  } else {
-    setStatus('fdStatus','fdLabel','Standings (via API-Football)', false);
-    console.warn('⚠️ football-data.org: no data returned. Key may be rate-limited or invalid. Check the ⚙ Configure panel → 🔍 Test APIs Now');
-  }
   if (bzOk) {
     setStatus('bzStatus','bzLabel','Bzzoiro Sports API ✓ Live', true);
     console.log('%c🔮 Bzzoiro Sports API: LIVE PREDICTIONS ACTIVE', 'color:#4ade80;font-weight:bold');
@@ -4170,12 +4350,12 @@ async function fetchLiveData() {
     console.warn('⚠️ Bzzoiro API: predictions using verified data. Run diagnostics from ⚙ Configure to debug.');
   }
 
-  // Re-render whatever tab is active
+  // Re-render active tab
   if (fdOk || bzOk) {
     const tab = state.activeTab;
-    if (tab === 'overview')   renderOverview();
-    if (tab === 'fixtures')   renderFixtures();
-    if (tab === 'standings')  renderStandings();
+    if (tab === 'overview')    renderOverview();
+    if (tab === 'fixtures')    renderFixtures();
+    if (tab === 'standings')   renderStandings();
     if (tab === 'predictions') renderPredictions();
   }
 }
