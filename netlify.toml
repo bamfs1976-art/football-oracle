@@ -1,3 +1,5 @@
 [functions]
-  # Extend function timeout to maximum allowed (26s free tier, 900s on paid)
+  node_bundler = "esbuild"
+
+[functions."flashscore"]
   timeout = 26
