@@ -5935,6 +5935,11 @@ async function fetchLiveScores(force = false) {
       localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
       const el = document.getElementById('liveLastFetch');
       if (el) el.textContent = `· Last fetched ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
+      // DEBUG: log first item to console so we can see actual field names
+      if (json.items.length) {
+        console.log('[FlashScore DEBUG] First item keys:', Object.keys(json.items[0]));
+        console.log('[FlashScore DEBUG] First item raw:', JSON.stringify(json.items[0], null, 2));
+      }
     } else {
       throw new Error(json.error || 'No data returned');
     }
@@ -5966,6 +5971,12 @@ function renderLiveMatches() {
     wrap.innerHTML = '<div class="live-empty">No matches found in the top 5 leagues right now.</div>';
     return;
   }
+
+  // DEBUG: show raw first item so we can map field names
+  wrap.innerHTML = `<details style="margin-bottom:16px;color:var(--white-dim);font-size:.75rem;font-family:monospace;">
+    <summary style="cursor:pointer;color:var(--gold);">🔍 DEBUG: Raw first item (${items.length} total) — click to expand</summary>
+    <pre style="overflow:auto;max-height:300px;background:rgba(0,0,0,.4);padding:12px;border-radius:4px;margin-top:8px;">${JSON.stringify(items[0], null, 2)}</pre>
+  </details>`;
 
   // Group by status: live, finished, upcoming
   const live = items.filter(m => m.status && /^\d+['']?$/.test(String(m.status).trim()) || String(m.status).toLowerCase().includes('live') || String(m.status) === 'HT');
