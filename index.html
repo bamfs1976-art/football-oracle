@@ -685,6 +685,229 @@
     margin-left: 8px;
   }
 
+  /* ===== LIVE TAB ===== */
+  .live-match-card {
+    background: var(--pitch-mid);
+    border: 1px solid rgba(245,200,66,0.15);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: border-color .2s;
+  }
+  .live-match-card:hover { border-color: rgba(245,200,66,0.4); }
+  .live-match-card.live-now { border-left: 3px solid var(--accent); }
+  .live-match-card.finished { border-left: 3px solid rgba(255,255,255,0.15); }
+  .live-match-card.upcoming { border-left: 3px solid var(--gold); }
+  .live-match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .live-league-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    background: rgba(255,255,255,0.06);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .live-status-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .live-status-badge.live   { background: rgba(74,222,128,0.15); color: var(--accent); animation: pulse 1.5s ease-in-out infinite; }
+  .live-status-badge.ft     { background: rgba(255,255,255,0.08); color: var(--white-dim); }
+  .live-status-badge.sched  { background: rgba(245,200,66,0.12); color: var(--gold); }
+  .live-teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .live-team-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: .5px;
+  }
+  .live-team-name.home { text-align: right; }
+  .live-team-name.away { text-align: left; }
+  .live-score {
+    font-family: 'Black Ops One', monospace;
+    font-size: 1.5rem;
+    color: var(--gold);
+    min-width: 60px;
+    text-align: center;
+  }
+  .live-score.sched { font-size: 1rem; color: var(--white-dim); font-family: 'Barlow Condensed'; font-weight: 700; }
+  .live-events {
+    margin-top: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .78rem;
+    color: var(--white-dim);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .live-event-pill {
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+  .live-event-pill.goal  { background: rgba(74,222,128,0.12); color: var(--accent); }
+  .live-event-pill.red   { background: rgba(239,68,68,0.15); color: var(--red-card); }
+  .live-event-pill.yellow { background: rgba(245,200,66,0.12); color: var(--gold); }
+  .live-refresh-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px 14px;
+    background: var(--pitch-mid);
+    border-radius: 8px;
+    border: 1px solid rgba(74,222,128,0.2);
+  }
+  .live-refresh-info {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .82rem;
+    color: var(--white-dim);
+    letter-spacing: .5px;
+  }
+  .live-refresh-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: rgba(74,222,128,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(74,222,128,0.3);
+    border-radius: 4px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .live-refresh-btn:hover { background: rgba(74,222,128,0.25); }
+  .live-countdown {
+    font-family: 'Black Ops One', monospace;
+    font-size: .8rem;
+    color: var(--accent);
+  }
+  .live-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: .72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin: 20px 0 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 6px;
+  }
+  .live-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--white-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  /* ===== ORACLE TIPS WIDGET ===== */
+  .oracle-tip-card {
+    background: linear-gradient(135deg, rgba(245,200,66,0.08) 0%, rgba(74,222,128,0.05) 100%);
+    border: 1px solid rgba(245,200,66,0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  .oracle-tip-match {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: .92rem;
+    margin-bottom: 2px;
+  }
+  .oracle-tip-pick {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .8rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .oracle-tip-conf {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .72rem;
+    color: var(--white-dim);
+    letter-spacing: .5px;
+  }
+
+  /* ===== FLASHSCORE FORM TOGGLE ===== */
+  .fs-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .85rem;
+    color: var(--white-dim);
+  }
+  .fs-toggle {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .fs-toggle input { display: none; }
+  .fs-toggle-slider {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .fs-toggle-slider:before {
+    content: '';
+    position: absolute;
+    width: 14px; height: 14px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform .2s;
+  }
+  .fs-toggle input:checked + .fs-toggle-slider { background: var(--accent); }
+  .fs-toggle input:checked + .fs-toggle-slider:before { transform: translateX(20px); }
+  .fs-form-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; height: 20px;
+    border-radius: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: .75rem;
+  }
+  .fs-form-badge.W { background: rgba(74,222,128,0.2); color: var(--accent); }
+  .fs-form-badge.D { background: rgba(245,200,66,0.15); color: var(--gold); }
+  .fs-form-badge.L { background: rgba(239,68,68,0.15); color: var(--red-card); }
+  .fs-form-row {
+    display: flex;
+    gap: 3px;
+    margin-top: 4px;
+  }
+  .fs-form-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .72rem;
+    color: var(--white-dim);
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
   .pulse-dot {
     width: 8px;
     height: 8px;
@@ -1698,6 +1921,7 @@
   <nav class="nav-tabs">
     <div class="nav-tabs-inner">
       <div class="nav-tab active" onclick="switchTab('overview')">📊 Overview</div>
+      <div class="nav-tab" onclick="switchTab('live')" id="navTabLive">⚡ Live</div>
       <div class="nav-tab" onclick="switchTab('fixtures')">📅 Fixtures & Results</div>
       <div class="nav-tab" onclick="switchTab('predictions')">🎯 Predictions</div>
       <div class="nav-tab" onclick="switchTab('bookings')">🟨 Bookings & Cards</div>
@@ -1844,6 +2068,41 @@
         </div>
       </div>
 
+      <!-- Oracle Tips Widget -->
+      <div class="card mb-32 fade-in" id="oracleTipsCard">
+        <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
+          <div>
+            <span class="section-title">🎯 Oracle Tips — This Week</span>
+            <span class="section-sub">Top confidence picks from the Predictions engine</span>
+          </div>
+          <button class="export-btn" onclick="switchTab('predictions')">See All Picks →</button>
+        </div>
+        <div id="oracleTipsList" class="grid-2"></div>
+      </div>
+
+    </div>
+
+    <!-- LIVE SCORES TAB -->
+    <div class="tab-content" id="tab-live">
+      <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
+        <div>
+          <span class="section-title">⚡ Live Scores</span>
+          <span class="section-sub">Real-time data via FlashScore · Auto-refreshes every 5 min</span>
+        </div>
+        <div class="live-pulse"><div class="pulse-dot"></div><span>LIVE</span></div>
+      </div>
+
+      <div class="live-refresh-bar">
+        <div class="live-refresh-info">
+          <span>Next refresh in </span><span class="live-countdown" id="liveCountdown">5:00</span>
+          <span id="liveLastFetch" style="margin-left:12px;font-size:.75rem;"></span>
+        </div>
+        <button class="live-refresh-btn" onclick="fetchLiveScores(true)">↻ Refresh Now</button>
+      </div>
+
+      <div id="liveMatchesWrap">
+        <div class="live-empty">⚡ Loading live scores…</div>
+      </div>
     </div>
 
     <!-- EUROPEAN TRACKER TAB -->
@@ -1964,6 +2223,15 @@
         <span class="week-display" id="weekDisplay">MATCHWEEK 26</span>
         <button class="week-btn" onclick="changeWeek(1)">›</button>
         <span class="section-sub" style="margin-left:8px;" id="weekDateRange"></span>
+      </div>
+
+      <div class="fs-toggle-row">
+        <label class="fs-toggle">
+          <input type="checkbox" id="fsFormToggle" onchange="toggleFSForm(this.checked)">
+          <span class="fs-toggle-slider"></span>
+        </label>
+        <span>Enrich with FlashScore live form <span style="color:var(--accent);font-weight:700;">(last 5 results)</span></span>
+        <span id="fsFormStatus" style="font-size:.72rem;color:var(--white-dim);margin-left:6px;"></span>
       </div>
 
       <div id="predictionsGrid" class="grid-2"></div>
@@ -3010,6 +3278,7 @@ function renderOverview() {
 
   // Fav next fixtures on overview
   renderFavNextFixtures();
+  renderOracleTips();
   renderWorldCup();
 }
 
@@ -3152,6 +3421,7 @@ function renderPredictions() {
             <span class="fixture-league-tag ${p.leagueTag}" style="padding:2px 8px;border-radius:2px;font-size:.7rem;font-weight:700;letter-spacing:1.5px;margin-bottom:6px;display:inline-block;">${LEAGUES[p.league].name}</span>
             <div class="rec-match">${p.home} vs ${p.away}</div>
             <div style="font-size:.78rem;color:var(--white-dim);font-family:'Barlow Condensed';margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">${new Date(p.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})} · ${p.time}${p.note?' · <strong style="color:var(--gold)">'+p.note+'</strong>':''} ${getTvBadge(p.home, p.away)}</div>
+            ${fsFormLoaded ? `<div style="margin-top:8px;display:flex;gap:16px;flex-wrap:wrap;"><div><div class="fs-form-label">HOME FORM</div>${getFormBadgesHtml(p.home)||'<span style="font-size:.7rem;color:var(--white-dim)">No data</span>'}</div><div><div class="fs-form-label">AWAY FORM</div>${getFormBadgesHtml(p.away)||'<span style="font-size:.7rem;color:var(--white-dim)">No data</span>'}</div></div>` : ''}
           </div>
           <div class="confidence-badge ${confClass}">${confLabel}</div>
         </div>
@@ -3414,6 +3684,7 @@ function switchTab(tab) {
   if (tab === 'europe')       renderEurope();
   if (tab === 'wrap')         renderWeekendWrap();
   if (tab === 'favourites')   renderFavourites();
+  if (tab === 'live')         initLiveTab();
   state.activeTab = tab;
   document.querySelectorAll('.nav-tab').forEach((el, i) => {
     el.classList.toggle('active', el.textContent.toLowerCase().includes(tab.split('-')[0]));
@@ -5612,6 +5883,282 @@ async function initAutoRefresh() {
 
   // Always do the initial full fetch
   await runFullFetch(false);
+}
+
+// ============================================================
+// ⚡ LIVE SCORES — FlashScore via Apify
+// ============================================================
+
+const liveState = {
+  data: null,
+  timer: null,
+  countdown: null,
+  refreshInterval: 5 * 60, // 5 minutes in seconds
+  secondsLeft: 5 * 60,
+  fetching: false,
+  formData: {}, // keyed by team name
+};
+
+async function fetchLiveScores(force = false) {
+  if (liveState.fetching) return;
+
+  // Check cache
+  if (!force) {
+    try {
+      const cached = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
+      if (cached && Date.now() - cached.ts < 5 * 60 * 1000) {
+        liveState.data = cached.items;
+        renderLiveMatches();
+        return;
+      }
+    } catch(_) {}
+  }
+
+  liveState.fetching = true;
+  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live data from FlashScore…</div>';
+
+  try {
+    const res = await fetch('/.netlify/functions/flashscore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leagues: [
+        'england_premier-league', 'spain_laliga', 'italy_serie-a',
+        'germany_bundesliga', 'france_ligue-1'
+      ]})
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+
+    if (json.ok && json.items) {
+      liveState.data = json.items;
+      localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
+      const el = document.getElementById('liveLastFetch');
+      if (el) el.textContent = `· Last fetched ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
+    } else {
+      throw new Error(json.error || 'No data returned');
+    }
+  } catch (err) {
+    console.warn('Live fetch error:', err.message);
+    // Fall back to cache if available even if stale
+    try {
+      const stale = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
+      if (stale) { liveState.data = stale.items; }
+    } catch(_) {}
+    if (!liveState.data) {
+      document.getElementById('liveMatchesWrap').innerHTML =
+        `<div class="live-empty">⚠️ Could not fetch live data.<br><small style="color:var(--white-dim)">${err.message}</small><br><br><button class="live-refresh-btn" onclick="fetchLiveScores(true)">Retry</button></div>`;
+      liveState.fetching = false;
+      return;
+    }
+  }
+
+  liveState.fetching = false;
+  renderLiveMatches();
+}
+
+function renderLiveMatches() {
+  const wrap = document.getElementById('liveMatchesWrap');
+  if (!wrap) return;
+
+  const items = liveState.data || [];
+  if (!items.length) {
+    wrap.innerHTML = '<div class="live-empty">No matches found in the top 5 leagues right now.</div>';
+    return;
+  }
+
+  // Group by status: live, finished, upcoming
+  const live = items.filter(m => m.status && /^\d+['']?$/.test(String(m.status).trim()) || String(m.status).toLowerCase().includes('live') || String(m.status) === 'HT');
+  const ft   = items.filter(m => String(m.status).toUpperCase() === 'FT' || String(m.status).toUpperCase() === 'AET' || String(m.status).toUpperCase() === 'PEN');
+  const sched = items.filter(m => !live.includes(m) && !ft.includes(m));
+
+  function matchCard(m) {
+    const isLive = live.includes(m);
+    const isFT = ft.includes(m);
+    const cls = isLive ? 'live-now' : isFT ? 'finished' : 'upcoming';
+
+    let statusLabel = String(m.status || '—');
+    let statusCls = isLive ? 'live' : isFT ? 'ft' : 'sched';
+    if (isLive && /^\d+$/.test(statusLabel)) statusLabel = `${statusLabel}'`;
+
+    const homeScore = m.homeScore ?? m.score?.split('-')[0] ?? '';
+    const awayScore = m.awayScore ?? m.score?.split('-')[1] ?? '';
+    const hasScore = homeScore !== '' && awayScore !== '';
+
+    let eventsHtml = '';
+    if (m.events && m.events.length) {
+      eventsHtml = '<div class="live-events">' + m.events.slice(0, 8).map(ev => {
+        const ecls = ev.type === 'goal' ? 'goal' : ev.type === 'red_card' ? 'red' : ev.type === 'yellow_card' ? 'yellow' : '';
+        const icon = ev.type === 'goal' ? '⚽' : ev.type === 'red_card' ? '🟥' : ev.type === 'yellow_card' ? '🟨' : '📋';
+        return `<span class="live-event-pill ${ecls}">${icon} ${ev.player || ''} ${ev.minute ? ev.minute + "'" : ''}</span>`;
+      }).join('') + '</div>';
+    }
+
+    return `<div class="live-match-card ${cls}">
+      <div class="live-match-header">
+        <span class="live-league-tag">${m.league || m.tournament || '—'}</span>
+        <span class="live-status-badge ${statusCls}">${statusLabel}</span>
+      </div>
+      <div class="live-teams">
+        <div class="live-team-name home">${m.homeTeam || m.home || '—'}</div>
+        ${hasScore
+          ? `<div class="live-score">${homeScore} – ${awayScore}</div>`
+          : `<div class="live-score sched">${m.startTime || m.time || '--:--'}</div>`}
+        <div class="live-team-name away">${m.awayTeam || m.away || '—'}</div>
+      </div>
+      ${eventsHtml}
+    </div>`;
+  }
+
+  let html = '';
+  if (live.length) {
+    html += `<div class="live-section-title">🔴 LIVE NOW — ${live.length} match${live.length > 1 ? 'es' : ''}</div>`;
+    html += live.map(matchCard).join('');
+  }
+  if (sched.length) {
+    html += `<div class="live-section-title">📅 UPCOMING</div>`;
+    html += sched.map(matchCard).join('');
+  }
+  if (ft.length) {
+    html += `<div class="live-section-title">✅ FULL TIME</div>`;
+    html += ft.map(matchCard).join('');
+  }
+
+  wrap.innerHTML = html;
+}
+
+function startLiveCountdown() {
+  clearInterval(liveState.countdown);
+  liveState.secondsLeft = liveState.refreshInterval;
+
+  liveState.countdown = setInterval(() => {
+    liveState.secondsLeft--;
+    const m = Math.floor(liveState.secondsLeft / 60);
+    const s = liveState.secondsLeft % 60;
+    const el = document.getElementById('liveCountdown');
+    if (el) el.textContent = `${m}:${String(s).padStart(2, '0')}`;
+
+    if (liveState.secondsLeft <= 0) {
+      liveState.secondsLeft = liveState.refreshInterval;
+      if (state.activeTab === 'live') fetchLiveScores();
+    }
+  }, 1000);
+}
+
+function initLiveTab() {
+  fetchLiveScores();
+  startLiveCountdown();
+}
+
+// ============================================================
+// 🎯 ORACLE TIPS WIDGET (Overview)
+// ============================================================
+
+function renderOracleTips() {
+  const el = document.getElementById('oracleTipsList');
+  if (!el) return;
+
+  const tips = (DEMO.predictions || [])
+    .filter(p => p.confidence === 'high')
+    .slice(0, 6);
+
+  if (!tips.length) {
+    el.innerHTML = '<div style="color:var(--white-dim);font-family:Barlow Condensed;padding:16px;">No high-confidence picks for current matchweek.</div>';
+    return;
+  }
+
+  el.innerHTML = tips.map(p => `
+    <div class="oracle-tip-card">
+      <div class="oracle-tip-match">${p.home} <span style="color:var(--white-dim);font-weight:400;">vs</span> ${p.away}</div>
+      <div class="oracle-tip-pick">🎯 ${p.pick}</div>
+      <div style="display:flex;gap:8px;margin-top:4px;align-items:center;">
+        <span class="oracle-tip-conf">${(LEAGUES[p.league] || {}).name || p.league}</span>
+        <span style="font-size:.72rem;background:rgba(74,222,128,0.15);color:var(--accent);padding:1px 6px;border-radius:3px;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;">HIGH</span>
+        <span class="oracle-tip-conf">⚽ ${p.expGoals} xG · 🟨 ${p.expYellow}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// 📊 FLASHSCORE FORM ENRICHMENT (Predictions)
+// ============================================================
+
+let fsFormData = {};
+let fsFormLoaded = false;
+
+async function toggleFSForm(enabled) {
+  const statusEl = document.getElementById('fsFormStatus');
+  if (!enabled) {
+    fsFormData = {};
+    fsFormLoaded = false;
+    if (statusEl) statusEl.textContent = '';
+    renderPredictions();
+    return;
+  }
+
+  if (statusEl) statusEl.textContent = '⏳ Loading form data…';
+
+  try {
+    // Use the live cache if available, else fetch fresh
+    let items = liveState.data;
+    if (!items) {
+      const cached = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
+      if (cached && Date.now() - cached.ts < 10 * 60 * 1000) {
+        items = cached.items;
+      }
+    }
+
+    if (!items) {
+      // Fetch fresh
+      const res = await fetch('/.netlify/functions/flashscore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      const json = await res.json();
+      if (json.ok) {
+        items = json.items;
+        localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items }));
+      }
+    }
+
+    // Build form map: team name → last 5 results array
+    if (items) {
+      fsFormData = {};
+      items.forEach(m => {
+        const hName = m.homeTeam || m.home || '';
+        const aName = m.awayTeam || m.away || '';
+        const hScore = parseInt(m.homeScore ?? (m.score || '').split('-')[0]);
+        const aScore = parseInt(m.awayScore ?? (m.score || '').split('-')[1]);
+
+        if (hName && !isNaN(hScore) && !isNaN(aScore)) {
+          const hResult = hScore > aScore ? 'W' : hScore === aScore ? 'D' : 'L';
+          const aResult = aScore > hScore ? 'W' : aScore === hScore ? 'D' : 'L';
+          if (!fsFormData[hName]) fsFormData[hName] = [];
+          if (!fsFormData[aName]) fsFormData[aName] = [];
+          if (fsFormData[hName].length < 5) fsFormData[hName].unshift(hResult);
+          if (fsFormData[aName].length < 5) fsFormData[aName].unshift(aResult);
+        }
+      });
+      fsFormLoaded = true;
+      if (statusEl) statusEl.textContent = `✅ Form loaded for ${Object.keys(fsFormData).length} teams`;
+    } else {
+      if (statusEl) statusEl.textContent = '⚠️ No data available';
+    }
+  } catch (err) {
+    if (statusEl) statusEl.textContent = `⚠️ ${err.message}`;
+    console.warn('FS form fetch error:', err);
+  }
+
+  renderPredictions();
+}
+
+function getFormBadgesHtml(teamName) {
+  if (!fsFormLoaded || !fsFormData[teamName]) return '';
+  const results = fsFormData[teamName].slice(-5);
+  const badges = results.map(r => `<span class="fs-form-badge ${r}">${r}</span>`).join('');
+  return `<div class="fs-form-row">${badges}</div>`;
 }
 
 // ============================================================
