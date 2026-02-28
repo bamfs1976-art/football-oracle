@@ -1831,6 +1831,88 @@
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
+
+  /* ===== FS TIP CARDS (Oracle Tips) ===== */
+  .fs-tip-card { cursor: default; }
+  .fs-tip-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .fs-tip-kickoff { font-family:'Barlow Condensed'; font-size:.72rem; color:var(--white-dim); }
+  .fs-tip-badge-row { display:flex; align-items:center; gap:8px; margin:6px 0; flex-wrap:wrap; }
+  .fs-tip-type-badge {
+    font-family:'Barlow Condensed'; font-weight:700; font-size:.8rem; letter-spacing:1px;
+    background:rgba(245,200,66,0.15); color:var(--gold);
+    border:1px solid rgba(245,200,66,0.3); border-radius:4px; padding:2px 8px;
+  }
+  .oracle-tip-conf.high  { color:var(--accent); }
+  .oracle-tip-conf.medium { color:var(--gold); }
+  .oracle-tip-conf.low   { color:var(--white-dim); }
+  .fs-confidence-bar-wrap {
+    background:rgba(255,255,255,0.08); border-radius:4px; height:4px; overflow:hidden; margin:4px 0;
+  }
+  .fs-confidence-bar { height:100%; border-radius:4px; transition:width .5s ease; }
+  .fs-tip-reason { font-family:'Barlow', sans-serif; font-size:.75rem; color:var(--white-dim); margin-top:4px; line-height:1.5; }
+  .fs-powered-badge {
+    font-family:'Barlow Condensed'; font-size:.68rem; color:var(--gold); letter-spacing:.5px;
+    margin-top:8px; opacity:.7;
+  }
+
+  /* ===== LIVE TIMELINE MODAL ===== */
+  .timeline-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .timeline-scoreline {
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px;
+    margin-bottom:20px; text-align:center;
+  }
+  .timeline-team { font-family:'Barlow Condensed'; font-weight:700; font-size:1rem; }
+  .timeline-team.home { text-align:right; }
+  .timeline-team.away { text-align:left; }
+  .timeline-score-big {
+    font-family:'Black Ops One'; font-size:2rem; color:var(--gold);
+    background:rgba(245,200,66,0.1); padding:4px 16px; border-radius:6px;
+  }
+  .timeline-stats-section { margin-bottom:16px; }
+  .stat-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-family:'Barlow Condensed'; font-size:.82rem; }
+  .stat-bar-track { flex:1; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; }
+  .stat-bar-fill { height:100%; background:var(--gold); border-radius:3px; }
+  .stat-bar-label { min-width:80px; text-align:right; color:var(--white-dim); font-size:.72rem; }
+  .timeline-section-title { font-family:'Barlow Condensed'; font-weight:700; font-size:.82rem; color:var(--gold); letter-spacing:2px; margin-bottom:12px; text-transform:uppercase; }
+  .timeline-list { display:flex; flex-direction:column; gap:8px; max-height:320px; overflow-y:auto; }
+  .timeline-item {
+    display:grid; grid-template-columns:36px 28px 1fr; align-items:center; gap:8px;
+    font-family:'Barlow Condensed'; font-size:.85rem; padding:6px 10px;
+    background:rgba(255,255,255,0.04); border-radius:4px;
+  }
+  .timeline-item.left { border-left:2px solid var(--accent); }
+  .timeline-item.right { border-left:2px solid var(--red-card); }
+  .timeline-minute { font-weight:700; color:var(--gold); font-size:.8rem; }
+  .timeline-icon { font-size:1rem; text-align:center; }
+  .timeline-detail { display:flex; flex-direction:column; gap:1px; }
+  .timeline-player { font-weight:700; font-size:.85rem; }
+  .timeline-action { color:var(--white-dim); font-size:.72rem; text-transform:capitalize; }
+  .timeline-score-snap { color:var(--accent); font-size:.72rem; font-weight:700; }
+  .timeline-empty { color:var(--white-dim); font-family:'Barlow Condensed'; padding:16px; text-align:center; }
+
+  /* ===== WEEKEND WRAP FLASHSCORE ===== */
+  .fs-load-btn { font-family:'Barlow Condensed'; font-weight:700; letter-spacing:1px; font-size:.82rem; white-space:nowrap; }
+  .fs-stats-bar {
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    background:rgba(245,200,66,0.06); border:1px solid rgba(245,200,66,0.15);
+    padding:12px 16px;
+  }
+  .fs-stat-chip {
+    font-family:'Barlow Condensed'; font-size:.85rem; color:var(--white-dim);
+    background:rgba(255,255,255,0.05); border-radius:4px; padding:3px 10px;
+  }
+  .fs-stat-chip strong { color:var(--gold); }
+  .wrap-shock { font-family:'Barlow Condensed'; font-size:.72rem; font-weight:700; letter-spacing:1px; color:var(--red-card); background:rgba(255,72,72,0.12); border:1px solid rgba(255,72,72,0.25); border-radius:3px; padding:1px 6px; }
+  .wrap-highlight { font-family:'Barlow Condensed'; font-size:.72rem; font-weight:700; letter-spacing:1px; color:var(--gold); background:rgba(245,200,66,0.12); border:1px solid rgba(245,200,66,0.25); border-radius:3px; padding:1px 6px; }
+  .wrap-team { font-family:'Barlow Condensed'; font-weight:700; font-size:.9rem; }
+  .wrap-team.home { flex:1; text-align:right; }
+  .wrap-team.away { flex:1; }
+  .wrap-score { font-family:'Black Ops One'; font-size:.95rem; color:var(--gold); min-width:50px; text-align:center; }
+
+  /* ===== GRID-3 ===== */
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media(max-width:900px){ .grid-3 { grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:640px){ .grid-3 { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -1838,6 +1920,14 @@
 <div id="app">
 
   <!-- API Config Modal -->
+  <!-- LIVE MATCH TIMELINE MODAL -->
+  <div class="modal-overlay hidden" id="liveTimelineModal">
+    <div class="modal" style="max-width:640px;">
+      <button class="modal-close" onclick="closeTimelineModal()">✕</button>
+      <div id="liveTimelineContent"></div>
+    </div>
+  </div>
+
   <div class="modal-overlay hidden" id="apiModal">
     <div class="modal">
       <button class="modal-close" onclick="document.getElementById('apiModal').classList.add('hidden')">✕</button>
@@ -2072,12 +2162,12 @@
       <div class="card mb-32 fade-in" id="oracleTipsCard">
         <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
           <div>
-            <span class="section-title">🎯 Oracle Tips — This Week</span>
-            <span class="section-sub">Top confidence picks from the Predictions engine</span>
+            <span class="section-title">⚡ Oracle Tips — Today's Best Bets</span>
+            <span class="section-sub">Top confidence picks · FlashScore form data</span>
           </div>
           <button class="export-btn" onclick="switchTab('predictions')">See All Picks →</button>
         </div>
-        <div id="oracleTipsList" class="grid-2"></div>
+        <div id="oracleTipsList" class="grid-3"></div>
       </div>
 
     </div>
@@ -2127,10 +2217,14 @@
 
     <!-- WEEKEND WRAP TAB -->
     <div class="tab-content" id="tab-wrap">
-      <div class="section-header">
-        <span class="section-title">Weekend Wrap</span>
-        <span class="section-sub">Latest matchweek round-up — auto-generated from results</span>
+      <div class="section-header" style="justify-content:space-between;align-items:center;">
+        <div>
+          <span class="section-title">Weekend Wrap</span>
+          <span class="section-sub">Latest matchweek round-up — auto-generated from results</span>
+        </div>
+        <button class="btn-primary fs-load-btn" id="wrapFsBtn" onclick="loadWrapFromFlashScore()">⚡ Load FlashScore Results</button>
       </div>
+      <div id="wrapFsStats" style="display:none;" class="card mb-16 fs-stats-bar"></div>
       <div id="wrapContent"></div>
     </div>
 
@@ -6016,7 +6110,8 @@ function renderLiveMatches() {
       }).join('') + '</div>';
     }
 
-    return `<div class="live-match-card ${cls}">
+    const mIdx = items.indexOf(m);
+    return `<div class="live-match-card ${cls}" onclick="openTimelineModal(${mIdx})" style="cursor:pointer;">
       <div class="live-match-header">
         <span class="live-league-tag">${m.league || '—'}</span>
         <span class="live-status-badge ${statusCls}">${statusLabel}</span>
@@ -6076,19 +6171,124 @@ function initLiveTab() {
 // 🎯 ORACLE TIPS WIDGET (Overview)
 // ============================================================
 
-function renderOracleTips() {
+// ============================================================
+// ⚡ ORACLE TIPS — FLASHSCORE POWERED
+// ============================================================
+const oracleTipsState = { loading: false };
+
+async function loadOracleTips() {
+  const el = document.getElementById('oracleTipsList');
+  if (!el || oracleTipsState.loading) return;
+  oracleTipsState.loading = true;
+
+  el.innerHTML = '<div class="loading-ring" style="margin:24px auto;"></div>';
+
+  // Check 30-min cache
+  try {
+    const cached = JSON.parse(localStorage.getItem('fo_tips_cache') || 'null');
+    if (cached && Date.now() - cached.ts < 30 * 60 * 1000) {
+      renderOracleTipsFromData(cached.items);
+      oracleTipsState.loading = false;
+      return;
+    }
+  } catch(_) {}
+
+  try {
+    const res = await fetch('/.netlify/functions/flashscore-fixtures', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dateOffset: 3 })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'No data');
+    localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
+    renderOracleTipsFromData(json.items);
+  } catch(err) {
+    console.warn('[OracleTips] FlashScore fetch failed, falling back to DEMO data:', err.message);
+    renderOracleTipsFallback();
+  }
+  oracleTipsState.loading = false;
+}
+
+function selectTipType(m) {
+  // m fields from fixtures actor: home_team, away_team, home_form, away_form, home_goals_avg, away_goals_avg
+  const hForm  = Array.isArray(m.home_form) ? m.home_form : [];
+  const aForm  = Array.isArray(m.away_form) ? m.away_form : [];
+  const hGoals = parseFloat(m.home_goals_avg) || 0;
+  const aGoals = parseFloat(m.away_goals_avg) || 0;
+  const avgGoals = hGoals + aGoals;
+
+  const hWins    = hForm.filter(r => r === 'W').length;
+  const aWins    = aForm.filter(r => r === 'W').length;
+  const hScored  = hForm.filter(r => r !== 'L').length; // W or D = scored
+  const aScored  = aForm.filter(r => r !== 'L').length;
+  const hLosses  = hForm.filter(r => r === 'L').length;
+  const aLosses  = aForm.filter(r => r === 'L').length;
+
+  // Check H2H draws
+  const h2h = Array.isArray(m.h2h) ? m.h2h : [];
+  const h2hDraws = h2h.slice(0,3).filter(g => g === 'D').length;
+
+  if (h2hDraws >= 2) return { type:'DRAW', conf: 62 + h2hDraws * 4, reason:'Strong H2H draw tendency over last 3 meetings.', icon:'🤝' };
+  if (hGoals < 1.5 && aGoals < 1.5) return { type:'UNDER 2.5', conf: 65 + Math.round((3 - avgGoals) * 6), reason:`Both sides averaging ${hGoals.toFixed(1)} + ${aGoals.toFixed(1)} goals — low-scoring expected.`, icon:'🔒' };
+  if (hScored >= 3 && aScored >= 3 && avgGoals > 2.7) return { type:'BTTS', conf: 68 + Math.round((avgGoals - 2.7) * 8), reason:`Both teams scoring in ${hScored}/5 and ${aScored}/5 recent matches.`, icon:'⚽' };
+  if (avgGoals > 2.7) return { type:'OVER 2.5', conf: 66 + Math.round((avgGoals - 2.7) * 7), reason:`Combined avg ${avgGoals.toFixed(1)} goals. High-scoring game likely.`, icon:'🔥' };
+  if (hWins >= 4 && aLosses >= 3) return { type:'HOME WIN', conf: 70 + hWins * 2 + aLosses, reason:`Home side won ${hWins}/5 recently, visitors lost ${aLosses}/5 away.`, icon:'🏠' };
+  // Default: most probable
+  return { type:'HOME WIN', conf: 57, reason:'Home advantage factor with slight form edge.', icon:'🏠' };
+}
+
+function renderOracleTipsFromData(items) {
   const el = document.getElementById('oracleTipsList');
   if (!el) return;
 
-  const tips = (DEMO.predictions || [])
-    .filter(p => p.confidence === 'high')
-    .slice(0, 6);
+  const candidates = (items || []).filter(m => m.home_team && m.away_team);
+  if (!candidates.length) { renderOracleTipsFallback(); return; }
 
+  // Score each fixture and pick top 3
+  const scored = candidates.map(m => {
+    const tip = selectTipType(m);
+    return { ...m, tip };
+  }).sort((a, b) => b.tip.conf - a.tip.conf).slice(0, 3);
+
+  if (!scored.length) { renderOracleTipsFallback(); return; }
+
+  el.innerHTML = scored.map(m => {
+    const tip = m.tip;
+    const conf = Math.min(tip.conf, 93);
+    const confClass = conf >= 70 ? 'high' : conf >= 55 ? 'medium' : 'low';
+    const kickoff = m.start_time || m.kickoff || '';
+    const league  = m.league || m.competition || '';
+    return `
+      <div class="oracle-tip-card fs-tip-card">
+        <div class="fs-tip-header">
+          ${league ? `<span class="live-league-tag">${league}</span>` : ''}
+          ${kickoff ? `<span class="fs-tip-kickoff">🕐 ${kickoff}</span>` : ''}
+        </div>
+        <div class="oracle-tip-match">${m.home_team} <span style="color:var(--white-dim);font-weight:400;">vs</span> ${m.away_team}</div>
+        <div class="fs-tip-badge-row">
+          <span class="fs-tip-type-badge">${tip.icon} ${tip.type}</span>
+          <span class="oracle-tip-conf ${confClass}">${conf}% confidence</span>
+        </div>
+        <div class="fs-confidence-bar-wrap">
+          <div class="fs-confidence-bar" style="width:${conf}%;background:${conf >= 70 ? 'var(--accent)' : conf >= 55 ? 'var(--gold)' : 'var(--white-dim)'};"></div>
+        </div>
+        <div class="fs-tip-reason">${tip.reason}</div>
+        <div class="fs-powered-badge">⚡ FlashScore Powered</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderOracleTipsFallback() {
+  const el = document.getElementById('oracleTipsList');
+  if (!el) return;
+  const tips = (DEMO.predictions || []).filter(p => p.confidence === 'high').slice(0, 3);
   if (!tips.length) {
-    el.innerHTML = '<div style="color:var(--white-dim);font-family:Barlow Condensed;padding:16px;">No high-confidence picks for current matchweek.</div>';
+    el.innerHTML = '<div style="color:var(--white-dim);font-family:Barlow Condensed;padding:16px;">No high-confidence picks available.</div>';
     return;
   }
-
   el.innerHTML = tips.map(p => `
     <div class="oracle-tip-card">
       <div class="oracle-tip-match">${p.home} <span style="color:var(--white-dim);font-weight:400;">vs</span> ${p.away}</div>
@@ -6101,6 +6301,8 @@ function renderOracleTips() {
     </div>
   `).join('');
 }
+
+function renderOracleTips() { loadOracleTips(); }
 
 // ============================================================
 // 📊 FLASHSCORE FORM ENRICHMENT (Predictions)
@@ -6119,41 +6321,54 @@ async function toggleFSForm(enabled) {
     return;
   }
 
-  if (statusEl) statusEl.textContent = '⏳ Loading form data…';
+  if (statusEl) statusEl.textContent = '⏳ Loading FlashScore form data…';
 
   try {
-    // Use the live cache if available, else fetch fresh
-    let items = liveState.data;
-    if (!items) {
-      const cached = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
-      if (cached && Date.now() - cached.ts < 10 * 60 * 1000) {
-        items = cached.items;
-      }
+    // Check fixture cache first
+    let items = null;
+    const cached = JSON.parse(localStorage.getItem('fo_tips_cache') || 'null');
+    if (cached && Date.now() - cached.ts < 30 * 60 * 1000) {
+      items = cached.items;
     }
 
     if (!items) {
-      // Fetch fresh
-      const res = await fetch('/.netlify/functions/flashscore', {
+      const res = await fetch('/.netlify/functions/flashscore-fixtures', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
+        body: JSON.stringify({ dateOffset: 3 })
       });
       const json = await res.json();
       if (json.ok) {
         items = json.items;
-        localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items }));
+        localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items }));
       }
     }
 
-    // Build form map: team name → last 5 results array
-    if (items) {
+    // Also check live cache as supplementary form source
+    const liveItems = liveState.data || (() => {
+      try { const c = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null'); return c?.items; } catch(_) { return null; }
+    })();
+
+    const allItems = [...(items || []), ...(liveItems || [])];
+
+    if (allItems.length) {
       fsFormData = {};
-      items.forEach(m => {
+      allItems.forEach(m => {
+        // Use pre-computed form arrays if available
+        if (Array.isArray(m.home_form) && m.home_team) {
+          const k = normTeam(m.home_team);
+          if (!fsFormData[k] || fsFormData[k].length < m.home_form.length) fsFormData[k] = m.home_form.slice(-5);
+        }
+        if (Array.isArray(m.away_form) && m.away_team) {
+          const k = normTeam(m.away_team);
+          if (!fsFormData[k] || fsFormData[k].length < m.away_form.length) fsFormData[k] = m.away_form.slice(-5);
+        }
+
+        // Derive from match result
         const hName  = normTeam(m.home_team || '');
         const aName  = normTeam(m.away_team || '');
         const hScore = parseInt(m.home_score ?? '');
         const aScore = parseInt(m.away_score ?? '');
-
         if (hName && !isNaN(hScore) && !isNaN(aScore)) {
           const hResult = hScore > aScore ? 'W' : hScore === aScore ? 'D' : 'L';
           const aResult = aScore > hScore ? 'W' : aScore === hScore ? 'D' : 'L';
@@ -6166,7 +6381,7 @@ async function toggleFSForm(enabled) {
       fsFormLoaded = true;
       if (statusEl) statusEl.textContent = `✅ Form loaded for ${Object.keys(fsFormData).length} teams`;
     } else {
-      if (statusEl) statusEl.textContent = '⚠️ No data available';
+      if (statusEl) statusEl.textContent = '⚠️ No FlashScore data available';
     }
   } catch (err) {
     if (statusEl) statusEl.textContent = `⚠️ ${err.message}`;
@@ -6183,6 +6398,209 @@ function getFormBadgesHtml(teamName) {
   const results = fsFormData[key].slice(-5);
   const badges = results.map(r => `<span class="fs-form-badge ${r}">${r}</span>`).join('');
   return `<div class="fs-form-row">${badges}</div>`;
+}
+
+// ============================================================
+// ⚡ LIVE MATCH TIMELINE MODAL
+// ============================================================
+
+function openTimelineModal(idxOrMatch) {
+  const m = typeof idxOrMatch === 'number'
+    ? (liveState.data || [])[idxOrMatch]
+    : idxOrMatch;
+  if (!m) return;
+
+  const overlay = document.getElementById('liveTimelineModal');
+  const content = document.getElementById('liveTimelineContent');
+  if (!overlay || !content) return;
+
+  const history = Array.isArray(m.history) ? m.history : [];
+  const events  = history.filter(e => e.kind === 'event' || e.action);
+
+  // Build timeline items
+  const timelineHtml = events.length ? events.map(ev => {
+    const action = String(ev.action || '').toLowerCase();
+    const icon   = action.includes('goal') ? '⚽' : action.includes('red') ? '🟥' : action.includes('yellow') ? '🟨' : action.includes('subst') ? '🔄' : '📋';
+    const side   = ev.side === 'home' ? 'left' : 'right';
+    return `
+      <div class="timeline-item ${side}">
+        <div class="timeline-minute">${ev.time || '?'}'</div>
+        <div class="timeline-icon">${icon}</div>
+        <div class="timeline-detail">
+          <span class="timeline-player">${ev.player || '—'}</span>
+          <span class="timeline-action">${ev.action || ''}</span>
+          ${ev.score ? `<span class="timeline-score-snap">${ev.score}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('') : '<div class="timeline-empty">No match events recorded yet.</div>';
+
+  // Stats section
+  const stats = m.stats || {};
+  const poss  = stats.possession || '';
+  const [hPoss, aPoss] = poss ? poss.split('-').map(Number) : [50, 50];
+  const statsHtml = poss || stats.shots ? `
+    <div class="timeline-stats-section">
+      <div class="stat-bar-row">
+        <span>${hPoss || 50}%</span>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${hPoss || 50}%;"></div></div>
+        <span>${aPoss || 50}%</span>
+        <span class="stat-bar-label">Possession</span>
+      </div>
+      ${stats.shots ? `<div class="stat-bar-row">
+        <span>${stats.shots.home ?? '—'}</span><div class="stat-bar-track"></div><span>${stats.shots.away ?? '—'}</span>
+        <span class="stat-bar-label">Shots</span>
+      </div>` : ''}
+      ${stats.corners ? `<div class="stat-bar-row">
+        <span>${stats.corners.home ?? '—'}</span><div class="stat-bar-track"></div><span>${stats.corners.away ?? '—'}</span>
+        <span class="stat-bar-label">Corners</span>
+      </div>` : ''}
+    </div>
+  ` : '';
+
+  const isLive = String(m.status || '').toLowerCase() === 'live';
+  content.innerHTML = `
+    <div class="timeline-modal-header">
+      <span class="live-league-tag">${m.league || '—'}</span>
+      <span class="live-status-badge ${isLive ? 'live' : 'ft'}">${m.status_time || m.status || '—'}</span>
+    </div>
+    <div class="timeline-scoreline">
+      <div class="timeline-team home">${m.home_team || '—'}</div>
+      <div class="timeline-score-big">${m.home_score ?? '—'} – ${m.away_score ?? '—'}</div>
+      <div class="timeline-team away">${m.away_team || '—'}</div>
+    </div>
+    ${statsHtml}
+    <div class="timeline-section-title">⏱ Match Timeline</div>
+    <div class="timeline-list">${timelineHtml}</div>
+    <div class="fs-powered-badge" style="margin-top:16px;">⚡ FlashScore Data</div>
+  `;
+
+  overlay.classList.remove('hidden');
+}
+
+function closeTimelineModal() {
+  document.getElementById('liveTimelineModal').classList.add('hidden');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeTimelineModal();
+});
+
+// ============================================================
+// ⚡ WEEKEND WRAP — FLASHSCORE AUTO-POPULATION
+// ============================================================
+
+async function loadWrapFromFlashScore() {
+  const btn     = document.getElementById('wrapFsBtn');
+  const statsEl = document.getElementById('wrapFsStats');
+  const wrapEl  = document.getElementById('wrapContent');
+  if (!btn || !wrapEl) return;
+
+  // Check 3-hour cache
+  try {
+    const cached = JSON.parse(localStorage.getItem('fo_wrap_cache') || 'null');
+    if (cached && Date.now() - cached.ts < 3 * 60 * 60 * 1000) {
+      renderWrapResults(cached.items, statsEl, wrapEl);
+      return;
+    }
+  } catch(_) {}
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Loading…';
+  wrapEl.innerHTML = '<div class="loading-ring" style="margin:32px auto;"></div>';
+
+  try {
+    const res = await fetch('/.netlify/functions/flashscore-history', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dateOffset: -1 })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'No data');
+
+    localStorage.setItem('fo_wrap_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
+    renderWrapResults(json.items, statsEl, wrapEl);
+  } catch(err) {
+    wrapEl.innerHTML = `<div class="live-empty">⚠️ Could not load FlashScore results.<br><small style="color:var(--white-dim)">${err.message}</small></div>`;
+    console.warn('[WrapLoad]', err);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⚡ Load FlashScore Results';
+}
+
+function renderWrapResults(items, statsEl, wrapEl) {
+  const finished = (items || []).filter(m => {
+    const s = String(m.status || '').toLowerCase();
+    return s === 'ft' || s === 'finished' || s === 'aet';
+  });
+
+  if (!finished.length) {
+    wrapEl.innerHTML = '<div class="live-empty">No finished results found for recent dates.</div>';
+    if (statsEl) statsEl.style.display = 'none';
+    return;
+  }
+
+  // Auto-calculate stats
+  let totalGoals = 0, cleanSheets = 0, highScoringGoals = 0, highScoringCount = 0;
+  let highestGoals = 0, highlightMatch = null;
+
+  finished.forEach(m => {
+    const hG = parseInt(m.home_score) || 0;
+    const aG = parseInt(m.away_score) || 0;
+    const tot = hG + aG;
+    totalGoals += tot;
+    if (hG === 0 || aG === 0) cleanSheets++;
+    if (tot >= 3) { highScoringGoals += tot; highScoringCount++; }
+    if (tot > highestGoals) { highestGoals = tot; highlightMatch = m; }
+  });
+  const avgGoals = (totalGoals / finished.length).toFixed(1);
+
+  // Show stats bar
+  if (statsEl) {
+    statsEl.style.display = 'flex';
+    statsEl.innerHTML = `
+      <div class="fs-stat-chip">⚽ <strong>${totalGoals}</strong> total goals</div>
+      <div class="fs-stat-chip">🧤 <strong>${cleanSheets}</strong> clean sheets</div>
+      <div class="fs-stat-chip">📊 <strong>${avgGoals}</strong> avg goals/game</div>
+      <div class="fs-stat-chip">🔥 <strong>${highScoringCount}</strong> matches with 3+ goals</div>
+      <div class="fs-powered-badge" style="margin-left:auto;">⚡ Powered by FlashScore</div>
+    `;
+  }
+
+  // Group by league
+  const byLeague = {};
+  finished.forEach(m => {
+    const league = m.league || 'Other';
+    if (!byLeague[league]) byLeague[league] = [];
+    byLeague[league].push(m);
+  });
+
+  let html = '';
+  Object.entries(byLeague).forEach(([league, matches]) => {
+    html += `<div class="section-header mt-24 mb-8"><span class="section-title" style="font-size:1rem;">${league}</span></div>`;
+    matches.forEach(m => {
+      const hG = parseInt(m.home_score) || 0;
+      const aG = parseInt(m.away_score) || 0;
+      const diff = Math.abs(hG - aG);
+      const isShock = diff >= 3;
+      const isHighlight = m === highlightMatch;
+      const borderStyle = isHighlight ? 'border-left:3px solid var(--gold);' : isShock ? 'border-left:3px solid var(--red-card);' : '';
+
+      html += `
+        <div class="wrap-result-row" style="${borderStyle}">
+          <span class="wrap-team home">${m.home_team || '—'}</span>
+          <span class="wrap-score">${hG} – ${aG}</span>
+          <span class="wrap-team away">${m.away_team || '—'}</span>
+          ${isShock ? '<span class="wrap-shock">😱 SHOCK</span>' : ''}
+          ${isHighlight ? '<span class="wrap-highlight">🔥 TOP GAME</span>' : ''}
+        </div>
+      `;
+    });
+  });
+
+  wrapEl.innerHTML = html;
 }
 
 // ============================================================

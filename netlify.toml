@@ -1,9 +1,27 @@
-[build]
-  publish = "."
-  functions = "netlify/functions"
-
 [functions]
   node_bundler = "esbuild"
+  directory = "functions"
 
 [functions."flashscore"]
   timeout = 26
+
+[functions."flashscore-history"]
+  timeout = 26
+
+[functions."flashscore-fixtures"]
+  timeout = 26
+
+[[redirects]]
+  from = "/api/flashscore-live"
+  to = "/.netlify/functions/flashscore"
+  status = 200
+
+[[redirects]]
+  from = "/api/flashscore-history"
+  to = "/.netlify/functions/flashscore-history"
+  status = 200
+
+[[redirects]]
+  from = "/api/flashscore-fixtures"
+  to = "/.netlify/functions/flashscore-fixtures"
+  status = 200
