@@ -6149,8 +6149,8 @@ async function toggleFSForm(enabled) {
     if (items) {
       fsFormData = {};
       items.forEach(m => {
-        const hName  = m.home_team || '';
-        const aName  = m.away_team || '';
+        const hName  = normTeam(m.home_team || '');
+        const aName  = normTeam(m.away_team || '');
         const hScore = parseInt(m.home_score ?? '');
         const aScore = parseInt(m.away_score ?? '');
 
@@ -6177,8 +6177,10 @@ async function toggleFSForm(enabled) {
 }
 
 function getFormBadgesHtml(teamName) {
-  if (!fsFormLoaded || !fsFormData[teamName]) return '';
-  const results = fsFormData[teamName].slice(-5);
+  if (!fsFormLoaded) return '';
+  const key = normTeam(teamName);
+  if (!fsFormData[key]) return '';
+  const results = fsFormData[key].slice(-5);
   const badges = results.map(r => `<span class="fs-form-badge ${r}">${r}</span>`).join('');
   return `<div class="fs-form-row">${badges}</div>`;
 }
