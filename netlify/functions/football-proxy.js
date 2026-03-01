@@ -1,46 +1,67 @@
-// Netlify serverless function — football-data.org proxy
-// Sits server-side so no CORS issues, keeps API key safe
-// Endpoint: /.netlify/functions/football-proxy?path=/v4/competitions/PL/standings
+// ============================================================
+// football-proxy.js — Football-Data.org proxy
+// Keeps API key server-side. Proxies all FD.org v4 endpoints.
+// ============================================================
+// Env vars needed:
+//   FOOTBALL_DATA_KEY — your football-data.org API key
+// ============================================================
 
-const FD_KEY = 'a707e148d9614e688fcc9b248c9961ee';
-const FD_BASE = 'https://api.football-data.org';
+const BASE = 'https://api.football-data.org/v4';
+
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Content-Type': 'application/json',
+};
 
 exports.handler = async (event) => {
-  const path = event.queryStringParameters?.path || '';
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: CORS, body: '' };
+  }
 
-  if (!path.startsWith('/v4/')) {
+  const params = event.queryStringParameters || {};
+  const path = params.path; // e.g. "/competitions/PL/standings"
+
+  if (!path) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'Invalid path. Must start with /v4/' }),
+      headers: CORS,
+      body: JSON.stringify({ error: 'Missing ?path= parameter' }),
     };
   }
 
-  // Forward any extra query params (dateFrom, dateTo, etc.)
-  const qs = { ...event.queryStringParameters };
-  delete qs.path;
-  const queryString = new URLSearchParams(qs).toString();
-  const url = `${FD_BASE}${path}${queryString ? '?' + queryString : ''}`;
+  const API_KEY = process.env.FOOTBALL_DATA_KEY;
+  if (!API_KEY) {
+    return {
+      statusCode: 500,
+      headers: CORS,
+      body: JSON.stringify({ error: 'FOOTBALL_DATA_KEY not configured' }),
+    };
+  }
+
+  const url = `${BASE}${path}`;
 
   try {
-    const response = await fetch(url, {
-      headers: { 'X-Auth-Token': FD_KEY },
+    const res = await fetch(url, {
+      headers: {
+        'X-Auth-Token': API_KEY,
+      },
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
     return {
-      statusCode: response.status,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
+      statusCode: res.status,
+      headers: CORS,
       body: JSON.stringify(data),
     };
   } catch (err) {
+    console.error('football-proxy error:', err);
     return {
       statusCode: 502,
-      body: JSON.stringify({ error: 'Proxy fetch failed', detail: err.message }),
+      headers: CORS,
+      body: JSON.stringify({ error: 'Upstream API error', message: err.message }),
     };
   }
 };
-

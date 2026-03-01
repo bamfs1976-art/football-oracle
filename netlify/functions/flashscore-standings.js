@@ -1,123 +1,101 @@
-// Netlify serverless function — FlashScore League Standings via Apify
-// Endpoint: /.netlify/functions/flashscore-standings  (GET)
-// Uses apify~web-scraper or extractify-labs~flashscore-extractor for standings.
-// Set APIFY_TOKEN in Netlify environment variables.
+// ============================================================
+// flashscore-standings.js — FlashScore standings via Apify
+// GET endpoint: returns current league tables for top 5 leagues
+// ============================================================
+// Env vars needed:
+//   APIFY_TOKEN — your Apify API token
+// ============================================================
 
-const ACTOR_ID = 'extractify-labs~flashscore-extractor';
-const POLL_INTERVAL_MS = 5000;
-const MAX_RETRIES = 12; // up to 60 seconds
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Content-Type': 'application/json',
+};
 
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  };
-}
+const ACTOR_ID = 'junglee~flashscore-scraper';
+const APIFY_RUN = `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items`;
+
+const LEAGUE_MAP = {
+  'england_premier-league': 'pl',
+  'spain_laliga': 'laliga',
+  'italy_serie-a': 'seriea',
+  'germany_bundesliga': 'bundesliga',
+  'france_ligue-1': 'ligue1',
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: corsHeaders(), body: '' };
+    return { statusCode: 204, headers: CORS, body: '' };
   }
 
   const APIFY_TOKEN = process.env.APIFY_TOKEN;
   if (!APIFY_TOKEN) {
     return {
       statusCode: 500,
-      headers: corsHeaders(),
-      body: JSON.stringify({ error: 'APIFY_TOKEN environment variable not set.' }),
+      headers: CORS,
+      body: JSON.stringify({ ok: false, error: 'APIFY_TOKEN not configured' }),
     };
   }
 
-  const actorInput = {
-    sport: 'football',
-    dataType: 'standings',   // request standings data from the actor
-    leagues: [
-      'england_premier-league',
-      'spain_laliga',
-      'italy_serie-a',
-      'germany_bundesliga',
-      'france_ligue-1',
-    ],
-    maxItems: 200,
-  };
-
   try {
-    // 1. Start the run
-    const startRes = await fetch(
-      `https://api.apify.com/v2/acts/${encodeURIComponent(ACTOR_ID)}/runs?token=${APIFY_TOKEN}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(actorInput),
-      }
-    );
+    const leagues = Object.keys(LEAGUE_MAP);
+    
+    const res = await fetch(`${APIFY_RUN}?token=${APIFY_TOKEN}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        leagues: leagues,
+        scrapeType: 'standings',
+        maxItems: 200,
+      }),
+    });
 
-    if (!startRes.ok) {
-      const txt = await startRes.text();
+    if (!res.ok) {
       return {
-        statusCode: 502,
-        headers: corsHeaders(),
-        body: JSON.stringify({ error: 'Failed to start Apify actor', detail: txt }),
+        statusCode: res.status,
+        headers: CORS,
+        body: JSON.stringify({ ok: false, error: `Apify returned ${res.status}` }),
       };
     }
 
-    const startJson = await startRes.json();
-    const runId = startJson.data?.id;
-    const datasetId = startJson.data?.defaultDatasetId;
+    const items = await res.json();
 
-    if (!runId) {
-      return {
-        statusCode: 502,
-        headers: corsHeaders(),
-        body: JSON.stringify({ error: 'No runId returned from Apify' }),
-      };
+    // Group by league for easier frontend consumption
+    const standings = {};
+    for (const [fsLeague, key] of Object.entries(LEAGUE_MAP)) {
+      standings[key] = items
+        .filter(item => {
+          const l = (item.league || item.tournament || '').toLowerCase();
+          return l.includes(fsLeague.split('_')[1]) || l.includes(key);
+        })
+        .map(item => ({
+          pos: item.position || item.rank || 0,
+          team: item.team || item.teamName || '',
+          p: item.played || item.matches || 0,
+          w: item.wins || item.won || 0,
+          d: item.draws || item.drawn || 0,
+          l: item.losses || item.lost || 0,
+          gf: item.goalsFor || item.scored || 0,
+          ga: item.goalsAgainst || item.conceded || 0,
+          gd: item.goalDifference || item.gd || 0,
+          pts: item.points || item.pts || 0,
+          form: item.form || '',
+        }))
+        .sort((a, b) => a.pos - b.pos);
     }
-
-    // 2. Poll until SUCCEEDED
-    let attempts = 0;
-    while (attempts < MAX_RETRIES) {
-      await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
-      attempts++;
-
-      const statusRes = await fetch(
-        `https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`
-      );
-      const statusJson = await statusRes.json();
-      const status = statusJson.data?.status;
-
-      if (status === 'SUCCEEDED') break;
-      if (status === 'FAILED' || status === 'ABORTED' || status === 'TIMED-OUT') {
-        return {
-          statusCode: 503,
-          headers: corsHeaders(),
-          body: JSON.stringify({ error: `Apify run ${status}` }),
-        };
-      }
-    }
-
-    // 3. Fetch dataset items
-    const itemsRes = await fetch(
-      `https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_TOKEN}&format=json&clean=true`
-    );
-    const items = await itemsRes.json();
 
     return {
       statusCode: 200,
-      headers: {
-        ...corsHeaders(),
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600', // cache 1 hour
-      },
-      body: JSON.stringify({ ok: true, count: Array.isArray(items) ? items.length : 0, items }),
+      headers: { ...CORS, 'Cache-Control': 'public, max-age=3600' },
+      body: JSON.stringify({ ok: true, standingsOk: true, standings }),
     };
-
   } catch (err) {
-    console.error('flashscore-standings error:', err.message);
+    console.error('flashscore-standings error:', err);
     return {
-      statusCode: 500,
-      headers: corsHeaders(),
-      body: JSON.stringify({ error: 'Internal error', detail: err.message }),
+      statusCode: 502,
+      headers: CORS,
+      body: JSON.stringify({ ok: false, standingsOk: false, error: err.message }),
     };
   }
 };

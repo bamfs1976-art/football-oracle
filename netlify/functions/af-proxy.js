@@ -1,59 +1,78 @@
-// Netlify serverless function — API-Football proxy
-// Endpoint: /.netlify/functions/af-proxy?path=/fixtures&league=39&season=2024
-// All API-Football v3 calls go through here — key never exposed in browser
-//
-// Auth: api-sports.io direct endpoint uses ONLY x-apisports-key header.
-// Do NOT send x-rapidapi-key or x-rapidapi-host — they conflict and cause
-// empty responses even when the HTTP status is 200.
+// ============================================================
+// af-proxy.js — API-Football proxy (v3.football.api-sports.io)
+// Keeps API key server-side. Handles standings, fixtures, status.
+// ============================================================
+// Env vars needed in Netlify dashboard:
+//   API_FOOTBALL_KEY — your API-Football (RapidAPI) key
+// ============================================================
 
-const AF_KEY  = '047aaa8a05f7ade8abbb4c91bc8dff1f';
-const AF_BASE = 'https://v3.football.api-sports.io';
+const BASE = 'https://v3.football.api-sports.io';
+
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Content-Type': 'application/json',
+};
 
 exports.handler = async (event) => {
-  const qs   = { ...event.queryStringParameters };
-  const path = qs.path || '';
-  delete qs.path;
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: CORS, body: '' };
+  }
 
-  if (!path || !path.startsWith('/')) {
+  const params = event.queryStringParameters || {};
+  const path = params.path;       // e.g. "/standings", "/fixtures", "/status"
+  
+  if (!path) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'Missing or invalid path param' }),
+      headers: CORS,
+      body: JSON.stringify({ error: 'Missing ?path= parameter' }),
     };
   }
 
-  const queryString = new URLSearchParams(qs).toString();
-  const url = `${AF_BASE}${path}${queryString ? '?' + queryString : ''}`;
+  const API_KEY = process.env.API_FOOTBALL_KEY;
+  if (!API_KEY) {
+    return {
+      statusCode: 500,
+      headers: CORS,
+      body: JSON.stringify({ error: 'API_FOOTBALL_KEY not configured' }),
+    };
+  }
+
+  // Build query string from remaining params (exclude 'path')
+  const qs = Object.entries(params)
+    .filter(([k]) => k !== 'path')
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&');
+
+  const url = `${BASE}${path}${qs ? '?' + qs : ''}`;
 
   try {
-    const response = await fetch(url, {
+    const res = await fetch(url, {
       headers: {
-        'x-apisports-key': AF_KEY,
-        // NOTE: x-rapidapi-host intentionally omitted — sending it alongside
-        // x-apisports-key causes the API to return empty response arrays.
+        'x-apisports-key': API_KEY,
       },
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    // Surface API-level errors in logs for easier debugging
-    if (data.errors && Object.keys(data.errors).length > 0) {
-      console.error('AF API error for', path, JSON.stringify(data.errors));
-    }
+    // Pass through rate limit headers so frontend can track quota
+    const respHeaders = { ...CORS };
+    const remaining = res.headers.get('x-ratelimit-remaining');
+    if (remaining) respHeaders['X-RateLimit-Remaining'] = remaining;
 
     return {
-      statusCode: response.status,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'no-store', // always fresh — never cache API responses
-      },
+      statusCode: res.status,
+      headers: respHeaders,
       body: JSON.stringify(data),
     };
   } catch (err) {
-    console.error('AF proxy fetch failed:', err.message);
+    console.error('af-proxy error:', err);
     return {
       statusCode: 502,
-      body: JSON.stringify({ error: 'AF proxy fetch failed', detail: err.message }),
+      headers: CORS,
+      body: JSON.stringify({ error: 'Upstream API error', message: err.message }),
     };
   }
 };

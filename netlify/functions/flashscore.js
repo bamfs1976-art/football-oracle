@@ -1,60 +1,73 @@
-// Netlify serverless function — Apify FlashScore Scraper Live proxy
-// Endpoint: /.netlify/functions/flashscore  (POST)
-// Uses Apify synchronous run endpoint to avoid Netlify's 10s timeout issue.
-// Set APIFY_TOKEN in Netlify environment variables.
+// ============================================================
+// flashscore.js — FlashScore live scores via Apify
+// Returns today's live/finished/upcoming matches for given leagues
+// ============================================================
+// Env vars needed:
+//   APIFY_TOKEN — your Apify API token
+// ============================================================
 
-const ACTOR_ID = 'statanow~flashscore-scraper-live';
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Content-Type': 'application/json',
+};
+
+// Apify actor for FlashScore scraping
+const ACTOR_ID = 'junglee~flashscore-scraper';
+const APIFY_RUN = `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items`;
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: corsHeaders(), body: '' };
+    return { statusCode: 204, headers: CORS, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: corsHeaders(), body: JSON.stringify({ error: 'POST only' }) };
+    return { statusCode: 405, headers: CORS, body: JSON.stringify({ error: 'POST only' }) };
   }
 
   const APIFY_TOKEN = process.env.APIFY_TOKEN;
   if (!APIFY_TOKEN) {
-    return { statusCode: 500, headers: corsHeaders(), body: JSON.stringify({ error: 'APIFY_TOKEN environment variable not set' }) };
+    return {
+      statusCode: 500,
+      headers: CORS,
+      body: JSON.stringify({ error: 'APIFY_TOKEN not configured' }),
+    };
   }
 
-  let input = {};
-  try { input = JSON.parse(event.body || '{}'); } catch (_) {}
+  let body;
+  try {
+    body = JSON.parse(event.body || '{}');
+  } catch {
+    return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid JSON body' }) };
+  }
 
-  const actorInput = {
-    sport: 'football',
-    leagues: input.leagues || [
-      'england_premier-league',
-      'spain_laliga',
-      'italy_serie-a',
-      'germany_bundesliga',
-      'france_ligue-1',
-    ],
-    maxItems: input.maxItems || 100,
-  };
+  const leagues = body.leagues || [
+    'england_premier-league', 'spain_laliga', 'italy_serie-a',
+    'germany_bundesliga', 'france_ligue-1'
+  ];
+
+  // Build today's date string
+  const today = new Date().toISOString().slice(0, 10);
 
   try {
-    // Use the synchronous run-and-get-dataset-items endpoint.
-    // Apify runs the actor and streams results back directly — no polling needed.
-    // timeout=55 tells Apify to wait up to 55s (Netlify functions allow up to 26s on free, 
-    // but Pro/paid plans allow up to 26s too — bump netlify.toml if needed).
-    const url = `https://api.apify.com/v2/acts/${encodeURIComponent(ACTOR_ID)}/run-sync-get-dataset-items` +
-      `?token=${APIFY_TOKEN}&format=json&clean=true&timeout=25`;
-
-    const res = await fetch(url, {
+    const res = await fetch(`${APIFY_RUN}?token=${APIFY_TOKEN}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(actorInput),
+      body: JSON.stringify({
+        leagues: leagues,
+        date: today,
+        maxItems: 100,
+      }),
     });
 
     if (!res.ok) {
-      const txt = await res.text();
-      console.error('Apify sync run failed:', res.status, txt);
+      const errText = await res.text();
+      console.error('Apify error:', res.status, errText);
       return {
-        statusCode: 502,
-        headers: corsHeaders(),
-        body: JSON.stringify({ error: 'Apify actor failed', status: res.status, detail: txt }),
+        statusCode: res.status,
+        headers: CORS,
+        body: JSON.stringify({ ok: false, error: `Apify returned ${res.status}` }),
       };
     }
 
@@ -62,28 +75,15 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: {
-        ...corsHeaders(),
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store',
-      },
-      body: JSON.stringify({ ok: true, count: Array.isArray(items) ? items.length : 0, items }),
+      headers: CORS,
+      body: JSON.stringify({ ok: true, items, count: items.length, date: today }),
     };
-
   } catch (err) {
-    console.error('FlashScore function error:', err.message);
+    console.error('flashscore error:', err);
     return {
-      statusCode: 500,
-      headers: corsHeaders(),
-      body: JSON.stringify({ error: 'Internal error', detail: err.message }),
+      statusCode: 502,
+      headers: CORS,
+      body: JSON.stringify({ ok: false, error: err.message }),
     };
   }
 };
-
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
-}
