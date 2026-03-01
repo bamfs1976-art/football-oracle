@@ -2052,7 +2052,7 @@
       
       <div class="section-header mb-20">
         <span class="section-title">Season At A Glance</span>
-        <span class="section-sub">2024-25 · All Leagues</span>
+        <span class="section-sub">2025-26 · All Leagues</span>
       </div>
 
       <!-- KPI Row -->
@@ -2065,7 +2065,7 @@
         <div class="card fade-in" style="animation-delay:.05s">
           <div class="card-label">Avg Goals Per Game</div>
           <div class="card-value green" id="kpiGoals">—</div>
-          <div class="card-detail">Season average 2024-25</div>
+          <div class="card-detail">Season average 2025-26</div>
         </div>
         <div class="card fade-in" style="animation-delay:.1s">
           <div class="card-label">Yellow Cards Issued</div>
@@ -2104,7 +2104,7 @@
         <div class="card fade-in" style="animation-delay:.1s">
           <div class="section-header mb-20">
             <span class="section-title">Most Booked Teams</span>
-            <span class="section-sub">Season 2024-25</span>
+            <span class="section-sub">Season 2025-26</span>
           </div>
           <table class="data-table" id="topBookedTeamsTable">
             <thead>
@@ -2126,7 +2126,7 @@
         <div class="card fade-in">
           <div class="section-header mb-20">
             <span class="section-title">Top Scorers</span>
-            <span class="section-sub">All Leagues 2024-25</span>
+            <span class="section-sub">All Leagues 2025-26</span>
           </div>
           <div id="topScorersList"></div>
         </div>
@@ -2134,7 +2134,7 @@
         <div class="card fade-in" style="animation-delay:.08s">
           <div class="section-header mb-20">
             <span class="section-title">Top Assists</span>
-            <span class="section-sub">All Leagues 2024-25</span>
+            <span class="section-sub">All Leagues 2025-26</span>
           </div>
           <div id="topAssistsList"></div>
         </div>
@@ -2275,7 +2275,7 @@
     <div class="tab-content" id="tab-fixtures">
       <div class="section-header">
         <span class="section-title">Fixtures & Results</span>
-        <span class="section-sub">2024-25 Season</span>
+        <span class="section-sub">2025-26 Season</span>
       </div>
 
       <div class="team-search-wrap">
@@ -2303,7 +2303,7 @@
       <div class="section-header" style="justify-content:space-between;align-items:center;">
         <div>
           <span class="section-title">Weekly Predictions</span>
-          <span class="section-sub">AI-Powered Picks · 2024-25</span>
+          <span class="section-sub">AI-Powered Picks · 2025-26</span>
         </div>
         <button class="export-btn" onclick="exportPredictionsCard()" style="margin-left:auto;">📋 Copy Picks Card</button>
       </div>
@@ -2335,7 +2335,7 @@
     <div class="tab-content" id="tab-injuries">
       <div class="section-header">
         <span class="section-title">Injury Tracker</span>
-        <span class="section-sub">Player availability — 2024-25</span>
+        <span class="section-sub">Player availability — 2025-26</span>
       </div>
 
       <div class="info-box" style="margin-bottom:20px;">
@@ -2391,7 +2391,7 @@
         <div class="card">
           <div class="section-header mb-20">
             <span class="section-title">Most Booked Players</span>
-            <span class="section-sub">Yellow Cards 2024-25</span>
+            <span class="section-sub">Yellow Cards 2025-26</span>
           </div>
           <table class="data-table">
             <thead>
@@ -2464,7 +2464,7 @@
     <div class="tab-content" id="tab-referees">
       <div class="section-header">
         <span class="section-title">Referee Statistics</span>
-        <span class="section-sub">Booking Tendencies 2024-25</span>
+        <span class="section-sub">Booking Tendencies 2025-26</span>
       </div>
 
       <div class="grid-2 mb-32">
@@ -2524,7 +2524,7 @@
     <div class="tab-content" id="tab-suspensions">
       <div class="section-header">
         <span class="section-title">Suspension Tracker</span>
-        <span class="section-sub">Yellow card accumulation · 2024-25</span>
+        <span class="section-sub">Yellow card accumulation · 2025-26</span>
       </div>
 
       <div class="info-box" style="margin-bottom:20px;">
@@ -2705,7 +2705,7 @@
     <div class="tab-content" id="tab-standings">
       <div class="section-header">
         <span class="section-title">League Tables</span>
-        <span class="section-sub">2024-25 Season</span>
+        <span class="section-sub">2025-26 Season</span>
       </div>
 
       <div class="grid-2" id="standingsGrid"></div>
@@ -2718,7 +2718,7 @@
 <script>
 // ============================================================
 // FOOTBALL ORACLE — Main Application
-// Data: OpenFootball.io (fixtures) + Demo data (2024-25 season)
+// Data: OpenFootball.io (fixtures) + Demo data (2025-26 season)
 // ============================================================
 
 // ─── API KEYS — pre-loaded (user-provided 23 Feb 2026) ───────────────────────
@@ -2732,9 +2732,9 @@ const CONFIG = {
   afKey: EMBED_AF_KEY,
 };
 
-// API-Football league IDs (season 2024)
+// API-Football league IDs (season 2025)
 const AF_LEAGUES = { pl: 39, ll: 140, sa: 135, bl: 78, l1: 61 };
-const AF_SEASON  = 2024;
+const AF_SEASON  = 2025;
 
 const LEAGUES = {
   pl: { name: 'Premier League', country: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 England', fdId: 2021, bzId: 1, color: '#3d0073', tag: 'tag-pl' },
@@ -2745,11 +2745,11 @@ const LEAGUES = {
 };
 
 const OPENFOOTBALL_URLS = {
-  pl: 'https://openfootball.github.io/england/2024-25/1-premierleague.json',
-  bl: 'https://openfootball.github.io/deutschland/2024-25/1-bundesliga.json',
-  ll: 'https://openfootball.github.io/espana/2024-25/1-liga.json',
-  sa: 'https://openfootball.github.io/italy/2024-25/1-serie-a.json',
-  l1: 'https://openfootball.github.io/france/2024-25/1-ligue-1.json',
+  pl: 'https://openfootball.github.io/england/2025-26/1-premierleague.json',
+  bl: 'https://openfootball.github.io/deutschland/2025-26/1-bundesliga.json',
+  ll: 'https://openfootball.github.io/espana/2025-26/1-liga.json',
+  sa: 'https://openfootball.github.io/italy/2025-26/1-serie-a.json',
+  l1: 'https://openfootball.github.io/france/2025-26/1-ligue-1.json',
 };
 
 let state = {
@@ -2762,7 +2762,7 @@ let state = {
 };
 
 // ============================================================
-// COMPREHENSIVE DEMO DATA — 2024-25 Season
+// COMPREHENSIVE DEMO DATA — 2025-26 Season
 // Based on actual league structures
 // ============================================================
 
@@ -2779,7 +2779,7 @@ const DEMO = {
 
   standings: {
     // PL — updated to MW27 results (22 Feb 2026). Everton v Man Utd (23 Feb) pending.
-    // Real 2024-25 teams: Leeds, Burnley, Sunderland promoted; Leicester, Ipswich, Southampton relegated
+    // Real 2025-26 teams: Leeds, Burnley, Sunderland promoted; Leicester, Ipswich, Southampton relegated
     pl: [
       { pos:1,  team:'Arsenal',           P:27, W:19, D:4, L:4, GF:62, GA:29, GD:33, pts:61, form:'DWWLW', zone:'cl' },
       { pos:2,  team:'Liverpool',         P:27, W:18, D:5, L:4, GF:61, GA:30, GD:31, pts:59, form:'DWDWW', zone:'cl' },
@@ -2876,7 +2876,7 @@ const DEMO = {
   ],
 
   bookedTeams: [
-    // *** VERIFIED 2024-25 DATA — Updated 23 Feb 2026 ***
+    // *** VERIFIED 2025-26 DATA — Updated 23 Feb 2026 ***
     // PL: myfootballfacts.com (MD27) | La Liga: sportsmole.co.uk | Bundesliga: statmuse.com
     { team:'Tottenham',         league:'pl', yellow:68, red:3, bp:815 },
     { team:'Brighton',          league:'pl', yellow:65, red:0, bp:780 },
@@ -3205,12 +3205,12 @@ const DEMO = {
 // ============================================================
 
 // ── UK TV CHANNEL LOOKUP ──
-// Based on verified 2024-25 broadcast rights:
+// Based on verified 2025-26 broadcast rights:
 // PL: Sky Sports (215 games) + TNT Sports (52 games)
 // La Liga: Premier Sports (340 games/season)
 // Serie A: TNT Sports (selected) + DAZN (all games)
 // Bundesliga: Sky Sports (Sat/Sun) + BBC iPlayer (Friday)
-// Ligue 1: Ligue 1+ pass (£9.99/mo) — no TNT from 2024-25
+// Ligue 1: Ligue 1+ pass (£9.99/mo) — no TNT from 2025-26
 const UK_TV = {
   // Premier League — MW28 confirmed picks
   'Bournemouth_Sunderland':   { channel:'TNT Sports', cls:'tv-tnt' },
@@ -3579,7 +3579,7 @@ function renderBookings() {
     { label:'Highest Yellow Rate', value:'4.0/game', sub:'🇪🇸 La Liga', color:'yellow' },
     { label:'Most Booked Player', value:'Amrabat', sub:'9 yellows, 1 red', color:'' },
     { label:'Highest Risk Fixture', value:'El Clásico', sub:'6.8 cards expected', color:'red' },
-    { label:'Total Cards (5 leagues)', value:Object.values(DEMO.seasonStats).reduce((a,s)=>a+s.yellowCards+s.redCards,0).toString(), sub:'2024-25 to date', color:'gold' },
+    { label:'Total Cards (5 leagues)', value:Object.values(DEMO.seasonStats).reduce((a,s)=>a+s.yellowCards+s.redCards,0).toString(), sub:'2025-26 to date', color:'gold' },
   ].map(k => `
     <div class="card fade-in">
       <div class="card-label">${k.label}</div>
@@ -3857,7 +3857,7 @@ async function runApiDiagnostics() {
     write(`  ↳ ${name}…`);
     try {
       const t0 = Date.now();
-      const r = await fetch(`/.netlify/functions/af-proxy?path=/standings&league=${id}&season=2024`);
+      const r = await fetch(`/.netlify/functions/af-proxy?path=/standings&league=${id}&season=2025`);
       const ms = Date.now() - t0;
       const d = await r.json();
       const table = d.response?.[0]?.league?.standings?.[0];
@@ -3879,7 +3879,7 @@ async function runApiDiagnostics() {
   try {
     const dateFrom = new Date(Date.now() - 7*86400000).toISOString().slice(0,10);
     const dateTo   = new Date(Date.now() + 7*86400000).toISOString().slice(0,10);
-    const r = await fetch(`/.netlify/functions/af-proxy?path=/fixtures&league=39&season=2024&from=${dateFrom}&to=${dateTo}`);
+    const r = await fetch(`/.netlify/functions/af-proxy?path=/fixtures&league=39&season=2025&from=${dateFrom}&to=${dateTo}`);
     const d = await r.json();
     const matches = d.response || [];
     const finished  = matches.filter(m => m.fixture.status.short === 'FT');
@@ -6788,6 +6788,10 @@ function renderWrapResults(items, statsEl, wrapEl) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Clear stale quota counter on fresh page load
+  localStorage.setItem(LS_QUOTA_DATE, getTodayStr());
+  localStorage.setItem(LS_QUOTA_USED, '0');
+
   // Restore theme
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-mode');
@@ -6847,7 +6851,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(e => console.warn('SW registration skipped:', e.message));
   }
 
-  console.log('%c⚽ Football Oracle — 2024-25 Season Analytics', 'color:#f5c842;font-size:1.1em;font-weight:bold');
+  console.log('%c⚽ Football Oracle — 2025-26 Season Analytics', 'color:#f5c842;font-size:1.1em;font-weight:bold');
   console.log('🔑 football-data.org key:', CONFIG.fdKey ? '✓ set' : '✗ missing');
   console.log('🔑 API-Football key: ✓ embedded');
   console.log('⏰ Auto-refresh: 24h schedule with midnight UTC preference');
