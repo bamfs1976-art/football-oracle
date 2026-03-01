@@ -31,14 +31,8 @@ exports.handler = async (event) => {
     };
   }
 
-  const API_KEY = process.env.API_FOOTBALL_KEY;
-  if (!API_KEY) {
-    return {
-      statusCode: 500,
-      headers: CORS,
-      body: JSON.stringify({ error: 'API_FOOTBALL_KEY not configured' }),
-    };
-  }
+  // Use env var if set, otherwise fall back to embedded key
+  const API_KEY = process.env.API_FOOTBALL_KEY || '047aaa8a05f7ade8abbb4c91bc8dff1f';
 
   // Build query string from remaining params (exclude 'path')
   const qs = Object.entries(params)

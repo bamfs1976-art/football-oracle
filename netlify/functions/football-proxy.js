@@ -31,14 +31,7 @@ exports.handler = async (event) => {
     };
   }
 
-  const API_KEY = process.env.FOOTBALL_DATA_KEY;
-  if (!API_KEY) {
-    return {
-      statusCode: 500,
-      headers: CORS,
-      body: JSON.stringify({ error: 'FOOTBALL_DATA_KEY not configured' }),
-    };
-  }
+  const API_KEY = process.env.FOOTBALL_DATA_KEY || 'a707e148d9614e688fcc9b248c9961ee';
 
   const url = `${BASE}${path}`;
 
