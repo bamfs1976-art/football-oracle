@@ -2163,7 +2163,7 @@
         <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
           <div>
             <span class="section-title">⚡ Oracle Tips — Today's Best Bets</span>
-            <span class="section-sub">Top confidence picks · FlashScore form data</span>
+            <span class="section-sub">Top confidence picks · Live form data</span>
           </div>
           <button class="export-btn" onclick="switchTab('predictions')">See All Picks →</button>
         </div>
@@ -2177,7 +2177,7 @@
       <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
         <div>
           <span class="section-title">⚡ Live Scores</span>
-          <span class="section-sub">Real-time data via FlashScore · Auto-refreshes every 5 min</span>
+          <span class="section-sub">Real-time data via API-Football · Auto-refreshes every 5 min</span>
         </div>
         <div class="live-pulse"><div class="pulse-dot"></div><span>LIVE</span></div>
       </div>
@@ -2222,7 +2222,7 @@
           <span class="section-title">Weekend Wrap</span>
           <span class="section-sub">Latest matchweek round-up — auto-generated from results</span>
         </div>
-        <button class="btn-primary fs-load-btn" id="wrapFsBtn" onclick="loadWrapFromFlashScore()">⚡ Load FlashScore Results</button>
+        <button class="btn-primary fs-load-btn" id="wrapFsBtn" onclick="loadWrapFromFlashScore()">⚡ Load Recent Results</button>
       </div>
       <div id="wrapFsStats" style="display:none;" class="card mb-16 fs-stats-bar"></div>
       <div id="wrapContent"></div>
@@ -2324,7 +2324,7 @@
           <input type="checkbox" id="fsFormToggle" onchange="toggleFSForm(this.checked)">
           <span class="fs-toggle-slider"></span>
         </label>
-        <span>Enrich with FlashScore live form <span style="color:var(--accent);font-weight:700;">(last 5 results)</span></span>
+        <span>Enrich with live form data <span style="color:var(--accent);font-weight:700;">(last 5 results)</span></span>
         <span id="fsFormStatus" style="font-size:.72rem;color:var(--white-dim);margin-left:6px;"></span>
       </div>
 
@@ -4176,92 +4176,10 @@ function fsMapStandingsRow(item, leagueKey) {
 
 // ── Primary data fetch: Apify / FlashScore ───────────────────────────────
 async function fetchFromApify() {
-  let matchesOk = false, standingsOk = false;
-
-  // 1. Fetch matches (results + upcoming fixtures) in parallel with standings
-  const [matchesRes, standingsRes] = await Promise.allSettled([
-    fetch('/.netlify/functions/flashscore-matches').then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('/.netlify/functions/flashscore-standings').then(r => r.ok ? r.json() : null).catch(() => null),
-  ]);
-
-  // Process matches
-  const matchData = matchesRes.status === 'fulfilled' ? matchesRes.value : null;
-  if (matchData?.ok) {
-    const allMatches = [
-      ...(matchData.results  || []),
-      ...(matchData.fixtures || []),
-    ];
-
-    // Group by league key
-    const byLeague = { pl:[], ll:[], sa:[], bl:[], l1:[] };
-    for (const item of allMatches) {
-      const mapped = fsMapMatch(item);
-      if (!mapped) continue;
-      // Try leagueKey from item; fall back to detecting from leagueId
-      let key = mapped._leagueKey;
-      if (!key) {
-        // Try to detect league from item.league or item.leagueName
-        const lg = (item.league || item.leagueName || item.tournamentName || '').toLowerCase();
-        if (lg.includes('premier'))   key = 'pl';
-        else if (lg.includes('liga') || lg.includes('laliga')) key = 'll';
-        else if (lg.includes('serie')) key = 'sa';
-        else if (lg.includes('bundesliga')) key = 'bl';
-        else if (lg.includes('ligue'))  key = 'l1';
-      }
-      if (key && byLeague[key]) byLeague[key].push(mapped);
-    }
-
-    for (const key of ['pl','ll','sa','bl','l1']) {
-      const arr = byLeague[key];
-      if (!arr.length) continue;
-      const results  = arr.filter(m => m.result).slice(-8);
-      const upcoming = arr.filter(m => !m.result).slice(0, 10);
-      if (results.length || upcoming.length) {
-        DEMO.fixtures[key] = [...results, ...upcoming];
-        matchesOk = true;
-      }
-    }
-    console.log('%c⚡ Apify FlashScore: MATCHES LOADED', 'color:#4ade80;font-weight:bold',
-      `(${allMatches.length} total)`);
-  }
-
-  // Process standings
-  const standData = standingsRes.status === 'fulfilled' ? standingsRes.value : null;
-  if (standData?.ok && Array.isArray(standData.items)) {
-    // Group standings items by league
-    const byLeague = { pl:[], ll:[], sa:[], bl:[], l1:[] };
-    for (const item of standData.items) {
-      const leagueId = item.leagueId || item.league_id || item.tournamentId || '';
-      let key = FS_REVERSE_MAP[leagueId];
-      if (!key) {
-        const lg = (item.league || item.leagueName || '').toLowerCase();
-        if (lg.includes('premier'))   key = 'pl';
-        else if (lg.includes('liga') || lg.includes('laliga')) key = 'll';
-        else if (lg.includes('serie')) key = 'sa';
-        else if (lg.includes('bundesliga')) key = 'bl';
-        else if (lg.includes('ligue'))  key = 'l1';
-      }
-      if (key && byLeague[key]) byLeague[key].push(item);
-    }
-
-    for (const key of ['pl','ll','sa','bl','l1']) {
-      const rows = byLeague[key];
-      if (!rows.length) continue;
-      const mapped = rows.map(r => fsMapStandingsRow(r, key)).filter(Boolean);
-      if (mapped.length >= 10) {
-        mapped.sort((a,b) => a.pos - b.pos);
-        // Store snapshot for movement tracking then enrich
-        storeStandingsSnapshot(key, mapped.map(r => ({ pos: r.pos, team: r.team })));
-        DEMO.standings[key] = enrichWithMovement(key, mapped);
-        standingsOk = true;
-      }
-    }
-    if (standingsOk) {
-      console.log('%c📊 Apify FlashScore: STANDINGS LOADED', 'color:#4ade80;font-weight:bold');
-    }
-  }
-
-  return { matchesOk, standingsOk };
+  // Apify FlashScore actors are not available — skip directly to API-Football fallback
+  // The fallback in fetchLiveData() handles all data loading via af-proxy
+  console.log('ℹ️ Skipping Apify (not configured) — using API-Football as primary source');
+  return { matchesOk: false, standingsOk: false };
 }
 
 async function fetchLiveData() {
@@ -6189,37 +6107,70 @@ async function fetchLiveScores(force = false) {
   }
 
   liveState.fetching = true;
-  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live data from FlashScore…</div>';
+  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live scores via API-Football…</div>';
+
+  const LEAGUE_NAMES = { 39: 'Premier League', 140: 'La Liga', 135: 'Serie A', 78: 'Bundesliga', 61: 'Ligue 1' };
 
   try {
-    const res = await fetch('/.netlify/functions/flashscore', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ leagues: [
-        'england_premier-league', 'spain_laliga', 'italy_serie-a',
-        'germany_bundesliga', 'france_ligue-1'
-      ]})
-    });
+    const dateFrom = new Date().toISOString().slice(0,10);
+    const dateTo   = dateFrom; // today only for live scores
+    const allItems = [];
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
+    for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
+      try {
+        const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+        if (!data || !data.length) continue;
+        data.forEach(m => {
+          const statusShort = m.fixture?.status?.short || '';
+          const elapsed     = m.fixture?.status?.elapsed;
+          let status = 'Scheduled', statusTime = '';
+          if (['1H','2H','HT','ET','BT','P','SUSP','INT','LIVE'].includes(statusShort)) {
+            status = 'Live';
+            statusTime = statusShort === 'HT' ? 'Half Time' : (elapsed ? elapsed + "'" : statusShort);
+          } else if (['FT','AET','PEN'].includes(statusShort)) {
+            status = statusShort;
+          } else if (['NS','TBD'].includes(statusShort)) {
+            status = m.fixture?.date ? new Date(m.fixture.date).toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}) : 'Scheduled';
+          } else if (['PST','CANC','ABD','AWD','WO'].includes(statusShort)) {
+            status = statusShort;
+          }
 
-    if (json.ok && json.items) {
-      liveState.data = json.items;
-      localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
+          const events = (m.events || []).slice(0, 8).map(ev => ({
+            kind: 'event',
+            action: ev.type === 'Goal' ? 'Goal' : ev.type === 'Card' ? (ev.detail === 'Red Card' ? 'Red Card' : 'Yellow Card') : ev.type === 'subst' ? 'Substitution' : ev.type,
+            player: ev.player?.name || '',
+            time: ev.time?.elapsed || '',
+            side: ev.team?.id === m.teams?.home?.id ? 'home' : 'away',
+            score: ''
+          }));
+
+          allItems.push({
+            home_team:  m.teams?.home?.name || '—',
+            away_team:  m.teams?.away?.name || '—',
+            home_score: m.goals?.home,
+            away_score: m.goals?.away,
+            status:     status,
+            status_time: statusTime,
+            start_time: m.fixture?.date ? new Date(m.fixture.date).toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}) : '--:--',
+            league:     LEAGUE_NAMES[leagueId] || key.toUpperCase(),
+            history:    events,
+          });
+        });
+      } catch(e) {
+        console.warn(`Live scores: failed for league ${key}:`, e.message);
+      }
+    }
+
+    if (allItems.length) {
+      liveState.data = allItems;
+      localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: allItems }));
       const el = document.getElementById('liveLastFetch');
       if (el) el.textContent = `· Last fetched ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
-      // DEBUG: log first item to console so we can see actual field names
-      if (json.items.length) {
-        console.log('[FlashScore DEBUG] First item keys:', Object.keys(json.items[0]));
-        console.log('[FlashScore DEBUG] First item raw:', JSON.stringify(json.items[0], null, 2));
-      }
     } else {
-      throw new Error(json.error || 'No data returned');
+      throw new Error('No matches found today across top 5 leagues');
     }
   } catch (err) {
     console.warn('Live fetch error:', err.message);
-    // Fall back to cache if available even if stale
     try {
       const stale = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
       if (stale) { liveState.data = stale.items; }
@@ -6245,12 +6196,6 @@ function renderLiveMatches() {
     wrap.innerHTML = '<div class="live-empty">No matches found in the top 5 leagues right now.</div>';
     return;
   }
-
-  // DEBUG: show raw first item so we can map field names
-  wrap.innerHTML = `<details style="margin-bottom:16px;color:var(--white-dim);font-size:.75rem;font-family:monospace;">
-    <summary style="cursor:pointer;color:var(--gold);">🔍 DEBUG: Raw first item (${items.length} total) — click to expand</summary>
-    <pre style="overflow:auto;max-height:300px;background:rgba(0,0,0,.4);padding:12px;border-radius:4px;margin-top:8px;">${JSON.stringify(items[0], null, 2)}</pre>
-  </details>`;
 
   // Apify actor confirmed field names: home_team, away_team, home_score, away_score,
   // status ("Live"), status_time ("2nd Half - 58'"), start_time, league,
@@ -6374,16 +6319,31 @@ async function loadOracleTips() {
   } catch(_) {}
 
   try {
-    const res = await fetch('/.netlify/functions/flashscore-fixtures', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dateOffset: 3 })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'No data');
-    localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
-    renderOracleTipsFromData(json.items);
+    // Fetch upcoming fixtures from API-Football for tips generation
+    const dateFrom = new Date().toISOString().slice(0,10);
+    const dateTo   = new Date(Date.now() + 3*86400000).toISOString().slice(0,10);
+    const tipItems = [];
+    for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
+      try {
+        const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+        if (!data || !data.length) continue;
+        data.filter(m => ['NS','TBD'].includes(m.fixture?.status?.short)).forEach(m => {
+          tipItems.push({
+            home_team: m.teams?.home?.name || '—',
+            away_team: m.teams?.away?.name || '—',
+            home_form: [], away_form: [],
+            home_goals_avg: 0, away_goals_avg: 0,
+            league: key,
+          });
+        });
+      } catch(e) { /* skip league */ }
+    }
+    if (tipItems.length) {
+      localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items: tipItems }));
+      renderOracleTipsFromData(tipItems);
+    } else {
+      throw new Error('No upcoming fixtures found');
+    }
   } catch(err) {
     console.warn('[OracleTips] FlashScore fetch failed, falling back to DEMO data:', err.message);
     renderOracleTipsFallback();
@@ -6455,7 +6415,7 @@ function renderOracleTipsFromData(items) {
           <div class="fs-confidence-bar" style="width:${conf}%;background:${conf >= 70 ? 'var(--accent)' : conf >= 55 ? 'var(--gold)' : 'var(--white-dim)'};"></div>
         </div>
         <div class="fs-tip-reason">${tip.reason}</div>
-        <div class="fs-powered-badge">⚡ FlashScore Powered</div>
+        <div class="fs-powered-badge">⚡ Live Data Powered</div>
       </div>
     `;
   }).join('');
@@ -6501,7 +6461,7 @@ async function toggleFSForm(enabled) {
     return;
   }
 
-  if (statusEl) statusEl.textContent = '⏳ Loading FlashScore form data…';
+  if (statusEl) statusEl.textContent = '⏳ Loading live form data…';
 
   try {
     // Check fixture cache first
@@ -6512,14 +6472,28 @@ async function toggleFSForm(enabled) {
     }
 
     if (!items) {
-      const res = await fetch('/.netlify/functions/flashscore-fixtures', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dateOffset: 3 })
-      });
-      const json = await res.json();
-      if (json.ok) {
-        items = json.items;
+      // Fetch from API-Football instead of missing FlashScore function
+      const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
+      const dateTo   = new Date(Date.now() + 3*86400000).toISOString().slice(0,10);
+      items = [];
+      for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
+        try {
+          const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+          if (data && data.length) {
+            data.forEach(m => {
+              items.push({
+                home_team: m.teams?.home?.name || '',
+                away_team: m.teams?.away?.name || '',
+                home_score: m.goals?.home,
+                away_score: m.goals?.away,
+                home_form: [], away_form: [],
+                status: m.fixture?.status?.short || '',
+              });
+            });
+          }
+        } catch(e) { /* skip */ }
+      }
+      if (items.length) {
         localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items }));
       }
     }
@@ -6561,7 +6535,7 @@ async function toggleFSForm(enabled) {
       fsFormLoaded = true;
       if (statusEl) statusEl.textContent = `✅ Form loaded for ${Object.keys(fsFormData).length} teams`;
     } else {
-      if (statusEl) statusEl.textContent = '⚠️ No FlashScore data available';
+      if (statusEl) statusEl.textContent = '⚠️ No form data available';
     }
   } catch (err) {
     if (statusEl) statusEl.textContent = `⚠️ ${err.message}`;
@@ -6652,7 +6626,7 @@ function openTimelineModal(idxOrMatch) {
     ${statsHtml}
     <div class="timeline-section-title">⏱ Match Timeline</div>
     <div class="timeline-list">${timelineHtml}</div>
-    <div class="fs-powered-badge" style="margin-top:16px;">⚡ FlashScore Data</div>
+    <div class="fs-powered-badge" style="margin-top:16px;">⚡ Live Data</div>
   `;
 
   overlay.classList.remove('hidden');
@@ -6690,24 +6664,38 @@ async function loadWrapFromFlashScore() {
   wrapEl.innerHTML = '<div class="loading-ring" style="margin:32px auto;"></div>';
 
   try {
-    const res = await fetch('/.netlify/functions/flashscore-history', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dateOffset: -1 })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'No data');
-
-    localStorage.setItem('fo_wrap_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
-    renderWrapResults(json.items, statsEl, wrapEl);
+    // Fetch yesterday's results from API-Football
+    const dateFrom = new Date(Date.now() - 2*86400000).toISOString().slice(0,10);
+    const dateTo   = new Date(Date.now() - 1*86400000).toISOString().slice(0,10);
+    const LEAGUE_NAMES = { 39: 'Premier League', 140: 'La Liga', 135: 'Serie A', 78: 'Bundesliga', 61: 'Ligue 1' };
+    const wrapItems = [];
+    for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
+      try {
+        const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+        if (data && data.length) {
+          data.filter(m => ['FT','AET','PEN'].includes(m.fixture?.status?.short)).forEach(m => {
+            wrapItems.push({
+              home_team: m.teams?.home?.name || '—',
+              away_team: m.teams?.away?.name || '—',
+              home_score: m.goals?.home,
+              away_score: m.goals?.away,
+              status: 'FT',
+              league: LEAGUE_NAMES[leagueId] || key.toUpperCase(),
+            });
+          });
+        }
+      } catch(e) { /* skip */ }
+    }
+    if (!wrapItems.length) throw new Error('No recent results found');
+    localStorage.setItem('fo_wrap_cache', JSON.stringify({ ts: Date.now(), items: wrapItems }));
+    renderWrapResults(wrapItems, statsEl, wrapEl);
   } catch(err) {
-    wrapEl.innerHTML = `<div class="live-empty">⚠️ Could not load FlashScore results.<br><small style="color:var(--white-dim)">${err.message}</small></div>`;
+    wrapEl.innerHTML = `<div class="live-empty">⚠️ Could not load recent results.<br><small style="color:var(--white-dim)">${err.message}</small></div>`;
     console.warn('[WrapLoad]', err);
   }
 
   btn.disabled = false;
-  btn.textContent = '⚡ Load FlashScore Results';
+  btn.textContent = '⚡ Load Recent Results';
 }
 
 function renderWrapResults(items, statsEl, wrapEl) {
