@@ -1,43 +1,29 @@
+[build]
+  publish = "."
+  command = "echo 'No build step required'"
+
+[build.environment]
+  NODE_VERSION = "18"
+
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
-  directory = "functions"
 
-[functions."flashscore"]
-  timeout = 26
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
-[functions."flashscore-history"]
-  timeout = 26
-
-[functions."flashscore-fixtures"]
-  timeout = 26
-
-[[redirects]]
-  from = "/api/flashscore-live"
-  to = "/.netlify/functions/flashscore"
-  status = 200
-
-[[redirects]]
-  from = "/api/flashscore-history"
-  to = "/.netlify/functions/flashscore-history"
-  status = 200
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
 
 [[redirects]]
-  from = "/api/flashscore-fixtures"
-  to = "/.netlify/functions/flashscore-fixtures"
-  status = 200
-
-[functions."flashscore-matches"]
-  timeout = 26
-
-[functions."flashscore-standings"]
-  timeout = 26
-
-[[redirects]]
-  from = "/api/flashscore-matches"
-  to = "/.netlify/functions/flashscore-matches"
-  status = 200
-
-[[redirects]]
-  from = "/api/flashscore-standings"
-  to = "/.netlify/functions/flashscore-standings"
+  from = "/*"
+  to = "/index.html"
   status = 200
