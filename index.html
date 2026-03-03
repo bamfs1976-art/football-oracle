@@ -18,6 +18,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow+Condensed:wght@300;400;500;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ── WCAG 2.2 ACCESSIBILITY ── */
+  .skip-link { position:absolute; top:-40px; left:0; background:var(--gold); color:#111; padding:8px 16px; z-index:1000; font-family:'Barlow Condensed'; font-weight:700; font-size:.9rem; text-decoration:none; border-radius:0 0 4px 0; transition:top .15s; }
+  .skip-link:focus { top:0; }
+  .nav-tab:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+  .nav-tab { border:none; background:none; cursor:pointer; color:inherit; font:inherit; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
   :root {
     --pitch-dark: #0a1a0f;
     --pitch-mid: #0f2318;
@@ -1916,6 +1923,7 @@
 </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 <div class="grass-stripes"></div>
 <div id="app">
 
@@ -1961,7 +1969,7 @@
   </div>
 
   <!-- Header -->
-  <header class="header">
+  <header class="header" role="banner">
     <div class="header-inner">
       <div class="logo">
         <div class="logo-icon">
@@ -2009,28 +2017,28 @@
 
   <!-- Nav Tabs -->
   <nav class="nav-tabs">
-    <div class="nav-tabs-inner">
-      <div class="nav-tab active" onclick="switchTab('overview')">📊 Overview</div>
-      <div class="nav-tab" onclick="switchTab('live')" id="navTabLive">⚡ Live</div>
-      <div class="nav-tab" onclick="switchTab('fixtures')">📅 Fixtures & Results</div>
-      <div class="nav-tab" onclick="switchTab('predictions')">🎯 Predictions</div>
-      <div class="nav-tab" onclick="switchTab('bookings')">🟨 Bookings & Cards</div>
-      <div class="nav-tab" onclick="switchTab('injuries')">🏥 Injuries</div>
-      <div class="nav-tab" onclick="switchTab('europe')">🏆 Europe</div>
-      <div class="nav-tab" onclick="switchTab('wrap')">📰 Weekend Wrap</div>
-      <div class="nav-tab" onclick="switchTab('favourites')">⭐ My Teams</div>
-      <div class="nav-tab" onclick="switchTab('referees')">👮 Referees</div>
-      <div class="nav-tab" onclick="switchTab('worldcup')">🌍 World Cup</div>
-      <div class="nav-tab" onclick="switchTab('suspensions')">🚨 Suspensions</div>
-      <div class="nav-tab" onclick="switchTab('standings')">🏆 Standings</div>
+    <div class="nav-tabs-inner" role="tablist" aria-label="Main navigation tabs">
+      <button class="nav-tab active" onclick="switchTab('overview')" role="tab" aria-selected="true" aria-controls="tab-overview" id="navTabOverview">📊 Overview</button>
+      <button class="nav-tab" onclick="switchTab('live')" role="tab" aria-selected="false" aria-controls="tab-live" id="navTabLive">⚡ Live</button>
+      <button class="nav-tab" onclick="switchTab('fixtures')" role="tab" aria-selected="false" aria-controls="tab-fixtures" id="navTabFixtures">📅 Fixtures & Results</button>
+      <button class="nav-tab" onclick="switchTab('predictions')" role="tab" aria-selected="false" aria-controls="tab-predictions" id="navTabPredictions">🎯 Predictions</button>
+      <button class="nav-tab" onclick="switchTab('bookings')" role="tab" aria-selected="false" aria-controls="tab-bookings" id="navTabBookings">🟨 Bookings & Cards</button>
+      <button class="nav-tab" onclick="switchTab('injuries')" role="tab" aria-selected="false" aria-controls="tab-injuries" id="navTabInjuries">🏥 Injuries</button>
+      <button class="nav-tab" onclick="switchTab('europe')" role="tab" aria-selected="false" aria-controls="tab-europe" id="navTabEurope">🏆 Europe</button>
+      <button class="nav-tab" onclick="switchTab('wrap')" role="tab" aria-selected="false" aria-controls="tab-wrap" id="navTabWrap">📰 Weekend Wrap</button>
+      <button class="nav-tab" onclick="switchTab('favourites')" role="tab" aria-selected="false" aria-controls="tab-favourites" id="navTabFavourites">⭐ My Teams</button>
+      <button class="nav-tab" onclick="switchTab('referees')" role="tab" aria-selected="false" aria-controls="tab-referees" id="navTabReferees">👮 Referees</button>
+      <button class="nav-tab" onclick="switchTab('worldcup')" role="tab" aria-selected="false" aria-controls="tab-worldcup" id="navTabWorldcup">🌍 World Cup</button>
+      <button class="nav-tab" onclick="switchTab('suspensions')" role="tab" aria-selected="false" aria-controls="tab-suspensions" id="navTabSuspensions">🚨 Suspensions</button>
+      <button class="nav-tab" onclick="switchTab('standings')" role="tab" aria-selected="false" aria-controls="tab-standings" id="navTabStandings">🏆 Standings</button>
     </div>
   </nav>
 
   <!-- Main Content -->
-  <main class="main">
+  <main class="main" id="main-content">
 
     <!-- API Status Bar -->
-    <div class="api-status-bar">
+    <div class="api-status-bar" role="status" aria-label="Data source connection status">
       <span class="api-status-label">DATA SOURCES:</span>
       <div class="api-source">
         <div class="dot" id="fdStatus" style="background:var(--gold)"></div>
@@ -2048,35 +2056,39 @@
     </div>
 
     <!-- OVERVIEW TAB -->
-    <div class="tab-content active" id="tab-overview">
+    <div class="tab-content active" id="tab-overview" role="tabpanel" aria-labelledby="navTabOverview">
       
       <div class="section-header mb-20">
         <span class="section-title">Season At A Glance</span>
         <span class="section-sub">2025-26 · All Leagues</span>
       </div>
 
-      <!-- KPI Row -->
-      <div class="grid-4 mb-32" id="kpiRow">
+
+      <!-- LATEST RESULTS & UPCOMING FIXTURES — added 3 Mar 2026 -->
+      <div class="grid-2 mb-32">
         <div class="card fade-in">
-          <div class="card-label">Total Matches Played</div>
-          <div class="card-value gold" id="kpiMatches">—</div>
-          <div class="card-detail">Across 5 leagues this season</div>
+          <div class="section-header mb-20" style="justify-content:space-between;align-items:center;">
+            <span class="section-title">Latest Results</span>
+            <button class="export-btn" onclick="switchTab('fixtures');showTab('results')" aria-label="View all results">All Results →</button>
+          </div>
+          <div id="homeLatestResults" role="region" aria-label="Latest match results"></div>
         </div>
-        <div class="card fade-in" style="animation-delay:.05s">
-          <div class="card-label">Avg Goals Per Game</div>
-          <div class="card-value green" id="kpiGoals">—</div>
-          <div class="card-detail">Season average 2025-26</div>
+        <div class="card fade-in" style="animation-delay:.08s">
+          <div class="section-header mb-20" style="justify-content:space-between;align-items:center;">
+            <span class="section-title">Upcoming Fixtures</span>
+            <button class="export-btn" onclick="switchTab('fixtures');showTab('upcoming')" aria-label="View all upcoming fixtures">All Fixtures →</button>
+          </div>
+          <div id="homeUpcomingFixtures" role="region" aria-label="Upcoming fixtures"></div>
         </div>
-        <div class="card fade-in" style="animation-delay:.1s">
-          <div class="card-label">Yellow Cards Issued</div>
-          <div class="card-value" style="color:var(--yellow-card)" id="kpiYellow">—</div>
-          <div class="card-detail" id="kpiYellowPG">— per game average</div>
+      </div>
+
+      <!-- MINI STANDINGS SNAPSHOT -->
+      <div class="card fade-in mb-32">
+        <div class="section-header mb-20" style="justify-content:space-between;align-items:center;">
+          <span class="section-title">Premier League Standings</span>
+          <button class="export-btn" onclick="switchTab('standings')" aria-label="View full standings">Full Table →</button>
         </div>
-        <div class="card fade-in" style="animation-delay:.15s">
-          <div class="card-label">Red Cards Issued</div>
-          <div class="card-value red" id="kpiRed">—</div>
-          <div class="card-detail" id="kpiRedPG">— per game average</div>
-        </div>
+        <div id="homeMiniStandings" role="region" aria-label="Premier League top 6 standings"></div>
       </div>
 
       <div class="grid-2 mb-32">
@@ -2085,15 +2097,15 @@
           <div class="section-header mb-20">
             <span class="section-title">League Summaries</span>
           </div>
-          <table class="data-table" id="leagueSummaryTable">
+          <table class="data-table" id="leagueSummaryTable" role="table" aria-label="League summary statistics">
             <thead>
               <tr>
-                <th>League</th>
-                <th class="num">Played</th>
-                <th class="num">Avg Goals</th>
-                <th class="num">🟨/game</th>
-                <th class="num">🟥/game</th>
-                <th class="num">Strictness</th>
+                <th scope="col">League</th>
+                <th class="num" scope="col">Played</th>
+                <th class="num" scope="col">Avg Goals</th>
+                <th class="num" scope="col">🟨/game</th>
+                <th class="num" scope="col">🟥/game</th>
+                <th class="num" scope="col">Strictness</th>
               </tr>
             </thead>
             <tbody id="leagueSummaryBody"></tbody>
@@ -2106,14 +2118,14 @@
             <span class="section-title">Most Booked Teams</span>
             <span class="section-sub">Season 2025-26</span>
           </div>
-          <table class="data-table" id="topBookedTeamsTable">
+          <table class="data-table" id="topBookedTeamsTable" role="table" aria-label="Most booked teams">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Team</th>
-                <th class="num">🟨</th>
-                <th class="num">🟥</th>
-                <th class="num">Points</th>
+                <th scope="col">#</th>
+                <th scope="col">Team</th>
+                <th class="num" scope="col">🟨</th>
+                <th class="num" scope="col">🟥</th>
+                <th class="num" scope="col">Points</th>
               </tr>
             </thead>
             <tbody id="topBookedTeamsBody"></tbody>
@@ -2163,7 +2175,7 @@
         <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
           <div>
             <span class="section-title">⚡ Oracle Tips — Today's Best Bets</span>
-            <span class="section-sub">Top confidence picks · Live form data</span>
+            <span class="section-sub">Top confidence picks · FlashScore form data</span>
           </div>
           <button class="export-btn" onclick="switchTab('predictions')">See All Picks →</button>
         </div>
@@ -2173,18 +2185,18 @@
     </div>
 
     <!-- LIVE SCORES TAB -->
-    <div class="tab-content" id="tab-live">
+    <div class="tab-content" id="tab-live" role="tabpanel" aria-labelledby="navTabLive">
       <div class="section-header mb-16" style="justify-content:space-between;align-items:center;">
         <div>
           <span class="section-title">⚡ Live Scores</span>
-          <span class="section-sub">Real-time data via API-Football · Auto-refreshes every 5 min</span>
+          <span class="section-sub">Real-time data via FlashScore · Auto-refreshes every 5 min</span>
         </div>
         <div class="live-pulse"><div class="pulse-dot"></div><span>LIVE</span></div>
       </div>
 
       <div class="live-refresh-bar">
         <div class="live-refresh-info">
-          <span>Next refresh in </span><span class="live-countdown" id="liveCountdown">5:00</span>
+          <span>Next refresh in </span><span class="live-countdown" id="liveCountdown" aria-live="polite">5:00</span>
           <span id="liveLastFetch" style="margin-left:12px;font-size:.75rem;"></span>
         </div>
         <button class="live-refresh-btn" onclick="fetchLiveScores(true)">↻ Refresh Now</button>
@@ -2196,7 +2208,7 @@
     </div>
 
     <!-- EUROPEAN TRACKER TAB -->
-    <div class="tab-content" id="tab-europe">
+    <div class="tab-content" id="tab-europe" role="tabpanel" aria-labelledby="navTabEurope">
       <div class="section-header">
         <span class="section-title">European Nights</span>
         <span class="section-sub">UCL · UEL · UECL — Clubs from the Big 5</span>
@@ -2216,20 +2228,20 @@
     </div>
 
     <!-- WEEKEND WRAP TAB -->
-    <div class="tab-content" id="tab-wrap">
+    <div class="tab-content" id="tab-wrap" role="tabpanel" aria-labelledby="navTabWrap">
       <div class="section-header" style="justify-content:space-between;align-items:center;">
         <div>
           <span class="section-title">Weekend Wrap</span>
           <span class="section-sub">Latest matchweek round-up — auto-generated from results</span>
         </div>
-        <button class="btn-primary fs-load-btn" id="wrapFsBtn" onclick="loadWrapFromFlashScore()">⚡ Load Recent Results</button>
+        <button class="btn-primary fs-load-btn" id="wrapFsBtn" onclick="loadWrapFromFlashScore()">⚡ Load FlashScore Results</button>
       </div>
       <div id="wrapFsStats" style="display:none;" class="card mb-16 fs-stats-bar"></div>
       <div id="wrapContent"></div>
     </div>
 
     <!-- MY TEAMS / FAVOURITES TAB -->
-    <div class="tab-content" id="tab-favourites">
+    <div class="tab-content" id="tab-favourites" role="tabpanel" aria-labelledby="navTabFavourites">
       <div class="section-header" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div>
           <span class="section-title">⭐ My Teams</span>
@@ -2272,7 +2284,7 @@
     </div>
 
     <!-- FIXTURES & RESULTS TAB -->
-    <div class="tab-content" id="tab-fixtures">
+    <div class="tab-content" id="tab-fixtures" role="tabpanel" aria-labelledby="navTabFixtures">
       <div class="section-header">
         <span class="section-title">Fixtures & Results</span>
         <span class="section-sub">2025-26 Season</span>
@@ -2299,7 +2311,7 @@
     </div>
 
     <!-- PREDICTIONS TAB -->
-    <div class="tab-content" id="tab-predictions">
+    <div class="tab-content" id="tab-predictions" role="tabpanel" aria-labelledby="navTabPredictions">
       <div class="section-header" style="justify-content:space-between;align-items:center;">
         <div>
           <span class="section-title">Weekly Predictions</span>
@@ -2324,7 +2336,7 @@
           <input type="checkbox" id="fsFormToggle" onchange="toggleFSForm(this.checked)">
           <span class="fs-toggle-slider"></span>
         </label>
-        <span>Enrich with live form data <span style="color:var(--accent);font-weight:700;">(last 5 results)</span></span>
+        <span>Enrich with FlashScore live form <span style="color:var(--accent);font-weight:700;">(last 5 results)</span></span>
         <span id="fsFormStatus" style="font-size:.72rem;color:var(--white-dim);margin-left:6px;"></span>
       </div>
 
@@ -2332,7 +2344,7 @@
     </div>
 
     <!-- INJURY TRACKER TAB -->
-    <div class="tab-content" id="tab-injuries">
+    <div class="tab-content" id="tab-injuries" role="tabpanel" aria-labelledby="navTabInjuries">
       <div class="section-header">
         <span class="section-title">Injury Tracker</span>
         <span class="section-sub">Player availability — 2025-26</span>
@@ -2379,7 +2391,7 @@
     </div>
 
     <!-- BOOKINGS & CARDS TAB -->
-    <div class="tab-content" id="tab-bookings">
+    <div class="tab-content" id="tab-bookings" role="tabpanel" aria-labelledby="navTabBookings">
       <div class="section-header">
         <span class="section-title">Bookings & Cards Analysis</span>
         <span class="section-sub">Player & Team Booking Profiles</span>
@@ -2396,12 +2408,12 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th scope="col">#</th>
                 <th>Player</th>
-                <th>Team</th>
-                <th>League</th>
-                <th class="num">🟨</th>
-                <th class="num">🟥</th>
+                <th scope="col">Team</th>
+                <th scope="col">League</th>
+                <th class="num" scope="col">🟨</th>
+                <th class="num" scope="col">🟥</th>
                 <th class="num">Avg/10</th>
               </tr>
             </thead>
@@ -2417,9 +2429,9 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th scope="col">#</th>
                 <th>Player</th>
-                <th>Team</th>
+                <th scope="col">Team</th>
                 <th class="num">Risk Score</th>
                 <th class="num">Reason</th>
               </tr>
@@ -2437,11 +2449,11 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Team</th>
-                <th>League</th>
-                <th class="num">🟨</th>
-                <th class="num">🟥</th>
+                <th scope="col">#</th>
+                <th scope="col">Team</th>
+                <th scope="col">League</th>
+                <th class="num" scope="col">🟨</th>
+                <th class="num" scope="col">🟥</th>
                 <th class="num">BP</th>
                 <th class="num">Fouls/G</th>
               </tr>
@@ -2461,7 +2473,7 @@
     </div>
 
     <!-- REFEREES TAB -->
-    <div class="tab-content" id="tab-referees">
+    <div class="tab-content" id="tab-referees" role="tabpanel" aria-labelledby="navTabReferees">
       <div class="section-header">
         <span class="section-title">Referee Statistics</span>
         <span class="section-sub">Booking Tendencies 2025-26</span>
@@ -2476,13 +2488,13 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th scope="col">#</th>
                 <th>Referee</th>
                 <th>Country</th>
                 <th class="num">Games</th>
                 <th class="num">🟨/G</th>
                 <th class="num">🟥/G</th>
-                <th class="num">Strictness</th>
+                <th class="num" scope="col">Strictness</th>
               </tr>
             </thead>
             <tbody id="strictestRefs"></tbody>
@@ -2497,13 +2509,13 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th scope="col">#</th>
                 <th>Referee</th>
                 <th>Country</th>
                 <th class="num">Games</th>
                 <th class="num">🟨/G</th>
                 <th class="num">🟥/G</th>
-                <th class="num">Strictness</th>
+                <th class="num" scope="col">Strictness</th>
               </tr>
             </thead>
             <tbody id="lenientRefs"></tbody>
@@ -2521,7 +2533,7 @@
     </div>
 
     <!-- SUSPENSION TRACKER TAB -->
-    <div class="tab-content" id="tab-suspensions">
+    <div class="tab-content" id="tab-suspensions" role="tabpanel" aria-labelledby="navTabSuspensions">
       <div class="section-header">
         <span class="section-title">Suspension Tracker</span>
         <span class="section-sub">Yellow card accumulation · 2025-26</span>
@@ -2562,8 +2574,8 @@
           <thead>
             <tr>
               <th>Player</th>
-              <th>Team</th>
-              <th>League</th>
+              <th scope="col">Team</th>
+              <th scope="col">League</th>
               <th class="num">🟨 Cards</th>
               <th class="num">Threshold</th>
               <th class="num">Remaining</th>
@@ -2588,7 +2600,7 @@
     <!-- ═══════════════════════════════════════════════
          WORLD CUP TAB
     ═══════════════════════════════════════════════ -->
-    <div class="tab-content" id="tab-worldcup">
+    <div class="tab-content" id="tab-worldcup" role="tabpanel" aria-labelledby="navTabWorldcup">
       <div class="wc-hero">
         <div class="wc-hero-title">FIFA World Cup</div>
         <div class="wc-hero-sub">1930 &ndash; 2022 &middot; 22 Tournaments &middot; 8 Nations &middot; The Greatest Show on Earth</div>
@@ -2672,10 +2684,10 @@
           <table class="wc-table wc-rankings-table" id="wcRankingsTable">
             <thead>
               <tr>
-                <th>#</th>
+                <th scope="col">#</th>
                 <th>Nation</th>
                 <th>Confederation</th>
-                <th>Points</th>
+                <th scope="col">Points</th>
                 <th>WC Titles</th>
                 <th>Best Finish</th>
               </tr>
@@ -2702,7 +2714,7 @@
 
     </div><!-- end tab-worldcup -->
 
-    <div class="tab-content" id="tab-standings">
+    <div class="tab-content" id="tab-standings" role="tabpanel" aria-labelledby="navTabStandings">
       <div class="section-header">
         <span class="section-title">League Tables</span>
         <span class="section-sub">2025-26 Season</span>
@@ -2767,7 +2779,7 @@ let state = {
 // ============================================================
 
 const DEMO = {
-  // ─── ALL DATA VERIFIED FROM LIVE SOURCES, current to 23 Feb 2026 ───
+  // ─── ALL DATA VERIFIED FROM LIVE SOURCES, current to 3 Mar 2026 ───
   // Sources: ESPN, WorldFootball.net, Sky Sports, Bundesliga.com, Wikipedia
   seasonStats: {
     pl:  { played: 243, goals: 681, yellowCards: 618, redCards: 23, avgGoals: 2.80, avgYellow: 2.54, avgRed: 0.09 },
@@ -2778,29 +2790,29 @@ const DEMO = {
   },
 
   standings: {
-    // PL — updated to MW27 results (22 Feb 2026). Everton v Man Utd (23 Feb) pending.
+    // PL — updated to MW28+MW27 final results (1 Mar 2026). Source: ESPN/NBC Sports/Sky Sports.
     // Real 2025-26 teams: Leeds, Burnley, Sunderland promoted; Leicester, Ipswich, Southampton relegated
     pl: [
-      { pos:1,  team:'Arsenal',           P:27, W:19, D:4, L:4, GF:62, GA:29, GD:33, pts:61, form:'DWWLW', zone:'cl' },
-      { pos:2,  team:'Liverpool',         P:27, W:18, D:5, L:4, GF:61, GA:30, GD:31, pts:59, form:'DWDWW', zone:'cl' },
-      { pos:3,  team:'Manchester City',   P:27, W:16, D:3, L:8, GF:57, GA:38, GD:19, pts:51, form:'LWWWL', zone:'cl' },
-      { pos:4,  team:'Chelsea',           P:27, W:13, D:7, L:7, GF:48, GA:35, GD:13, pts:46, form:'LLDWW', zone:'cl' },
-      { pos:5,  team:'Fulham',            P:27, W:12, D:6, L:9, GF:40, GA:34, GD:6,  pts:42, form:'WWWLW', zone:'el' },
-      { pos:6,  team:'Brighton',          P:27, W:11, D:6, L:10,GF:44, GA:38, GD:6,  pts:39, form:'LWWWL', zone:'el' },
-      { pos:7,  team:'Aston Villa',       P:27, W:10, D:9, L:8, GF:39, GA:36, GD:3,  pts:39, form:'DWWLD', zone:'' },
-      { pos:8,  team:'Newcastle',         P:27, W:10, D:6, L:11,GF:42, GA:43, GD:-1, pts:36, form:'LWWLL', zone:'' },
-      { pos:9,  team:'Brentford',         P:27, W:10, D:5, L:12,GF:38, GA:44, GD:-6, pts:35, form:'LLWWL', zone:'' },
-      { pos:10, team:'Nottm Forest',      P:27, W:9,  D:5, L:13,GF:32, GA:42, GD:-10,pts:32, form:'WLLWL', zone:'' },
-      { pos:11, team:'West Ham',          P:27, W:8,  D:8, L:11,GF:36, GA:44, GD:-8, pts:32, form:'DLDWD', zone:'' },
-      { pos:12, team:'Crystal Palace',    P:27, W:9,  D:4, L:14,GF:33, GA:44, GD:-11,pts:31, form:'LWWLW', zone:'' },
-      { pos:13, team:'Manchester Utd',    P:26, W:8,  D:7, L:11,GF:37, GA:43, GD:-6, pts:31, form:'DLWLL', zone:'' },
-      { pos:14, team:'Everton',           P:26, W:8,  D:6, L:12,GF:32, GA:40, GD:-8, pts:30, form:'LWLLD', zone:'' },
-      { pos:15, team:'Wolves',            P:27, W:7,  D:7, L:13,GF:31, GA:44, GD:-13,pts:28, form:'LDWLL', zone:'' },
-      { pos:16, team:'Tottenham',         P:27, W:7,  D:5, L:15,GF:33, GA:50, GD:-17,pts:26, form:'LLLLL', zone:'' },
-      { pos:17, team:'Leeds United',      P:27, W:6,  D:8, L:13,GF:29, GA:44, GD:-15,pts:26, form:'DWLDL', zone:'' },
-      { pos:18, team:'Bournemouth',       P:27, W:6,  D:7, L:14,GF:30, GA:46, GD:-16,pts:25, form:'DLWLD', zone:'rel' },
-      { pos:19, team:'Sunderland',        P:27, W:5,  D:5, L:17,GF:25, GA:56, GD:-31,pts:20, form:'LLWLL', zone:'rel' },
-      { pos:20, team:'Burnley',           P:27, W:4,  D:5, L:18,GF:23, GA:58, GD:-35,pts:17, form:'DLLLL', zone:'rel' },
+      { pos:1,  team:'Arsenal',           P:29, W:19, D:7, L:3, GF:66, GA:30, GD:36, pts:64, form:'WWWDW', zone:'cl' },
+      { pos:2,  team:'Manchester City',   P:28, W:18, D:5, L:5, GF:60, GA:28, GD:32, pts:59, form:'WWWLW', zone:'cl' },
+      { pos:3,  team:'Manchester Utd',    P:28, W:14, D:9, L:5, GF:46, GA:34, GD:12, pts:51, form:'WWDWW', zone:'cl' },
+      { pos:4,  team:'Liverpool',         P:29, W:15, D:6, L:8, GF:55, GA:42, GD:13, pts:51, form:'WDWLW', zone:'cl' },
+      { pos:5,  team:'Aston Villa',       P:29, W:15, D:6, L:8, GF:46, GA:40, GD:6,  pts:51, form:'WDLWL', zone:'el' },
+      { pos:6,  team:'Brentford',         P:29, W:14, D:4, L:11,GF:46, GA:41, GD:5,  pts:46, form:'WWLWW', zone:'el' },
+      { pos:7,  team:'Chelsea',           P:28, W:12, D:9, L:7, GF:49, GA:33, GD:16, pts:45, form:'DDWWL', zone:'' },
+      { pos:8,  team:'Everton',           P:29, W:12, D:7, L:10,GF:39, GA:39, GD:0,  pts:43, form:'WWLWW', zone:'' },
+      { pos:9,  team:'Bournemouth',       P:29, W:9, D:13, L:7, GF:39, GA:41, GD:-2, pts:40, form:'DWDWD', zone:'' },
+      { pos:10, team:'Fulham',            P:28, W:12, D:4, L:12,GF:39, GA:41, GD:-2, pts:40, form:'WWLLW', zone:'' },
+      { pos:11, team:'Sunderland',        P:29, W:9, D:11, L:9, GF:36, GA:41, GD:-5, pts:38, form:'WDDWD', zone:'' },
+      { pos:12, team:'Brighton',          P:28, W:9, D:10, L:9, GF:40, GA:37, GD:3,  pts:37, form:'DWDLW', zone:'' },
+      { pos:13, team:'Newcastle',         P:29, W:10, D:6, L:13,GF:42, GA:45, GD:-3, pts:36, form:'WWLLL', zone:'' },
+      { pos:14, team:'Crystal Palace',    P:28, W:9,  D:8, L:11,GF:36, GA:40, GD:-4, pts:35, form:'WWLDL', zone:'' },
+      { pos:15, team:'Leeds United',      P:28, W:7, D:10, L:11,GF:30, GA:40, GD:-10,pts:31, form:'LDWDL', zone:'' },
+      { pos:16, team:'Tottenham',         P:28, W:7,  D:8, L:13,GF:34, GA:39, GD:-5, pts:29, form:'LLWDL', zone:'' },
+      { pos:17, team:'Nottm Forest',      P:28, W:7,  D:6, L:15,GF:29, GA:44, GD:-15,pts:27, form:'LWLLL', zone:'' },
+      { pos:18, team:'West Ham',          P:29, W:6,  D:7, L:16,GF:31, GA:54, GD:-23,pts:25, form:'LLDLL', zone:'rel' },
+      { pos:19, team:'Burnley',           P:29, W:4,  D:7, L:18,GF:25, GA:50, GD:-25,pts:19, form:'LLLDL', zone:'rel' },
+      { pos:20, team:'Wolves',            P:30, W:3,  D:7, L:20,GF:20, GA:49, GD:-29,pts:16, form:'LLLLW', zone:'rel' },
     ],
     // La Liga — updated to GW26 (22 Feb 2026). Barcelona top after Osasuna beat Real Madrid 2-1
     ll: [
@@ -2979,9 +2991,9 @@ const DEMO = {
 
   // ─── VERIFIED RESULTS & REAL UPCOMING FIXTURES ───
   fixtures: {
-    // Premier League — MW27 results confirmed + MW28 upcoming (from Soccerway/Flashscore)
+    // Premier League — MW27-28 results confirmed + MW29 upcoming (3 Mar 2026). Source: ESPN/NBC/Sky Sports.
     pl: [
-      // MW27 RESULTS (21–22 Feb 2026) — verified
+      // MW27 RESULTS (21–23 Feb 2026) — all confirmed
       { home:'Aston Villa',      away:'Leeds United',    date:'2026-02-21', time:'15:00', week:27, result:{h:1,a:1} },
       { home:'Brentford',        away:'Brighton',        date:'2026-02-21', time:'15:00', week:27, result:{h:0,a:2} },
       { home:'Chelsea',          away:'Burnley',         date:'2026-02-21', time:'15:00', week:27, result:{h:1,a:1} },
@@ -2991,18 +3003,29 @@ const DEMO = {
       { home:'Crystal Palace',   away:'Wolves',          date:'2026-02-22', time:'14:00', week:27, result:{h:1,a:0} },
       { home:'Nottm Forest',     away:'Liverpool',       date:'2026-02-22', time:'14:00', week:27, result:{h:0,a:1} },
       { home:'Tottenham',        away:'Arsenal',         date:'2026-02-22', time:'16:30', week:27, result:{h:1,a:4}, note:'North London Derby' },
-      { home:'Everton',          away:'Man Utd',         date:'2026-02-23', time:'20:00', week:27, result:null, note:'Tonight (23 Feb)' },
-      // MW28 UPCOMING (27 Feb – 3 Mar 2026)
-      { home:'Wolves',           away:'Aston Villa',     date:'2026-02-27', time:'20:00', week:28, result:null },
-      { home:'Bournemouth',      away:'Sunderland',      date:'2026-02-28', time:'12:30', week:28, result:null },
-      { home:'Burnley',          away:'Brentford',       date:'2026-02-28', time:'15:00', week:28, result:null },
-      { home:'Liverpool',        away:'West Ham',        date:'2026-02-28', time:'15:00', week:28, result:null },
-      { home:'Newcastle',        away:'Everton',         date:'2026-02-28', time:'15:00', week:28, result:null },
-      { home:'Leeds United',     away:'Manchester City', date:'2026-02-28', time:'17:30', week:28, result:null },
-      { home:'Brighton',         away:'Nottm Forest',    date:'2026-03-01', time:'14:00', week:28, result:null },
-      { home:'Fulham',           away:'Tottenham',       date:'2026-03-01', time:'14:00', week:28, result:null },
-      { home:'Manchester Utd',   away:'Crystal Palace',  date:'2026-03-01', time:'14:00', week:28, result:null },
-      { home:'Arsenal',          away:'Chelsea',         date:'2026-03-01', time:'16:30', week:28, result:null, note:'Top-of-table clash' },
+      { home:'Everton',          away:'Man Utd',         date:'2026-02-23', time:'20:00', week:27, result:{h:0,a:1} },
+      // MW28 RESULTS (27 Feb – 1 Mar 2026) — all confirmed
+      { home:'Wolves',           away:'Aston Villa',     date:'2026-02-27', time:'20:00', week:28, result:{h:2,a:0} },
+      { home:'Bournemouth',      away:'Sunderland',      date:'2026-02-28', time:'12:30', week:28, result:{h:1,a:1} },
+      { home:'Burnley',          away:'Brentford',       date:'2026-02-28', time:'15:00', week:28, result:{h:3,a:4} },
+      { home:'Liverpool',        away:'West Ham',        date:'2026-02-28', time:'15:00', week:28, result:{h:5,a:2} },
+      { home:'Newcastle',        away:'Everton',         date:'2026-02-28', time:'15:00', week:28, result:{h:2,a:3} },
+      { home:'Leeds United',     away:'Manchester City', date:'2026-02-28', time:'17:30', week:28, result:{h:0,a:1} },
+      { home:'Brighton',         away:'Nottm Forest',    date:'2026-03-01', time:'14:00', week:28, result:{h:2,a:1} },
+      { home:'Fulham',           away:'Tottenham',       date:'2026-03-01', time:'14:00', week:28, result:{h:2,a:1} },
+      { home:'Manchester Utd',   away:'Crystal Palace',  date:'2026-03-01', time:'14:00', week:28, result:{h:2,a:1} },
+      { home:'Arsenal',          away:'Chelsea',         date:'2026-03-01', time:'16:30', week:28, result:{h:2,a:1}, note:'Timber winner · Neto red card' },
+      // MW29 UPCOMING (3–5 Mar 2026) — Source: Flashscore/Sky Sports
+      { home:'Bournemouth',      away:'Brentford',       date:'2026-03-03', time:'19:30', week:29, result:null },
+      { home:'Everton',          away:'Burnley',         date:'2026-03-03', time:'19:30', week:29, result:null },
+      { home:'Leeds United',     away:'Sunderland',      date:'2026-03-03', time:'19:30', week:29, result:null },
+      { home:'Wolves',           away:'Liverpool',       date:'2026-03-03', time:'20:15', week:29, result:null },
+      { home:'Aston Villa',      away:'Chelsea',         date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Brighton',         away:'Arsenal',         date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Fulham',           away:'West Ham',        date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Manchester City',  away:'Nottm Forest',    date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Newcastle',        away:'Manchester Utd',  date:'2026-03-04', time:'20:15', week:29, result:null },
+      { home:'Tottenham',        away:'Crystal Palace',  date:'2026-03-05', time:'20:00', week:29, result:null },
     ],
     // La Liga — GW26 results + upcoming GW27 (from Flashscore/Soccerway)
     ll: [
@@ -3271,6 +3294,82 @@ function renderTicker() {
   }
 }
 
+function renderHomeLatest() {
+  // Latest Results — show last 6 completed PL fixtures
+  const allFx = [];
+  Object.entries(DEMO.fixtures).forEach(([key, fxs]) => {
+    fxs.forEach(f => allFx.push({...f, leagueKey: key}));
+  });
+  const results = allFx.filter(f => f.result).sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,6);
+  const el = document.getElementById('homeLatestResults');
+  if (el) {
+    el.innerHTML = results.map(f => {
+      const lg = LEAGUES[f.leagueKey];
+      const hw = f.result.h > f.result.a ? 'home' : f.result.h < f.result.a ? 'away' : 'draw';
+      const dateStr = new Date(f.date).toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+      return '<div class="home-result-row" role="listitem">' +
+        '<span class="fixture-league-tag ' + lg.tag + '" style="padding:1px 6px;border-radius:2px;font-size:.65rem;font-weight:700;width:28px;text-align:center;">' + f.leagueKey.toUpperCase() + '</span>' +
+        '<span class="home-result-team ' + (hw==='home'?'winner':'') + '" style="flex:1;text-align:right;font-family:Barlow Condensed;font-weight:' + (hw==='home'?'700':'400') + ';font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + f.home + '</span>' +
+        '<span class="home-result-score" style="font-family:Barlow Condensed;font-weight:700;font-size:1rem;padding:2px 8px;background:rgba(255,255,255,0.07);border-radius:4px;min-width:42px;text-align:center;">' + f.result.h + ' – ' + f.result.a + '</span>' +
+        '<span class="home-result-team ' + (hw==='away'?'winner':'') + '" style="flex:1;font-family:Barlow Condensed;font-weight:' + (hw==='away'?'700':'400') + ';font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + f.away + '</span>' +
+        '<span style="font-size:.68rem;color:var(--white-dim);width:40px;text-align:right;">' + dateStr + '</span>' +
+      '</div>';
+    }).join('') || '<div style="color:var(--white-dim);padding:16px;text-align:center;font-family:Barlow Condensed">No recent results</div>';
+  }
+
+  // Upcoming Fixtures — show next 6 upcoming PL fixtures
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = allFx.filter(f => !f.result && f.date >= today).sort((a,b) => new Date(a.date) - new Date(b.date)).slice(0,6);
+  const upEl = document.getElementById('homeUpcomingFixtures');
+  if (upEl) {
+    upEl.innerHTML = upcoming.map(f => {
+      const lg = LEAGUES[f.leagueKey];
+      const dt = new Date(f.date);
+      const dateStr = dt.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+      return '<div class="home-result-row" role="listitem">' +
+        '<span class="fixture-league-tag ' + lg.tag + '" style="padding:1px 6px;border-radius:2px;font-size:.65rem;font-weight:700;width:28px;text-align:center;">' + f.leagueKey.toUpperCase() + '</span>' +
+        '<span style="flex:1;text-align:right;font-family:Barlow Condensed;font-weight:600;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + f.home + '</span>' +
+        '<span style="font-family:Barlow Condensed;font-weight:700;font-size:.88rem;padding:2px 8px;background:rgba(255,255,255,0.05);border-radius:4px;min-width:42px;text-align:center;color:var(--white-dim);">' + f.time + '</span>' +
+        '<span style="flex:1;font-family:Barlow Condensed;font-weight:600;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + f.away + '</span>' +
+        '<span style="font-size:.68rem;color:var(--white-dim);width:68px;text-align:right;">' + dateStr + '</span>' +
+      '</div>';
+    }).join('') || '<div style="color:var(--white-dim);padding:16px;text-align:center;font-family:Barlow Condensed">No upcoming fixtures</div>';
+  }
+
+  // Mini Standings — PL top 6 + relegation 3
+  const plStandings = DEMO.standings.pl || [];
+  const miniEl = document.getElementById('homeMiniStandings');
+  if (miniEl && plStandings.length) {
+    const top6 = plStandings.slice(0,6);
+    const bottom3 = plStandings.slice(-3);
+    const showTeams = [...top6, {divider:true}, ...bottom3];
+    let html = '<table class="data-table" role="table" aria-label="Premier League standings snapshot"><thead><tr>' +
+      '<th scope="col">#</th><th scope="col">Team</th><th scope="col" class="num">P</th><th scope="col" class="num">W</th><th scope="col" class="num">D</th><th scope="col" class="num">L</th><th scope="col" class="num">GD</th><th scope="col" class="num">Pts</th><th scope="col">Form</th>' +
+      '</tr></thead><tbody>';
+    showTeams.forEach(t => {
+      if (t.divider) {
+        html += '<tr><td colspan="9" style="text-align:center;padding:4px;font-size:.72rem;color:var(--white-dim);letter-spacing:2px;font-family:Barlow Condensed;">· · ·</td></tr>';
+        return;
+      }
+      const zoneCls = t.zone==='cl' ? 'color:var(--accent)' : t.zone==='el' ? 'color:#4da6ff' : t.zone==='rel' ? 'color:var(--red-card)' : '';
+      const formDots = (t.form||'').split('').map(r => '<div class="form-dot-mini ' + r + '" role="img" aria-label="' + (r==='W'?'Win':r==='D'?'Draw':'Loss') + '"></div>').join('');
+      html += '<tr>' +
+        '<td style="' + zoneCls + ';font-weight:700">' + t.pos + '</td>' +
+        '<td><strong>' + t.team + '</strong></td>' +
+        '<td class="num">' + t.P + '</td>' +
+        '<td class="num">' + t.W + '</td>' +
+        '<td class="num">' + t.D + '</td>' +
+        '<td class="num">' + t.L + '</td>' +
+        '<td class="num" style="font-weight:700;' + (t.GD>0?'color:var(--accent)':t.GD<0?'color:var(--red-card)':'') + '">' + (t.GD>0?'+':'') + t.GD + '</td>' +
+        '<td class="num" style="font-weight:700">' + t.pts + '</td>' +
+        '<td><div class="team-form-mini">' + formDots + '</div></td>' +
+      '</tr>';
+    });
+    html += '</tbody></table>';
+    miniEl.innerHTML = html;
+  }
+}
+
 function renderOverview() {
   // KPIs
   let totals = {played:0, goals:0, yellow:0, red:0};
@@ -3284,12 +3383,6 @@ function renderOverview() {
   const avgY = (totals.yellow / totals.played).toFixed(2);
   const avgR = (totals.red / totals.played).toFixed(2);
 
-  document.getElementById('kpiMatches').textContent = totals.played.toLocaleString();
-  document.getElementById('kpiGoals').textContent = avgGoals;
-  document.getElementById('kpiYellow').textContent = totals.yellow.toLocaleString();
-  document.getElementById('kpiYellowPG').textContent = `${avgY} per game average`;
-  document.getElementById('kpiRed').textContent = totals.red.toLocaleString();
-  document.getElementById('kpiRedPG').textContent = `${avgR} per game average`;
 
   // League summary table
   const leagueRows = Object.entries(DEMO.seasonStats).map(([k, s]) => {
@@ -3371,6 +3464,7 @@ function renderOverview() {
   }
 
   // Fav next fixtures on overview
+  renderHomeLatest();
   renderFavNextFixtures();
   renderOracleTips();
   renderWorldCup();
@@ -3483,12 +3577,12 @@ function renderFixtures() {
         <div class="fixture-teams">
           <div style="text-align:center;flex:1;">
             <div class="fixture-team home">${f.home}</div>
-            ${(()=>{const s=getTeamForm(f.home,f.leagueKey);return s?'<div class="team-form-mini">'+s.split('').map(r=>'<div class="form-dot-mini '+r+'"></div>').join('')+'</div>':''})()}
+            ${(()=>{const s=getTeamForm(f.home,f.leagueKey);return s?'<div class="team-form-mini">'+s.split('').map(r=>'<div class="form-dot-mini '+r+'" role="img" aria-label="'+(r==='W'?'Win':r==='D'?'Draw':'Loss')+'"></div>').join('')+'</div>':''})()}
           </div>
           ${vsContent}
           <div style="text-align:center;flex:1;">
             <div class="fixture-team away">${f.away}</div>
-            ${(()=>{const s=getTeamForm(f.away,f.leagueKey);return s?'<div class="team-form-mini">'+s.split('').map(r=>'<div class="form-dot-mini '+r+'"></div>').join('')+'</div>':''})()}
+            ${(()=>{const s=getTeamForm(f.away,f.leagueKey);return s?'<div class="team-form-mini">'+s.split('').map(r=>'<div class="form-dot-mini '+r+'" role="img" aria-label="'+(r==='W'?'Win':r==='D'?'Draw':'Loss')+'"></div>').join('')+'</div>':''})()}
           </div>
         </div>
         ${predHtml}
@@ -3748,8 +3842,8 @@ function renderStandings() {
         <table class="data-table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Team</th>
+              <th scope="col">#</th>
+              <th scope="col">Team</th>
               <th class="num">P</th>
               <th class="num">W</th>
               <th class="num">D</th>
@@ -4022,51 +4116,99 @@ function setStatus(dotId, labelId, text, live) {
 
 // Fetch standings for one league from football-data.org
 async function fdFetchStandings(leagueKey) {
-  // Now uses API-Football as primary source
+  // Try API-Football via proxy first
   const leagueId = AF_LEAGUES[leagueKey];
-  if (!leagueId) return null;
+  if (leagueId) {
+    try {
+      const data = await afFetch('/standings', { league: leagueId, season: AF_SEASON });
+      if (data && data.length) {
+        const table = data[0]?.league?.standings?.[0];
+        if (table) {
+          storeStandingsSnapshot(leagueKey, table.map(r => ({ pos: r.rank, team: normTeam(r.team.name) })));
+          return enrichWithMovement(leagueKey, table.map(row => ({
+            pos:  row.rank,
+            team: normTeam(row.team.name),
+            P:    row.all.played,
+            W:    row.all.win, D: row.all.draw, L: row.all.lose,
+            GF:   row.all.goals.for, GA: row.all.goals.against,
+            GD:   row.goalsDiff,
+            pts:  row.points,
+            form: (row.form || '').slice(-5),
+            zone: row.rank <= 4 ? 'cl' : row.rank <= 6 ? 'el' : (row.rank >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
+          })));
+        }
+      }
+    } catch(e) { console.warn('fdFetchStandings AF error:', e.message); }
+  }
+  // Fallback: football-data.org direct
+  const code = FD_CODES[leagueKey];
+  if (!code) return null;
   try {
-    const data = await afFetch('/standings', { league: leagueId, season: AF_SEASON });
-    if (!data || !data.length) return null;
-    const table = data[0]?.league?.standings?.[0];
+    console.log(`📡 Trying football-data.org direct for ${leagueKey} standings…`);
+    const d = await fdFetch(`/v4/competitions/${code}/standings`);
+    if (!d || !d.standings) return null;
+    const table = d.standings.find(s => s.type === 'TOTAL')?.table;
     if (!table) return null;
-    storeStandingsSnapshot(leagueKey, table.map(r => ({ pos: r.rank, team: normTeam(r.team.name) })));
+    storeStandingsSnapshot(leagueKey, table.map(r => ({ pos: r.position, team: normTeam(r.team.name) })));
     return enrichWithMovement(leagueKey, table.map(row => ({
-      pos:  row.rank,
+      pos:  row.position,
       team: normTeam(row.team.name),
-      P:    row.all.played,
-      W:    row.all.win, D: row.all.draw, L: row.all.lose,
-      GF:   row.all.goals.for, GA: row.all.goals.against,
-      GD:   row.goalsDiff,
+      P:    row.playedGames,
+      W:    row.won, D: row.draw, L: row.lost,
+      GF:   row.goalsFor, GA: row.goalsAgainst,
+      GD:   row.goalDifference,
       pts:  row.points,
       form: (row.form || '').slice(-5),
-      zone: row.rank <= 4 ? 'cl' : row.rank <= 6 ? 'el' : (row.rank >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
+      zone: row.position <= 4 ? 'cl' : row.position <= 6 ? 'el' : (row.position >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
     })));
-  } catch(e) { console.warn('fdFetchStandings error:', e.message); return null; }
+  } catch(e) { console.warn('fdFetchStandings direct error:', e.message); return null; }
 }
 
-// Fetch recent + upcoming matches — now via API-Football
+// Fetch recent + upcoming matches — now via API-Football with football-data.org fallback
 async function fdFetchMatches(leagueKey) {
   const leagueId = AF_LEAGUES[leagueKey];
-  if (!leagueId) return null;
+  const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
+  const dateTo   = new Date(Date.now() + 14*86400000).toISOString().slice(0,10);
+  // Try API-Football via proxy first
+  if (leagueId) {
+    try {
+      const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
+      if (data && data.length) {
+        return data.map(m => ({
+          home:   normTeam(m.teams.home.name),
+          away:   normTeam(m.teams.away.name),
+          date:   m.fixture.date.slice(0,10),
+          time:   m.fixture.date.slice(11,16),
+          week:   m.league.round?.match(/\d+/)?.[0] ? parseInt(m.league.round.match(/\d+/)[0]) : 0,
+          result: m.fixture.status.short === 'FT'
+                    ? { h: m.goals.home, a: m.goals.away }
+                    : null,
+          referee: m.fixture.referee || null,
+          note:   '',
+        }));
+      }
+    } catch(e) { console.warn('fdFetchMatches AF error:', e.message); }
+  }
+  // Fallback: football-data.org direct
+  const code = FD_CODES[leagueKey];
+  if (!code) return null;
   try {
-    const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
-    const dateTo   = new Date(Date.now() + 14*86400000).toISOString().slice(0,10);
-    const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
-    if (!data || !data.length) return null;
-    return data.map(m => ({
-      home:   normTeam(m.teams.home.name),
-      away:   normTeam(m.teams.away.name),
-      date:   m.fixture.date.slice(0,10),
-      time:   m.fixture.date.slice(11,16),
-      week:   m.league.round?.match(/\d+/)?.[0] ? parseInt(m.league.round.match(/\d+/)[0]) : 0,
-      result: m.fixture.status.short === 'FT'
-                ? { h: m.goals.home, a: m.goals.away }
+    console.log(`📡 Trying football-data.org direct for ${leagueKey} matches…`);
+    const d = await fdFetch(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
+    if (!d || !d.matches) return null;
+    return d.matches.map(m => ({
+      home:   normTeam(m.homeTeam.name || m.homeTeam.shortName),
+      away:   normTeam(m.awayTeam.name || m.awayTeam.shortName),
+      date:   m.utcDate.slice(0,10),
+      time:   m.utcDate.slice(11,16),
+      week:   m.matchday || 0,
+      result: m.status === 'FINISHED'
+                ? { h: m.score.fullTime.home, a: m.score.fullTime.away }
                 : null,
-      referee: m.fixture.referee || null,
+      referee: m.referees?.[0]?.name || null,
       note:   '',
     }));
-  } catch(e) { console.warn('fdFetchMatches error:', e.message); return null; }
+  } catch(e) { console.warn('fdFetchMatches direct error:', e.message); return null; }
 }
 
 // Fetch predictions/odds from Bzzoiro
@@ -4089,14 +4231,31 @@ async function bzFetchPredictions(leagueKey) {
 // Calls /.netlify/functions/football-proxy which runs server-side,
 // adds the API key header, and returns JSON directly — no CORS issues.
 async function fdFetch(path) {
+  // Try Netlify proxy first
   try {
     const r = await fetch('/.netlify/functions/football-proxy?path=' + encodeURIComponent(path));
-    if (!r.ok) { console.warn('fdFetch: proxy HTTP', r.status); return null; }
+    if (r.ok) {
+      const parsed = await r.json();
+      if (!parsed.message) return parsed;
+      console.warn('fdFetch API error:', parsed.message);
+    } else {
+      console.warn('fdFetch: proxy HTTP', r.status, '— trying direct API…');
+    }
+  } catch(e) {
+    console.warn('fdFetch proxy exception:', e.message, '— trying direct API…');
+  }
+  // Fallback: call football-data.org directly (CORS supported with API key header)
+  if (!CONFIG.fdKey) { console.warn('fdFetch: no API key for direct call'); return null; }
+  try {
+    const r = await fetch('https://api.football-data.org' + path, {
+      headers: { 'X-Auth-Token': CONFIG.fdKey }
+    });
+    if (!r.ok) { console.warn('fdFetch direct HTTP', r.status, path); return null; }
     const parsed = await r.json();
-    if (parsed.message) { console.warn('fdFetch API error:', parsed.message); return null; }
+    if (parsed.message) { console.warn('fdFetch direct API error:', parsed.message); return null; }
     return parsed;
   } catch(e) {
-    console.warn('fdFetch exception:', e.message);
+    console.warn('fdFetch direct exception:', e.message);
     return null;
   }
 }
@@ -4176,10 +4335,92 @@ function fsMapStandingsRow(item, leagueKey) {
 
 // ── Primary data fetch: Apify / FlashScore ───────────────────────────────
 async function fetchFromApify() {
-  // Apify FlashScore actors are not available — skip directly to API-Football fallback
-  // The fallback in fetchLiveData() handles all data loading via af-proxy
-  console.log('ℹ️ Skipping Apify (not configured) — using API-Football as primary source');
-  return { matchesOk: false, standingsOk: false };
+  let matchesOk = false, standingsOk = false;
+
+  // 1. Fetch matches (results + upcoming fixtures) in parallel with standings
+  const [matchesRes, standingsRes] = await Promise.allSettled([
+    fetch('/.netlify/functions/flashscore-matches').then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('/.netlify/functions/flashscore-standings').then(r => r.ok ? r.json() : null).catch(() => null),
+  ]);
+
+  // Process matches
+  const matchData = matchesRes.status === 'fulfilled' ? matchesRes.value : null;
+  if (matchData?.ok) {
+    const allMatches = [
+      ...(matchData.results  || []),
+      ...(matchData.fixtures || []),
+    ];
+
+    // Group by league key
+    const byLeague = { pl:[], ll:[], sa:[], bl:[], l1:[] };
+    for (const item of allMatches) {
+      const mapped = fsMapMatch(item);
+      if (!mapped) continue;
+      // Try leagueKey from item; fall back to detecting from leagueId
+      let key = mapped._leagueKey;
+      if (!key) {
+        // Try to detect league from item.league or item.leagueName
+        const lg = (item.league || item.leagueName || item.tournamentName || '').toLowerCase();
+        if (lg.includes('premier'))   key = 'pl';
+        else if (lg.includes('liga') || lg.includes('laliga')) key = 'll';
+        else if (lg.includes('serie')) key = 'sa';
+        else if (lg.includes('bundesliga')) key = 'bl';
+        else if (lg.includes('ligue'))  key = 'l1';
+      }
+      if (key && byLeague[key]) byLeague[key].push(mapped);
+    }
+
+    for (const key of ['pl','ll','sa','bl','l1']) {
+      const arr = byLeague[key];
+      if (!arr.length) continue;
+      const results  = arr.filter(m => m.result).slice(-8);
+      const upcoming = arr.filter(m => !m.result).slice(0, 10);
+      if (results.length || upcoming.length) {
+        DEMO.fixtures[key] = [...results, ...upcoming];
+        matchesOk = true;
+      }
+    }
+    console.log('%c⚡ Apify FlashScore: MATCHES LOADED', 'color:#4ade80;font-weight:bold',
+      `(${allMatches.length} total)`);
+  }
+
+  // Process standings
+  const standData = standingsRes.status === 'fulfilled' ? standingsRes.value : null;
+  if (standData?.ok && Array.isArray(standData.items)) {
+    // Group standings items by league
+    const byLeague = { pl:[], ll:[], sa:[], bl:[], l1:[] };
+    for (const item of standData.items) {
+      const leagueId = item.leagueId || item.league_id || item.tournamentId || '';
+      let key = FS_REVERSE_MAP[leagueId];
+      if (!key) {
+        const lg = (item.league || item.leagueName || '').toLowerCase();
+        if (lg.includes('premier'))   key = 'pl';
+        else if (lg.includes('liga') || lg.includes('laliga')) key = 'll';
+        else if (lg.includes('serie')) key = 'sa';
+        else if (lg.includes('bundesliga')) key = 'bl';
+        else if (lg.includes('ligue'))  key = 'l1';
+      }
+      if (key && byLeague[key]) byLeague[key].push(item);
+    }
+
+    for (const key of ['pl','ll','sa','bl','l1']) {
+      const rows = byLeague[key];
+      if (!rows.length) continue;
+      const mapped = rows.map(r => fsMapStandingsRow(r, key)).filter(Boolean);
+      if (mapped.length >= 10) {
+        mapped.sort((a,b) => a.pos - b.pos);
+        // Store snapshot for movement tracking then enrich
+        storeStandingsSnapshot(key, mapped.map(r => ({ pos: r.pos, team: r.team })));
+        DEMO.standings[key] = enrichWithMovement(key, mapped);
+        standingsOk = true;
+      }
+    }
+    if (standingsOk) {
+      console.log('%c📊 Apify FlashScore: STANDINGS LOADED', 'color:#4ade80;font-weight:bold');
+    }
+  }
+
+  return { matchesOk, standingsOk };
 }
 
 async function fetchLiveData() {
@@ -6107,70 +6348,37 @@ async function fetchLiveScores(force = false) {
   }
 
   liveState.fetching = true;
-  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live scores via API-Football…</div>';
-
-  const LEAGUE_NAMES = { 39: 'Premier League', 140: 'La Liga', 135: 'Serie A', 78: 'Bundesliga', 61: 'Ligue 1' };
+  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live data from FlashScore…</div>';
 
   try {
-    const dateFrom = new Date().toISOString().slice(0,10);
-    const dateTo   = dateFrom; // today only for live scores
-    const allItems = [];
+    const res = await fetch('/.netlify/functions/flashscore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leagues: [
+        'england_premier-league', 'spain_laliga', 'italy_serie-a',
+        'germany_bundesliga', 'france_ligue-1'
+      ]})
+    });
 
-    for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
-      try {
-        const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
-        if (!data || !data.length) continue;
-        data.forEach(m => {
-          const statusShort = m.fixture?.status?.short || '';
-          const elapsed     = m.fixture?.status?.elapsed;
-          let status = 'Scheduled', statusTime = '';
-          if (['1H','2H','HT','ET','BT','P','SUSP','INT','LIVE'].includes(statusShort)) {
-            status = 'Live';
-            statusTime = statusShort === 'HT' ? 'Half Time' : (elapsed ? elapsed + "'" : statusShort);
-          } else if (['FT','AET','PEN'].includes(statusShort)) {
-            status = statusShort;
-          } else if (['NS','TBD'].includes(statusShort)) {
-            status = m.fixture?.date ? new Date(m.fixture.date).toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}) : 'Scheduled';
-          } else if (['PST','CANC','ABD','AWD','WO'].includes(statusShort)) {
-            status = statusShort;
-          }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
 
-          const events = (m.events || []).slice(0, 8).map(ev => ({
-            kind: 'event',
-            action: ev.type === 'Goal' ? 'Goal' : ev.type === 'Card' ? (ev.detail === 'Red Card' ? 'Red Card' : 'Yellow Card') : ev.type === 'subst' ? 'Substitution' : ev.type,
-            player: ev.player?.name || '',
-            time: ev.time?.elapsed || '',
-            side: ev.team?.id === m.teams?.home?.id ? 'home' : 'away',
-            score: ''
-          }));
-
-          allItems.push({
-            home_team:  m.teams?.home?.name || '—',
-            away_team:  m.teams?.away?.name || '—',
-            home_score: m.goals?.home,
-            away_score: m.goals?.away,
-            status:     status,
-            status_time: statusTime,
-            start_time: m.fixture?.date ? new Date(m.fixture.date).toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}) : '--:--',
-            league:     LEAGUE_NAMES[leagueId] || key.toUpperCase(),
-            history:    events,
-          });
-        });
-      } catch(e) {
-        console.warn(`Live scores: failed for league ${key}:`, e.message);
-      }
-    }
-
-    if (allItems.length) {
-      liveState.data = allItems;
-      localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: allItems }));
+    if (json.ok && json.items) {
+      liveState.data = json.items;
+      localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
       const el = document.getElementById('liveLastFetch');
       if (el) el.textContent = `· Last fetched ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
+      // DEBUG: log first item to console so we can see actual field names
+      if (json.items.length) {
+        console.log('[FlashScore DEBUG] First item keys:', Object.keys(json.items[0]));
+        console.log('[FlashScore DEBUG] First item raw:', JSON.stringify(json.items[0], null, 2));
+      }
     } else {
-      throw new Error('No matches found today across top 5 leagues');
+      throw new Error(json.error || 'No data returned');
     }
   } catch (err) {
     console.warn('Live fetch error:', err.message);
+    // Fall back to cache if available even if stale
     try {
       const stale = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
       if (stale) { liveState.data = stale.items; }
@@ -6196,6 +6404,12 @@ function renderLiveMatches() {
     wrap.innerHTML = '<div class="live-empty">No matches found in the top 5 leagues right now.</div>';
     return;
   }
+
+  // DEBUG: show raw first item so we can map field names
+  wrap.innerHTML = `<details style="margin-bottom:16px;color:var(--white-dim);font-size:.75rem;font-family:monospace;">
+    <summary style="cursor:pointer;color:var(--gold);">🔍 DEBUG: Raw first item (${items.length} total) — click to expand</summary>
+    <pre style="overflow:auto;max-height:300px;background:rgba(0,0,0,.4);padding:12px;border-radius:4px;margin-top:8px;">${JSON.stringify(items[0], null, 2)}</pre>
+  </details>`;
 
   // Apify actor confirmed field names: home_team, away_team, home_score, away_score,
   // status ("Live"), status_time ("2nd Half - 58'"), start_time, league,
@@ -6319,31 +6533,16 @@ async function loadOracleTips() {
   } catch(_) {}
 
   try {
-    // Fetch upcoming fixtures from API-Football for tips generation
-    const dateFrom = new Date().toISOString().slice(0,10);
-    const dateTo   = new Date(Date.now() + 3*86400000).toISOString().slice(0,10);
-    const tipItems = [];
-    for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
-      try {
-        const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
-        if (!data || !data.length) continue;
-        data.filter(m => ['NS','TBD'].includes(m.fixture?.status?.short)).forEach(m => {
-          tipItems.push({
-            home_team: m.teams?.home?.name || '—',
-            away_team: m.teams?.away?.name || '—',
-            home_form: [], away_form: [],
-            home_goals_avg: 0, away_goals_avg: 0,
-            league: key,
-          });
-        });
-      } catch(e) { /* skip league */ }
-    }
-    if (tipItems.length) {
-      localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items: tipItems }));
-      renderOracleTipsFromData(tipItems);
-    } else {
-      throw new Error('No upcoming fixtures found');
-    }
+    const res = await fetch('/.netlify/functions/flashscore-fixtures', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dateOffset: 3 })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'No data');
+    localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
+    renderOracleTipsFromData(json.items);
   } catch(err) {
     console.warn('[OracleTips] FlashScore fetch failed, falling back to DEMO data:', err.message);
     renderOracleTipsFallback();
@@ -6415,7 +6614,7 @@ function renderOracleTipsFromData(items) {
           <div class="fs-confidence-bar" style="width:${conf}%;background:${conf >= 70 ? 'var(--accent)' : conf >= 55 ? 'var(--gold)' : 'var(--white-dim)'};"></div>
         </div>
         <div class="fs-tip-reason">${tip.reason}</div>
-        <div class="fs-powered-badge">⚡ Live Data Powered</div>
+        <div class="fs-powered-badge">⚡ FlashScore Powered</div>
       </div>
     `;
   }).join('');
@@ -6461,7 +6660,7 @@ async function toggleFSForm(enabled) {
     return;
   }
 
-  if (statusEl) statusEl.textContent = '⏳ Loading live form data…';
+  if (statusEl) statusEl.textContent = '⏳ Loading FlashScore form data…';
 
   try {
     // Check fixture cache first
@@ -6472,28 +6671,14 @@ async function toggleFSForm(enabled) {
     }
 
     if (!items) {
-      // Fetch from API-Football instead of missing FlashScore function
-      const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
-      const dateTo   = new Date(Date.now() + 3*86400000).toISOString().slice(0,10);
-      items = [];
-      for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
-        try {
-          const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
-          if (data && data.length) {
-            data.forEach(m => {
-              items.push({
-                home_team: m.teams?.home?.name || '',
-                away_team: m.teams?.away?.name || '',
-                home_score: m.goals?.home,
-                away_score: m.goals?.away,
-                home_form: [], away_form: [],
-                status: m.fixture?.status?.short || '',
-              });
-            });
-          }
-        } catch(e) { /* skip */ }
-      }
-      if (items.length) {
+      const res = await fetch('/.netlify/functions/flashscore-fixtures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dateOffset: 3 })
+      });
+      const json = await res.json();
+      if (json.ok) {
+        items = json.items;
         localStorage.setItem('fo_tips_cache', JSON.stringify({ ts: Date.now(), items }));
       }
     }
@@ -6535,7 +6720,7 @@ async function toggleFSForm(enabled) {
       fsFormLoaded = true;
       if (statusEl) statusEl.textContent = `✅ Form loaded for ${Object.keys(fsFormData).length} teams`;
     } else {
-      if (statusEl) statusEl.textContent = '⚠️ No form data available';
+      if (statusEl) statusEl.textContent = '⚠️ No FlashScore data available';
     }
   } catch (err) {
     if (statusEl) statusEl.textContent = `⚠️ ${err.message}`;
@@ -6626,7 +6811,7 @@ function openTimelineModal(idxOrMatch) {
     ${statsHtml}
     <div class="timeline-section-title">⏱ Match Timeline</div>
     <div class="timeline-list">${timelineHtml}</div>
-    <div class="fs-powered-badge" style="margin-top:16px;">⚡ Live Data</div>
+    <div class="fs-powered-badge" style="margin-top:16px;">⚡ FlashScore Data</div>
   `;
 
   overlay.classList.remove('hidden');
@@ -6664,38 +6849,24 @@ async function loadWrapFromFlashScore() {
   wrapEl.innerHTML = '<div class="loading-ring" style="margin:32px auto;"></div>';
 
   try {
-    // Fetch yesterday's results from API-Football
-    const dateFrom = new Date(Date.now() - 2*86400000).toISOString().slice(0,10);
-    const dateTo   = new Date(Date.now() - 1*86400000).toISOString().slice(0,10);
-    const LEAGUE_NAMES = { 39: 'Premier League', 140: 'La Liga', 135: 'Serie A', 78: 'Bundesliga', 61: 'Ligue 1' };
-    const wrapItems = [];
-    for (const [key, leagueId] of Object.entries(AF_LEAGUES)) {
-      try {
-        const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
-        if (data && data.length) {
-          data.filter(m => ['FT','AET','PEN'].includes(m.fixture?.status?.short)).forEach(m => {
-            wrapItems.push({
-              home_team: m.teams?.home?.name || '—',
-              away_team: m.teams?.away?.name || '—',
-              home_score: m.goals?.home,
-              away_score: m.goals?.away,
-              status: 'FT',
-              league: LEAGUE_NAMES[leagueId] || key.toUpperCase(),
-            });
-          });
-        }
-      } catch(e) { /* skip */ }
-    }
-    if (!wrapItems.length) throw new Error('No recent results found');
-    localStorage.setItem('fo_wrap_cache', JSON.stringify({ ts: Date.now(), items: wrapItems }));
-    renderWrapResults(wrapItems, statsEl, wrapEl);
+    const res = await fetch('/.netlify/functions/flashscore-history', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dateOffset: -1 })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'No data');
+
+    localStorage.setItem('fo_wrap_cache', JSON.stringify({ ts: Date.now(), items: json.items }));
+    renderWrapResults(json.items, statsEl, wrapEl);
   } catch(err) {
-    wrapEl.innerHTML = `<div class="live-empty">⚠️ Could not load recent results.<br><small style="color:var(--white-dim)">${err.message}</small></div>`;
+    wrapEl.innerHTML = `<div class="live-empty">⚠️ Could not load FlashScore results.<br><small style="color:var(--white-dim)">${err.message}</small></div>`;
     console.warn('[WrapLoad]', err);
   }
 
   btn.disabled = false;
-  btn.textContent = '⚡ Load Recent Results';
+  btn.textContent = '⚡ Load FlashScore Results';
 }
 
 function renderWrapResults(items, statsEl, wrapEl) {
@@ -6794,8 +6965,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fix nav tab click listeners
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.addEventListener('click', function() {
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
       this.classList.add('active');
+      this.setAttribute('aria-selected','true');
     });
   });
 
