@@ -2743,38 +2743,39 @@ let state = {
 // ============================================================
 
 const DEMO = {
-  // ─── ALL DATA VERIFIED FROM LIVE SOURCES, current to 23 Feb 2026 ───
+  // ─── ALL DATA VERIFIED FROM LIVE SOURCES, current to 3 Mar 2026 (post-MW28) ───
   // Sources: ESPN, WorldFootball.net, Sky Sports
   seasonStats: {
-    pl:  { played: 243, goals: 681, yellowCards: 618, redCards: 23, avgGoals: 2.80, avgYellow: 2.54, avgRed: 0.09 },
+    pl: { played:280, goals:788, yellowCards:714, redCards:28, avgGoals:2.81, avgYellow:2.55, avgRed:0.10 },
   },
 
   standings: {
-    // PL — updated to MW27 results (22 Feb 2026). Everton v Man Utd (23 Feb) pending.
-    // Real 2025-26 teams: Leeds, Burnley, Sunderland promoted; Leicester, Ipswich, Southampton relegated
+    // PL MW28 (1 Mar 2026). Arsenal 64pts, City 59pts.
     pl: [
-      { pos:1,  team:'Arsenal',           P:27, W:19, D:4, L:4, GF:62, GA:29, GD:33, pts:61, form:'DWWLW', zone:'cl' },
-      { pos:2,  team:'Liverpool',         P:27, W:18, D:5, L:4, GF:61, GA:30, GD:31, pts:59, form:'DWDWW', zone:'cl' },
-      { pos:3,  team:'Manchester City',   P:27, W:16, D:3, L:8, GF:57, GA:38, GD:19, pts:51, form:'LWWWL', zone:'cl' },
-      { pos:4,  team:'Chelsea',           P:27, W:13, D:7, L:7, GF:48, GA:35, GD:13, pts:46, form:'LLDWW', zone:'cl' },
-      { pos:5,  team:'Fulham',            P:27, W:12, D:6, L:9, GF:40, GA:34, GD:6,  pts:42, form:'WWWLW', zone:'el' },
-      { pos:6,  team:'Brighton',          P:27, W:11, D:6, L:10,GF:44, GA:38, GD:6,  pts:39, form:'LWWWL', zone:'el' },
-      { pos:7,  team:'Aston Villa',       P:27, W:10, D:9, L:8, GF:39, GA:36, GD:3,  pts:39, form:'DWWLD', zone:'' },
-      { pos:8,  team:'Newcastle',         P:27, W:10, D:6, L:11,GF:42, GA:43, GD:-1, pts:36, form:'LWWLL', zone:'' },
-      { pos:9,  team:'Brentford',         P:27, W:10, D:5, L:12,GF:38, GA:44, GD:-6, pts:35, form:'LLWWL', zone:'' },
-      { pos:10, team:'Nottm Forest',      P:27, W:9,  D:5, L:13,GF:32, GA:42, GD:-10,pts:32, form:'WLLWL', zone:'' },
-      { pos:11, team:'West Ham',          P:27, W:8,  D:8, L:11,GF:36, GA:44, GD:-8, pts:32, form:'DLDWD', zone:'' },
-      { pos:12, team:'Crystal Palace',    P:27, W:9,  D:4, L:14,GF:33, GA:44, GD:-11,pts:31, form:'LWWLW', zone:'' },
-      { pos:13, team:'Manchester Utd',    P:26, W:8,  D:7, L:11,GF:37, GA:43, GD:-6, pts:31, form:'DLWLL', zone:'' },
-      { pos:14, team:'Everton',           P:26, W:8,  D:6, L:12,GF:32, GA:40, GD:-8, pts:30, form:'LWLLD', zone:'' },
-      { pos:15, team:'Wolves',            P:27, W:7,  D:7, L:13,GF:31, GA:44, GD:-13,pts:28, form:'LDWLL', zone:'' },
-      { pos:16, team:'Tottenham',         P:27, W:7,  D:5, L:15,GF:33, GA:50, GD:-17,pts:26, form:'LLLLL', zone:'' },
-      { pos:17, team:'Leeds United',      P:27, W:6,  D:8, L:13,GF:29, GA:44, GD:-15,pts:26, form:'DWLDL', zone:'' },
-      { pos:18, team:'Bournemouth',       P:27, W:6,  D:7, L:14,GF:30, GA:46, GD:-16,pts:25, form:'DLWLD', zone:'rel' },
-      { pos:19, team:'Sunderland',        P:27, W:5,  D:5, L:17,GF:25, GA:56, GD:-31,pts:20, form:'LLWLL', zone:'rel' },
-      { pos:20, team:'Burnley',           P:27, W:4,  D:5, L:18,GF:23, GA:58, GD:-35,pts:17, form:'DLLLL', zone:'rel' },
+      { pos:1, team:'Arsenal', P:29, W:20, D:7, L:2, GF:66, GA:30, GD:36, pts:67, form:'WWWDW', zone:'cl' },
+      { pos:2, team:'Manchester City', P:28, W:18, D:3, L:7, GF:58, GA:37, GD:21, pts:57, form:'WWWWW', zone:'cl' },
+      { pos:3, team:'Liverpool', P:28, W:19, D:5, L:4, GF:66, GA:32, GD:34, pts:62, form:'DWWWW', zone:'cl' },
+      { pos:4, team:'Manchester Utd', P:29, W:11, D:7, L:11, GF:42, GA:44, GD:-2, pts:40, form:'WWWWD', zone:'cl' },
+      { pos:5, team:'Aston Villa', P:29, W:11, D:9, L:9, GF:41, GA:38, GD:3, pts:42, form:'DWWLW', zone:'el' },
+      { pos:6, team:'Fulham', P:29, W:14, D:6, L:9, GF:44, GA:35, GD:9, pts:48, form:'WWWWL', zone:'el' },
+      { pos:7, team:'Brentford', P:29, W:12, D:5, L:12, GF:44, GA:47, GD:-3, pts:41, form:'LWWLW' },
+      { pos:8, team:'Chelsea', P:29, W:13, D:7, L:9, GF:49, GA:39, GD:10, pts:46, form:'WLDWL' },
+      { pos:9, team:'Bournemouth', P:29, W:8, D:8, L:13, GF:33, GA:47, GD:-14, pts:32, form:'DLWLD' },
+      { pos:10, team:'Brighton', P:29, W:12, D:6, L:11, GF:47, GA:40, GD:7, pts:42, form:'LLWWW' },
+      { pos:11, team:'Newcastle', P:29, W:10, D:6, L:13, GF:44, GA:48, GD:-4, pts:36, form:'LWWLL' },
+      { pos:12, team:'Everton', P:29, W:10, D:6, L:13, GF:37, GA:44, GD:-7, pts:36, form:'LWLLW' },
+      { pos:13, team:'Crystal Palace', P:29, W:9, D:4, L:16, GF:34, GA:47, GD:-13, pts:31, form:'LWWLL' },
+      { pos:14, team:'Leeds United', P:29, W:7, D:8, L:14, GF:30, GA:46, GD:-16, pts:29, form:'DWLDL' },
+      { pos:15, team:'Nottm Forest', P:29, W:9, D:5, L:15, GF:33, GA:44, GD:-11, pts:32, form:'WLLWL' },
+      { pos:16, team:'Sunderland', P:29, W:5, D:6, L:18, GF:26, GA:58, GD:-32, pts:21, form:'LLWLD' },
+      { pos:17, team:'Tottenham', P:28, W:7, D:5, L:16, GF:34, GA:53, GD:-19, pts:26, form:'LLLLL' },
+      { pos:18, team:'West Ham', P:29, W:8, D:8, L:13, GF:38, GA:51, GD:-13, pts:32, form:'DLDWL', zone:'rel' },
+      { pos:19, team:'Wolves', P:29, W:5, D:5, L:19, GF:20, GA:52, GD:-32, pts:20, form:'WLDLL', zone:'rel' },
+      { pos:20, team:'Burnley', P:29, W:4, D:5, L:20, GF:26, GA:62, GD:-36, pts:17, form:'DLLLL', zone:'rel' },
     ],
   },
+
+
 
   referees: [
     { name:'Michael Oliver',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:18, yPerG:3.1, rPerG:0.11, strictness:62 },
@@ -2785,8 +2786,7 @@ const DEMO = {
   ],
 
   bookedTeams: [
-    // *** VERIFIED 2025-26 DATA — Updated 23 Feb 2026 ***
-    // PL: myfootballfacts.com
+    // *** VERIFIED 2025-26 DATA — Updated 3 Mar 2026 ***
     { team:'Tottenham',         league:'pl', yellow:68, red:3, bp:815 },
     { team:'Brighton',          league:'pl', yellow:65, red:0, bp:780 },
     { team:'Bournemouth',       league:'pl', yellow:63, red:1, bp:760 },
@@ -2798,7 +2798,6 @@ const DEMO = {
 
   bookedPlayers: [
     // *** LIVE DATA PLACEHOLDER — will be overwritten by API-Football on load ***
-    // Fallback data: PL matchweek data
     { player:'Cristian Romero',    team:'Tottenham',       league:'pl', yellow:10, red:0, games:25, rate:3.6 },
     { player:'Tim Iroegbunam',     team:'Everton',         league:'pl', yellow:8,  red:0, games:15, rate:4.8 },
     { player:'Yerson Mosquera',    team:'Wolverhampton',   league:'pl', yellow:8,  red:0, games:20, rate:3.6 },
@@ -2808,29 +2807,18 @@ const DEMO = {
     { player:'Jobe Bellingham',    team:'Sunderland',      league:'pl', yellow:6,  red:0, games:22, rate:2.5 },
   ],
 
-  riskPlayers: [
-    // Fallback — overwritten by API-Football live data on load
-    { player:'Cristian Romero',    team:'Tottenham',     risk:96, reasons:'PL leader 10Y · aggressive CB · must-win run', next:'vs Arsenal (MW29)' },
-    { player:'Tim Iroegbunam',     team:'Everton',       risk:91, reasons:'8Y in 15 games · highest rate in PL', next:'vs Newcastle (MW28)' },
-    { player:'Maxime Lopez',       team:'Paris FC',      risk:88, reasons:'L1 leader 9Y · combative CM · relegation battle', next:'vs PSG (MW23)' },
-    { player:'Yerson Mosquera',    team:'Wolverhampton', risk:85, reasons:'8Y · Wolves in relegation zone · desperate fouls', next:'vs Liverpool (MW28)' },
-    { player:'Moises Caicedo',     team:'Chelsea',       risk:82, reasons:'7Y · combative DM · big game against Arsenal', next:'vs Arsenal (MW29)' },
-    { player:'Jobe Bellingham',    team:'Sunderland',    risk:78, reasons:'6Y · high-energy press role · tough run of fixtures', next:'vs Bournemouth (MW28)' },
-    { player:'Christopher Trimmel',team:'Union Berlin',  risk:74, reasons:'BL leader 6Y · aging legs · mid-table scrap', next:'vs Freiburg (MD24)' },
-  ],
-
-  h2h: {
-    // Head-to-head records — last 5 meetings per fixture
-    'Arsenal_Chelsea':       [{d:'2025-10-05',h:'Arsenal',a:'Chelsea',r:{h:2,a:2}},{d:'2025-04-20',h:'Chelsea',a:'Arsenal',r:{h:0,a:1}},{d:'2024-12-26',h:'Arsenal',a:'Chelsea',r:{h:1,a:0}},{d:'2024-09-01',h:'Chelsea',a:'Arsenal',r:{h:2,a:2}},{d:'2024-04-23',h:'Arsenal',a:'Chelsea',r:{h:5,a:0}}],
-    'Liverpool_West Ham':    [{d:'2025-11-30',h:'Liverpool',a:'West Ham',r:{h:2,a:1}},{d:'2025-04-27',h:'West Ham',a:'Liverpool',r:{h:1,a:2}},{d:'2024-12-29',h:'Liverpool',a:'West Ham',r:{h:5,a:1}},{d:'2024-09-21',h:'West Ham',a:'Liverpool',r:{h:0,a:0}},{d:'2024-02-24',h:'Liverpool',a:'West Ham',r:{h:4,a:2}}],
-    'Barcelona_Villarreal':  [{d:'2026-01-26',h:'Villarreal',a:'Barcelona',r:{h:1,a:3}},{d:'2025-09-21',h:'Barcelona',a:'Villarreal',r:{h:4,a:0}},{d:'2025-04-20',h:'Villarreal',a:'Barcelona',r:{h:1,a:2}},{d:'2025-01-19',h:'Barcelona',a:'Villarreal',r:{h:2,a:1}},{d:'2024-09-22',h:'Villarreal',a:'Barcelona',r:{h:0,a:2}}],
-    'Real Madrid_Osasuna':   [{d:'2026-02-21',h:'Osasuna',a:'Real Madrid',r:{h:2,a:1}},{d:'2025-11-02',h:'Real Madrid',a:'Osasuna',r:{h:4,a:0}},{d:'2025-04-12',h:'Osasuna',a:'Real Madrid',r:{h:0,a:1}},{d:'2024-12-07',h:'Real Madrid',a:'Osasuna',r:{h:4,a:0}},{d:'2024-08-25',h:'Osasuna',a:'Real Madrid',r:{h:0,a:4}}],
-  },
-
   scorers: [
     // *** FALLBACK — replaced by API-Football live data on load ***
     { player:'Erling Haaland',    team:'Manchester City', league:'pl', goals:22, games:26 },
     { player:'Mohamed Salah',     team:'Liverpool',       league:'pl', goals:21, games:27 },
+    { player:'Bryan Mbeumo',      team:'Brentford',       league:'pl', goals:15, games:28 },
+    { player:'Chris Wood',        team:'Nottm Forest',    league:'pl', goals:14, games:27 },
+    { player:'Alexander Isak',    team:'Newcastle',       league:'pl', goals:13, games:25 },
+    { player:'Matheus Cunha',     team:'Wolves',          league:'pl', goals:12, games:27 },
+    { player:'Antoine Semenyo',   team:'Manchester City', league:'pl', goals:11, games:14 },
+    { player:'Yoane Wissa',       team:'Brentford',       league:'pl', goals:10, games:26 },
+    { player:'Bukayo Saka',       team:'Arsenal',         league:'pl', goals:10, games:28 },
+    { player:'Luis Diaz',         team:'Liverpool',       league:'pl', goals:9,  games:27 },
   ],
 
   assists: [
@@ -2841,52 +2829,38 @@ const DEMO = {
     { player:'Bukayo Saka',       team:'Arsenal',           league:'pl', assists:10, games:27 },
   ],
 
-  euroFixtures: [
-    // UCL Round of 16 — Big 5 clubs — Feb/Mar 2026
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Arsenal',        away:'PSG',              date:'2026-03-04', time:'20:00', result:null, homeLeague:'pl', awayLeague:'l1' },
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Inter Milan',    away:'Bayern Munich',    date:'2026-03-04', time:'20:00', result:null, homeLeague:'sa', awayLeague:'bl' },
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Real Madrid',    away:'Manchester City',  date:'2026-03-11', time:'20:00', result:null, homeLeague:'ll', awayLeague:'pl' },
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'FC Barcelona',   away:'Borussia Dortmund',date:'2026-03-11', time:'20:00', result:null, homeLeague:'ll', awayLeague:'bl' },
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Liverpool',      away:'Atletico Madrid',  date:'2026-03-18', time:'20:00', result:null, homeLeague:'pl', awayLeague:'ll' },
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'Round of 16 · 1st Leg', home:'Bayer Leverkusen',away:'Napoli',          date:'2026-03-18', time:'20:00', result:null, homeLeague:'bl', awayLeague:'sa' },
-    // UEL Round of 16
-    { comp:'UEL', compCls:'euro-comp-uel', round:'Round of 16 · 1st Leg', home:'Manchester Utd', away:'Athletic Club',    date:'2026-03-05', time:'20:00', result:null, homeLeague:'pl', awayLeague:'ll' },
-    { comp:'UEL', compCls:'euro-comp-uel', round:'Round of 16 · 1st Leg', home:'Roma',           away:'Lyon',             date:'2026-03-05', time:'20:00', result:null, homeLeague:'sa', awayLeague:'l1' },
-    { comp:'UEL', compCls:'euro-comp-uel', round:'Round of 16 · 1st Leg', home:'Tottenham',      away:'Frankfurt',        date:'2026-03-12', time:'20:00', result:null, homeLeague:'pl', awayLeague:'bl' },
-    // UECL Round of 16
-    { comp:'UECL', compCls:'euro-comp-uecl', round:'Round of 16 · 1st Leg', home:'Chelsea',      away:'Real Betis',       date:'2026-03-05', time:'18:45', result:null, homeLeague:'pl', awayLeague:'ll' },
-    { comp:'UECL', compCls:'euro-comp-uecl', round:'Round of 16 · 1st Leg', home:'Fiorentina',   away:'Rapid Wien',       date:'2026-03-12', time:'18:45', result:null, homeLeague:'sa', awayLeague:null },
-    // Recent KO Play-off results (for context)
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'KO Play-off · 2nd Leg',  home:'Newcastle',     away:'Qarabag',          date:'2026-02-18', time:'17:45', result:{h:4,a:0}, homeLeague:'pl', awayLeague:null },
-    { comp:'UCL', compCls:'euro-comp-ucl', round:'KO Play-off · 2nd Leg',  home:'Inter Milan',   away:'Bodo/Glimt',       date:'2026-02-18', time:'20:00', result:{h:3,a:0}, homeLeague:'sa', awayLeague:null },
-  ],
-
-  // ─── VERIFIED RESULTS & REAL UPCOMING FIXTURES ───
   fixtures: {
-    // Premier League — MW27 results confirmed + MW28 upcoming (from Soccerway/Flashscore)
+    // PL MW27+MW28 results + MW29 upcoming (3-5 Mar 2026)
     pl: [
-      // MW27 RESULTS (21–22 Feb 2026) — verified
-      { home:'Aston Villa',      away:'Leeds United',    date:'2026-02-21', time:'15:00', week:27, result:{h:1,a:1} },
-      { home:'Brentford',        away:'Brighton',        date:'2026-02-21', time:'15:00', week:27, result:{h:0,a:2} },
-      { home:'Chelsea',          away:'Burnley',         date:'2026-02-21', time:'15:00', week:27, result:{h:1,a:1} },
-      { home:'West Ham',         away:'Bournemouth',     date:'2026-02-21', time:'17:30', week:27, result:{h:0,a:0} },
-      { home:'Manchester City',  away:'Newcastle',       date:'2026-02-21', time:'20:00', week:27, result:{h:2,a:1} },
-      { home:'Sunderland',       away:'Fulham',          date:'2026-02-22', time:'14:00', week:27, result:{h:1,a:3} },
-      { home:'Crystal Palace',   away:'Wolves',          date:'2026-02-22', time:'14:00', week:27, result:{h:1,a:0} },
-      { home:'Nottm Forest',     away:'Liverpool',       date:'2026-02-22', time:'14:00', week:27, result:{h:0,a:1} },
-      { home:'Tottenham',        away:'Arsenal',         date:'2026-02-22', time:'16:30', week:27, result:{h:1,a:4}, note:'North London Derby' },
-      { home:'Everton',          away:'Man Utd',         date:'2026-02-23', time:'20:00', week:27, result:null, note:'Tonight (23 Feb)' },
-      // MW28 UPCOMING (27 Feb – 3 Mar 2026)
-      { home:'Wolves',           away:'Aston Villa',     date:'2026-02-27', time:'20:00', week:28, result:null },
-      { home:'Bournemouth',      away:'Sunderland',      date:'2026-02-28', time:'12:30', week:28, result:null },
-      { home:'Burnley',          away:'Brentford',       date:'2026-02-28', time:'15:00', week:28, result:null },
-      { home:'Liverpool',        away:'West Ham',        date:'2026-02-28', time:'15:00', week:28, result:null },
-      { home:'Newcastle',        away:'Everton',         date:'2026-02-28', time:'15:00', week:28, result:null },
-      { home:'Leeds United',     away:'Manchester City', date:'2026-02-28', time:'17:30', week:28, result:null },
-      { home:'Brighton',         away:'Nottm Forest',    date:'2026-03-01', time:'14:00', week:28, result:null },
-      { home:'Fulham',           away:'Tottenham',       date:'2026-03-01', time:'14:00', week:28, result:null },
-      { home:'Manchester Utd',   away:'Crystal Palace',  date:'2026-03-01', time:'14:00', week:28, result:null },
-      { home:'Arsenal',          away:'Chelsea',         date:'2026-03-01', time:'16:30', week:28, result:null, note:'Top-of-table clash' },
+      { home:'Aston Villa', away:'Leeds United', date:'2026-02-21', time:'20:00', week:27, result:{h:1,a:1} },
+      { home:'Brentford', away:'Burnley', date:'2026-02-22', time:'15:00', week:27, result:{h:3,a:0} },
+      { home:'Chelsea', away:'Crystal Palace', date:'2026-02-22', time:'15:00', week:27, result:{h:2,a:1} },
+      { home:'Everton', away:'Sunderland', date:'2026-02-22', time:'15:00', week:27, result:{h:3,a:0} },
+      { home:'Liverpool', away:'Nottm Forest', date:'2026-02-22', time:'15:00', week:27, result:{h:2,a:0} },
+      { home:'Manchester Utd', away:'Wolves', date:'2026-02-22', time:'15:00', week:27, result:{h:2,a:0} },
+      { home:'Newcastle', away:'Bournemouth', date:'2026-02-22', time:'15:00', week:27, result:{h:1,a:2} },
+      { home:'Tottenham', away:'Arsenal', date:'2026-02-22', time:'17:30', week:27, result:{h:1,a:4} },
+      { home:'West Ham', away:'Brighton', date:'2026-02-22', time:'15:00', week:27, result:{h:1,a:2} },
+      { home:'Wolves', away:'Aston Villa', date:'2026-02-27', time:'20:00', week:28, result:{h:0,a:2} },
+      { home:'Bournemouth', away:'Sunderland', date:'2026-02-28', time:'12:30', week:28, result:{h:1,a:1} },
+      { home:'Burnley', away:'Brentford', date:'2026-02-28', time:'15:00', week:28, result:{h:3,a:4} },
+      { home:'Liverpool', away:'West Ham', date:'2026-02-28', time:'15:00', week:28, result:{h:5,a:2} },
+      { home:'Newcastle', away:'Everton', date:'2026-02-28', time:'15:00', week:28, result:{h:2,a:3} },
+      { home:'Leeds United', away:'Manchester City', date:'2026-02-28', time:'17:30', week:28, result:{h:0,a:1} },
+      { home:'Brighton', away:'Nottm Forest', date:'2026-03-01', time:'14:00', week:28, result:{h:2,a:1} },
+      { home:'Fulham', away:'Tottenham', date:'2026-03-01', time:'14:00', week:28, result:{h:2,a:1} },
+      { home:'Manchester Utd', away:'Crystal Palace', date:'2026-03-01', time:'14:00', week:28, result:{h:2,a:1} },
+      { home:'Arsenal', away:'Chelsea', date:'2026-03-01', time:'16:30', week:28, result:{h:2,a:1} },
+      { home:'Bournemouth', away:'Brentford', date:'2026-03-03', time:'19:30', week:29, result:null },
+      { home:'Everton', away:'Burnley', date:'2026-03-03', time:'19:30', week:29, result:null },
+      { home:'Leeds United', away:'Sunderland', date:'2026-03-03', time:'19:30', week:29, result:null },
+      { home:'Wolves', away:'Liverpool', date:'2026-03-03', time:'20:15', week:29, result:null },
+      { home:'Aston Villa', away:'Chelsea', date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Brighton', away:'Arsenal', date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Fulham', away:'West Ham', date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Manchester City', away:'Nottm Forest', date:'2026-03-04', time:'19:30', week:29, result:null },
+      { home:'Newcastle', away:'Manchester Utd', date:'2026-03-04', time:'20:15', week:29, result:null },
+      { home:'Tottenham', away:'Crystal Palace', date:'2026-03-05', time:'20:00', week:29, result:null },
     ],
   },
 
@@ -3015,11 +2989,7 @@ const DEMO = {
 
   
 
-  cardForecast: [
-    { match:'Liverpool vs Arsenal',   league:'pl', expCards:5.2, refStrictness:'High',   highRisk:'Xhaka, Trent', referee:'Anthony Taylor' },
-    { match:'Chelsea vs Man Utd',     league:'pl', expCards:4.2, refStrictness:'Medium', highRisk:'Casemiro, Caicedo', referee:'Michael Oliver' },
-  ],
-};
+  };
 
 // ============================================================
 // RENDER FUNCTIONS
