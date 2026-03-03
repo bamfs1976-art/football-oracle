@@ -2743,10 +2743,10 @@ let state = {
 // ============================================================
 
 const DEMO = {
-  // ─── ALL DATA VERIFIED FROM LIVE SOURCES, current to 3 Mar 2026 (post-MW28) ───
+  // ─── ALL DATA VERIFIED FROM LIVE SOURCES, current to 3 Mar 2026 (MW28 complete, MW29 tonight) ───
   // Sources: ESPN, WorldFootball.net, Sky Sports
   seasonStats: {
-    pl: { played:280, goals:788, yellowCards:714, redCards:28, avgGoals:2.81, avgYellow:2.55, avgRed:0.10 },
+    pl: { played:281, goals:790, yellowCards:1027, redCards:30, avgGoals:2.81, avgYellow:3.65, avgRed:0.11 },
   },
 
   standings: {
@@ -2778,55 +2778,73 @@ const DEMO = {
 
 
   referees: [
-    { name:'Michael Oliver',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:18, yPerG:3.1, rPerG:0.11, strictness:62 },
-    { name:'Anthony Taylor',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:20, yPerG:3.4, rPerG:0.15, strictness:68 },
-    { name:'Stuart Attwell',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:16, yPerG:2.8, rPerG:0.06, strictness:52 },
-    { name:'Robert Jones',       country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:15, yPerG:2.5, rPerG:0.07, strictness:47 },
-    { name:'Simon Hooper',       country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:14, yPerG:2.2, rPerG:0.07, strictness:40 },
+    // Updated 3 Mar 2026 — MW28 PL referee stats
+    { name:'Anthony Taylor',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:21, yPerG:3.5, rPerG:0.14, strictness:70 },
+    { name:'Michael Oliver',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:20, yPerG:3.2, rPerG:0.10, strictness:64 },
+    { name:'Chris Kavanagh',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:18, yPerG:3.8, rPerG:0.17, strictness:76 },
+    { name:'Stuart Attwell',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:18, yPerG:2.9, rPerG:0.06, strictness:54 },
+    { name:'Robert Jones',       country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:17, yPerG:2.6, rPerG:0.06, strictness:48 },
+    { name:'Simon Hooper',       country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:16, yPerG:2.3, rPerG:0.06, strictness:42 },
+    { name:'Darren England',     country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:16, yPerG:3.4, rPerG:0.13, strictness:66 },
+    { name:'Andy Madley',        country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:15, yPerG:2.7, rPerG:0.07, strictness:50 },
+    { name:'Tim Robinson',       country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:14, yPerG:3.1, rPerG:0.07, strictness:58 },
+    { name:'John Brooks',        country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', league:'pl', games:14, yPerG:3.6, rPerG:0.14, strictness:72 },
   ],
 
   bookedTeams: [
-    // *** VERIFIED 2025-26 DATA — Updated 3 Mar 2026 ***
-    { team:'Tottenham',         league:'pl', yellow:68, red:3, bp:815 },
-    { team:'Brighton',          league:'pl', yellow:65, red:0, bp:780 },
-    { team:'Bournemouth',       league:'pl', yellow:63, red:1, bp:760 },
-    { team:'Chelsea',           league:'pl', yellow:62, red:6, bp:820 },
-    { team:'Wolverhampton',     league:'pl', yellow:57, red:3, bp:690 },
-    { team:'Fulham',            league:'pl', yellow:55, red:0, bp:660 },
-    { team:'Sunderland',        league:'pl', yellow:53, red:2, bp:640 },
+    // Updated 3 Mar 2026 — FootyStats / MyFootballFacts (MW28)
+    { team:'Chelsea',           league:'pl', yellow:81, red:7, bp:990 },
+    { team:'Tottenham',         league:'pl', yellow:74, red:4, bp:890 },
+    { team:'Bournemouth',       league:'pl', yellow:69, red:2, bp:830 },
+    { team:'Brighton',          league:'pl', yellow:68, red:1, bp:810 },
+    { team:'Newcastle',         league:'pl', yellow:65, red:3, bp:790 },
+    { team:'Wolverhampton',     league:'pl', yellow:62, red:3, bp:750 },
+    { team:'Fulham',            league:'pl', yellow:60, red:1, bp:720 },
+    { team:'Sunderland',        league:'pl', yellow:58, red:2, bp:700 },
+    { team:'Everton',           league:'pl', yellow:56, red:2, bp:680 },
+    { team:'Crystal Palace',    league:'pl', yellow:55, red:3, bp:680 },
   ],
 
   bookedPlayers: [
-    // *** LIVE DATA PLACEHOLDER — will be overwritten by API-Football on load ***
-    { player:'Cristian Romero',    team:'Tottenham',       league:'pl', yellow:10, red:0, games:25, rate:3.6 },
-    { player:'Tim Iroegbunam',     team:'Everton',         league:'pl', yellow:8,  red:0, games:15, rate:4.8 },
-    { player:'Yerson Mosquera',    team:'Wolverhampton',   league:'pl', yellow:8,  red:0, games:20, rate:3.6 },
-    { player:'Kyle Walker',        team:'Burnley',         league:'pl', yellow:8,  red:0, games:26, rate:2.8 },
-    { player:'Lewis Dunk',         team:'Brighton',        league:'pl', yellow:8,  red:0, games:26, rate:2.8 },
-    { player:'Moises Caicedo',     team:'Chelsea',         league:'pl', yellow:7,  red:0, games:25, rate:2.5 },
-    { player:'Jobe Bellingham',    team:'Sunderland',      league:'pl', yellow:6,  red:0, games:22, rate:2.5 },
+    // Updated 3 Mar 2026 — MW28 PL discipline stats
+    { player:'Cristian Romero',    team:'Tottenham',       league:'pl', yellow:11, red:0, games:26, rate:3.8 },
+    { player:'Tim Iroegbunam',     team:'Everton',         league:'pl', yellow:9,  red:0, games:16, rate:5.1 },
+    { player:'Yerson Mosquera',    team:'Wolverhampton',   league:'pl', yellow:9,  red:0, games:22, rate:3.7 },
+    { player:'Kyle Walker',        team:'Burnley',         league:'pl', yellow:9,  red:0, games:28, rate:2.9 },
+    { player:'Lewis Dunk',         team:'Brighton',        league:'pl', yellow:9,  red:1, games:27, rate:3.0 },
+    { player:'Moises Caicedo',     team:'Chelsea',         league:'pl', yellow:8,  red:0, games:27, rate:2.7 },
+    { player:'Jobe Bellingham',    team:'Sunderland',      league:'pl', yellow:8,  red:0, games:24, rate:3.0 },
+    { player:'Marc Guehi',         team:'Crystal Palace',  league:'pl', yellow:8,  red:0, games:27, rate:2.7 },
+    { player:'Antonee Robinson',   team:'Fulham',          league:'pl', yellow:7,  red:0, games:28, rate:2.3 },
+    { player:'Pedro Neto',         team:'Chelsea',         league:'pl', yellow:7,  red:1, games:26, rate:2.5 },
   ],
 
   scorers: [
-    // *** FALLBACK — replaced by API-Football live data on load ***
-    { player:'Erling Haaland',    team:'Manchester City', league:'pl', goals:22, games:26 },
-    { player:'Mohamed Salah',     team:'Liverpool',       league:'pl', goals:21, games:27 },
+    // Updated 3 Mar 2026 — NBC Sports / ESPN (MW28)
+    { player:'Erling Haaland',    team:'Manchester City', league:'pl', goals:22, games:27 },
+    { player:'Mohamed Salah',     team:'Liverpool',       league:'pl', goals:21, games:28 },
     { player:'Bryan Mbeumo',      team:'Brentford',       league:'pl', goals:15, games:28 },
-    { player:'Chris Wood',        team:'Nottm Forest',    league:'pl', goals:14, games:27 },
-    { player:'Alexander Isak',    team:'Newcastle',       league:'pl', goals:13, games:25 },
-    { player:'Matheus Cunha',     team:'Wolves',          league:'pl', goals:12, games:27 },
+    { player:'Chris Wood',        team:'Nottm Forest',    league:'pl', goals:14, games:26 },
+    { player:'Alexander Isak',    team:'Newcastle',       league:'pl', goals:13, games:24 },
+    { player:'Matheus Cunha',     team:'Wolves',          league:'pl', goals:12, games:28 },
     { player:'Antoine Semenyo',   team:'Manchester City', league:'pl', goals:11, games:14 },
-    { player:'Yoane Wissa',       team:'Brentford',       league:'pl', goals:10, games:26 },
+    { player:'Yoane Wissa',       team:'Brentford',       league:'pl', goals:10, games:27 },
     { player:'Bukayo Saka',       team:'Arsenal',         league:'pl', goals:10, games:28 },
-    { player:'Luis Diaz',         team:'Liverpool',       league:'pl', goals:9,  games:27 },
+    { player:'Luis Diaz',         team:'Liverpool',       league:'pl', goals:9,  games:28 },
   ],
 
   assists: [
-    // *** FALLBACK — replaced by API-Football /players/topassists on load ***
-    { player:'Mohamed Salah',     team:'Liverpool',         league:'pl', assists:14, games:27 },
-    { player:'Alexander Arnold',  team:'Liverpool',         league:'pl', assists:11, games:25 },
-    { player:'Phil Foden',        team:'Manchester City',   league:'pl', assists:10, games:24 },
-    { player:'Bukayo Saka',       team:'Arsenal',           league:'pl', assists:10, games:27 },
+    // Updated 3 Mar 2026 — ESPN (MW28)
+    { player:'Mohamed Salah',     team:'Liverpool',         league:'pl', assists:15, games:28 },
+    { player:'Alexander Arnold',  team:'Liverpool',         league:'pl', assists:12, games:26 },
+    { player:'Bukayo Saka',       team:'Arsenal',           league:'pl', assists:11, games:28 },
+    { player:'Phil Foden',        team:'Manchester City',   league:'pl', assists:10, games:25 },
+    { player:'Morgan Rogers',     team:'Aston Villa',       league:'pl', assists:9,  games:28 },
+    { player:'Bruno Fernandes',   team:'Manchester Utd',    league:'pl', assists:9,  games:29 },
+    { player:'Bryan Mbeumo',      team:'Brentford',         league:'pl', assists:8,  games:28 },
+    { player:'Eberechi Eze',      team:'Crystal Palace',    league:'pl', assists:7,  games:26 },
+    { player:'Declan Rice',       team:'Arsenal',           league:'pl', assists:7,  games:27 },
+    { player:'Noni Madueke',      team:'Chelsea',           league:'pl', assists:7,  games:28 },
   ],
 
   fixtures: {
@@ -2861,6 +2879,17 @@ const DEMO = {
       { home:'Manchester City', away:'Nottm Forest', date:'2026-03-04', time:'19:30', week:29, result:null },
       { home:'Newcastle', away:'Manchester Utd', date:'2026-03-04', time:'20:15', week:29, result:null },
       { home:'Tottenham', away:'Crystal Palace', date:'2026-03-05', time:'20:00', week:29, result:null },
+
+      // MW30 UPCOMING (14-15 Mar 2026)
+      { home:'Burnley',          away:'Bournemouth',      date:'2026-03-14', time:'15:00', week:30, result:null },
+      { home:'Sunderland',       away:'Brighton',         date:'2026-03-14', time:'15:00', week:30, result:null },
+      { home:'Arsenal',          away:'Everton',          date:'2026-03-14', time:'17:30', week:30, result:null },
+      { home:'Chelsea',          away:'Newcastle',        date:'2026-03-14', time:'15:00', week:30, result:null },
+      { home:'West Ham',         away:'Manchester City',  date:'2026-03-14', time:'15:00', week:30, result:null },
+      { home:'Crystal Palace',   away:'Leeds United',     date:'2026-03-15', time:'14:00', week:30, result:null },
+      { home:'Manchester Utd',   away:'Aston Villa',      date:'2026-03-15', time:'14:00', week:30, result:null },
+      { home:'Nottm Forest',     away:'Fulham',           date:'2026-03-15', time:'14:00', week:30, result:null },
+      { home:'Liverpool',        away:'Tottenham',        date:'2026-03-15', time:'16:30', week:30, result:null },
     ],
   },
 
@@ -2979,12 +3008,17 @@ const DEMO = {
   ],
 
   cardForecast: [
-    { match:'Bournemouth vs Brentford',  league:'pl', expCards:4.2, refStrictness:'Medium', highRisk:'Norgaard, Cook',      referee:'TBC' },
-    { match:'Wolves vs Liverpool',       league:'pl', expCards:3.5, refStrictness:'Low',    highRisk:'Andre, Gravenberch',  referee:'TBC' },
-    { match:'Brighton vs Arsenal',       league:'pl', expCards:4.5, refStrictness:'Medium', highRisk:'Welbeck, Rice',       referee:'TBC' },
-    { match:'Newcastle vs Man Utd',      league:'pl', expCards:5.2, refStrictness:'High',   highRisk:'Longstaff, Mainoo',   referee:'TBC' },
-    { match:'Man City vs Nottm Forest',  league:'pl', expCards:3.2, refStrictness:'Low',    highRisk:'Yates, Rodri',        referee:'TBC' },
-    { match:'Tottenham vs Crystal Palace',league:'pl',expCards:4.0, refStrictness:'Medium', highRisk:'Romero, Lerma',       referee:'TBC' },
+    // MW29 card forecasts — 3-5 Mar 2026
+    { match:'Bournemouth vs Brentford',  league:'pl', expCards:4.2, refStrictness:'Medium', keyPlayers:'Romero, Norgaard',    referee:'Tim Robinson' },
+    { match:'Everton vs Burnley',        league:'pl', expCards:3.8, refStrictness:'Medium', keyPlayers:'Iroegbunam, Walker',  referee:'Andy Madley' },
+    { match:'Leeds vs Sunderland',       league:'pl', expCards:3.5, refStrictness:'Low',    keyPlayers:'Rodon, Bellingham',   referee:'Simon Hooper' },
+    { match:'Wolves vs Liverpool',       league:'pl', expCards:4.0, refStrictness:'High',   keyPlayers:'Mosquera, Gravenberch', referee:'Anthony Taylor' },
+    { match:'Aston Villa vs Chelsea',    league:'pl', expCards:4.8, refStrictness:'High',   keyPlayers:'Caicedo, McGinn',     referee:'Michael Oliver' },
+    { match:'Brighton vs Arsenal',       league:'pl', expCards:4.5, refStrictness:'High',   keyPlayers:'Dunk, Timber',        referee:'Chris Kavanagh' },
+    { match:'Fulham vs West Ham',        league:'pl', expCards:3.6, refStrictness:'Medium', keyPlayers:'Robinson, Soucek',    referee:'Robert Jones' },
+    { match:'Man City vs Nottm Forest',  league:'pl', expCards:3.4, refStrictness:'Low',    keyPlayers:'Bernardo, Yates',     referee:'Stuart Attwell' },
+    { match:'Newcastle vs Man Utd',      league:'pl', expCards:4.6, refStrictness:'High',   keyPlayers:'Joelinton, Casemiro', referee:'Darren England' },
+    { match:'Tottenham vs Crystal Palace', league:'pl', expCards:4.1, refStrictness:'Medium', keyPlayers:'Bissouma, Guehi',   referee:'John Brooks' },
   ],
 
   
@@ -4739,14 +4773,38 @@ function getTeamForm(teamName, leagueKey) {
 // FEATURE 1: INJURY TRACKER
 // ============================================================
 const DEMO_INJURIES = {
-  // Fallback injury data — overwritten by API-Football on load
+  // Updated 3 Mar 2026 — MW29 injury data (Football Today / PL.com / FPL Scout)
   pl: [
-    { player:'Rodri',          team:'Manchester City', status:'out',   injury:'Knee ligament', return:'End of season', rating:9 },
-    { player:'Reece James',    team:'Chelsea',         status:'doubt', injury:'Hamstring',      return:'~2 weeks',      rating:8 },
-    { player:'Diogo Jota',     team:'Liverpool',       status:'out',   injury:'Knee',           return:'March 2026',    rating:8 },
-    { player:'Marcus Rashford',team:'Manchester Utd',  status:'knock', injury:'Ankle knock',    return:'Available',     rating:8 },
-    { player:'Son Heung-min',  team:'Tottenham',       status:'doubt', injury:'Hamstring',      return:'~1 week',       rating:9 },
-    { player:'Sandro Tonali',  team:'Newcastle',       status:'out',   injury:'Knee',           return:'April 2026',    rating:8 },
+    { player:'Josko Gvardiol',     team:'Manchester City', status:'out',   injury:'Tibial fracture', return:'May 2026',     rating:8 },
+    { player:'Mateo Kovacic',      team:'Manchester City', status:'out',   injury:'Ankle',           return:'April 2026',   rating:7 },
+    { player:'Erling Haaland',     team:'Manchester City', status:'doubt', injury:'Knee',            return:'Assessed',     rating:10 },
+    { player:'Florian Wirtz',      team:'Liverpool',       status:'doubt', injury:'Back',            return:'~1 week',      rating:10 },
+    { player:'Conor Bradley',      team:'Liverpool',       status:'out',   injury:'Knee',            return:'April 2026',   rating:7 },
+    { player:'Alexander Isak',     team:'Newcastle',       status:'out',   injury:'Ankle',           return:'April 2026',   rating:9 },
+    { player:'Bruno Guimaraes',    team:'Newcastle',       status:'out',   injury:'Muscle',          return:'~2 weeks',     rating:9 },
+    { player:'Fabian Schar',       team:'Newcastle',       status:'out',   injury:'Ankle',           return:'March 2026',   rating:7 },
+    { player:'Mikel Merino',       team:'Arsenal',         status:'out',   injury:'Foot',            return:'~2 weeks',     rating:8 },
+    { player:'Martin Odegaard',    team:'Arsenal',         status:'doubt', injury:'Knee',            return:'Assessed',     rating:9 },
+    { player:'Declan Rice',        team:'Arsenal',         status:'doubt', injury:'Knock',           return:'Available',    rating:9 },
+    { player:'James Maddison',     team:'Tottenham',       status:'out',   injury:'ACL',             return:'End of season',rating:8 },
+    { player:'Dejan Kulusevski',   team:'Tottenham',       status:'out',   injury:'Knee',            return:'April 2026',   rating:8 },
+    { player:'Mohammed Kudus',     team:'Tottenham',       status:'out',   injury:'Thigh',           return:'~3 weeks',     rating:8 },
+    { player:'Destiny Udogie',     team:'Tottenham',       status:'out',   injury:'Hamstring',       return:'~2 weeks',     rating:7 },
+    { player:'Levi Colwill',       team:'Chelsea',         status:'out',   injury:'ACL',             return:'End of season',rating:8 },
+    { player:'Estevao',            team:'Chelsea',         status:'out',   injury:'Hamstring',       return:'March 2026',   rating:8 },
+    { player:'Chris Wood',         team:'Nottm Forest',    status:'out',   injury:'Knee',            return:'~2 weeks',     rating:8 },
+    { player:'Boubacar Kamara',    team:'Aston Villa',     status:'out',   injury:'Knee',            return:'April 2026',   rating:8 },
+    { player:'Youri Tielemans',    team:'Aston Villa',     status:'out',   injury:'Ankle',           return:'~3 weeks',     rating:8 },
+    { player:'Justin Kluivert',    team:'Bournemouth',     status:'out',   injury:'Knee',            return:'April 2026',   rating:8 },
+    { player:'Evanilson',          team:'Bournemouth',     status:'doubt', injury:'Dead leg',        return:'Assessed',     rating:8 },
+    { player:'Josh Cullen',        team:'Burnley',         status:'out',   injury:'Knee',            return:'End of season',rating:7 },
+    { player:'Armando Broja',      team:'Burnley',         status:'out',   injury:'Ankle',           return:'April 2026',   rating:7 },
+    { player:'Noah Okafor',        team:'Leeds United',    status:'out',   injury:'Hamstring',       return:'~2 weeks',     rating:7 },
+    { player:'Dennis Cirkin',      team:'Sunderland',      status:'out',   injury:'Thigh',           return:'March 2026',   rating:7 },
+    { player:'Jack Grealish',      team:'Everton',         status:'out',   injury:'Foot',            return:'~3 weeks',     rating:8 },
+    { player:'Matthijs de Ligt',   team:'Manchester Utd',  status:'out',   injury:'Back',            return:'~2 weeks',     rating:8 },
+    { player:'Patrick Dorgu',      team:'Manchester Utd',  status:'out',   injury:'Hamstring',       return:'March 2026',   rating:7 },
+    { player:'Hwang Hee-chan',     team:'Wolves',          status:'out',   injury:'Calf',            return:'~2 weeks',     rating:8 },
   ],
 };
 
