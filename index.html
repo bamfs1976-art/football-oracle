@@ -6378,21 +6378,62 @@ async function fetchLiveScores(force = false) {
     }
   } catch (err) {
     console.warn('Live fetch error:', err.message);
-    // Fall back to cache if available even if stale
+    // Fall back to fresh cache only (< 1 hour old)
     try {
       const stale = JSON.parse(localStorage.getItem('fo_flashscore_cache') || 'null');
-      if (stale) { liveState.data = stale.items; }
+      if (stale && Date.now() - stale.ts < 60 * 60 * 1000) { liveState.data = stale.items; }
     } catch(_) {}
-    if (!liveState.data) {
-      document.getElementById('liveMatchesWrap').innerHTML =
-        `<div class="live-empty">⚠️ Could not fetch live data.<br><small style="color:var(--white-dim)">${err.message}</small><br><br><button class="live-refresh-btn" onclick="fetchLiveScores(true)">Retry</button></div>`;
-      liveState.fetching = false;
-      return;
+    // If no usable cache, build from DEMO fixtures for today
+    if (!liveState.data || !liveState.data.length) {
+      liveState.data = buildLiveFromDemo();
     }
   }
 
   liveState.fetching = false;
   renderLiveMatches();
+}
+
+// Build live-style items from DEMO fixtures for today +/- 1 day
+function buildLiveFromDemo() {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0,10);
+  const items = [];
+  const leagueNames = { pl:'Premier League', ll:'La Liga', sa:'Serie A', bl:'Bundesliga', l1:'Ligue 1' };
+  Object.entries(DEMO.fixtures).forEach(([key, fxs]) => {
+    fxs.forEach(f => {
+      const diff = Math.abs(today - new Date(f.date)) / 86400000;
+      if (diff > 1.5) return;
+      items.push({
+        home_team: f.home, away_team: f.away,
+        league: leagueNames[key] || key.toUpperCase(),
+        start_time: f.time,
+        home_score: f.result ? f.result.h : null,
+        away_score: f.result ? f.result.a : null,
+        status: f.result ? 'FT' : (f.date === todayStr ? 'Today' : 'Scheduled'),
+        status_time: f.result ? 'FT' : f.time,
+        history: [], _demo: true
+      });
+    });
+  });
+  (DEMO.euroFixtures || []).forEach(f => {
+    const diff = Math.abs(today - new Date(f.date)) / 86400000;
+    if (diff > 1.5) return;
+    items.push({
+      home_team: f.home, away_team: f.away, league: f.comp,
+      start_time: f.time,
+      home_score: f.result ? f.result.h : null,
+      away_score: f.result ? f.result.a : null,
+      status: f.result ? 'FT' : 'Scheduled',
+      status_time: f.result ? 'FT' : f.time,
+      history: [], _demo: true
+    });
+  });
+  items.sort((a,b) => {
+    const order = {'Live':0,'HT':1,'Today':2,'Scheduled':3,'FT':4};
+    return (order[a.status]||3) - (order[b.status]||3);
+  });
+  console.log('%c\U0001f4cb Live tab: ' + items.length + ' matches from demo data', 'color:#f5c842');
+  return items;
 }
 
 function renderLiveMatches() {
@@ -6401,15 +6442,11 @@ function renderLiveMatches() {
 
   const items = liveState.data || [];
   if (!items.length) {
-    wrap.innerHTML = '<div class="live-empty">No matches found in the top 5 leagues right now.</div>';
+    wrap.innerHTML = '<div class="live-empty">No matches found in the top 5 leagues right now.<br><small style="color:var(--white-dim)">Live data requires Netlify deployment with FlashScore proxy.</small></div>';
     return;
   }
 
-  // DEBUG: show raw first item so we can map field names
-  wrap.innerHTML = `<details style="margin-bottom:16px;color:var(--white-dim);font-size:.75rem;font-family:monospace;">
-    <summary style="cursor:pointer;color:var(--gold);">🔍 DEBUG: Raw first item (${items.length} total) — click to expand</summary>
-    <pre style="overflow:auto;max-height:300px;background:rgba(0,0,0,.4);padding:12px;border-radius:4px;margin-top:8px;">${JSON.stringify(items[0], null, 2)}</pre>
-  </details>`;
+  // Live matches renderer
 
   // Apify actor confirmed field names: home_team, away_team, home_score, away_score,
   // status ("Live"), status_time ("2nd Half - 58'"), start_time, league,
@@ -6466,13 +6503,18 @@ function renderLiveMatches() {
     </div>`;
   }
 
+  const isDemo = items.some(m => m._demo);
   let html = '';
+  if (isDemo) {
+    html += '<div style="background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);border-radius:6px;padding:8px 14px;margin-bottom:14px;font-family:Barlow Condensed;font-size:.82rem;display:flex;align-items:center;gap:8px;">' +
+      '<span style="font-size:1.1rem;">📋</span> Showing today\u2019s fixtures from local data. Live scores update automatically on <strong>Netlify deployment</strong>.</div>';
+  }
   if (live.length) {
     html += `<div class="live-section-title">🔴 LIVE NOW — ${live.length} match${live.length > 1 ? 'es' : ''}</div>`;
     html += live.map(matchCard).join('');
   }
   if (sched.length) {
-    html += `<div class="live-section-title">📅 UPCOMING</div>`;
+    html += `<div class="live-section-title">📅 UPCOMING TODAY</div>`;
     html += sched.map(matchCard).join('');
   }
   if (ft.length) {
