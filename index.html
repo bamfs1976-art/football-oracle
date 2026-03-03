@@ -4015,7 +4015,35 @@ async function runApiDiagnostics() {
   }
 
   write('');
-  write('Testing API-Football via Netlify function…', '#f5c842');
+  write('');
+  write('Testing football-data.org DIRECT (primary source)…', '#f5c842');
+  try {
+    var fdT0 = Date.now();
+    var fdR = await fetch('https://api.football-data.org/v4/competitions/PL/standings', {
+      headers: { 'X-Auth-Token': CONFIG.fdKey }
+    });
+    var fdMs = Date.now() - fdT0;
+    if (fdR.ok) {
+      var fdD = await fdR.json();
+      var fdTable = fdD.standings ? fdD.standings.find(function(s){return s.type==='TOTAL'}) : null;
+      if (fdTable && fdTable.table && fdTable.table.length) {
+        var fdTop = fdTable.table[0];
+        write('  \u2705 ' + fdMs + 'ms \u2014 PL leader: ' + fdTop.team.shortName + ' ' + fdTop.points + 'pts (' + fdTop.playedGames + 'gp)', '#4ade80');
+        write('     football-data.org is YOUR PRIMARY data source \u2014 working!', '#4ade80');
+      } else {
+        write('  \u26a0\ufe0f ' + fdMs + 'ms \u2014 Connected but no standings data', '#f5c842');
+      }
+    } else if (fdR.status === 429) {
+      write('  \u26a0\ufe0f Rate limited (10 req/min) \u2014 wait 60s and retry', '#f5c842');
+    } else {
+      write('  \u274c HTTP ' + fdR.status, '#e63946');
+    }
+  } catch(fdErr) {
+    write('  \u274c ERROR \u2014 ' + fdErr.message, '#e63946');
+  }
+
+  write('');
+  write('Testing API-Football via Netlify proxy (fallback)\u2026', '#f5c842');
   try {
     const t0 = Date.now();
     const r = await fetch('/.netlify/functions/af-proxy?path=/status');
@@ -4047,7 +4075,7 @@ async function runApiDiagnostics() {
   }
 
   write('');
-  write('Diagnostics complete. ✅ green = live data via Netlify function. ❌ red = check key or function deploy.', '#4ade80');
+  write('Diagnostics complete. \u2705 = working, \u26a0\ufe0f = partial, \u274c = broken. Primary source: football-data.org direct.', '#4ade80');
 }
 
 function saveApiKeys() {
@@ -4116,7 +4144,31 @@ function setStatus(dotId, labelId, text, live) {
 
 // Fetch standings for one league from football-data.org
 async function fdFetchStandings(leagueKey) {
-  // Try API-Football via proxy first
+  // PRIMARY: football-data.org DIRECT (CORS-enabled, no proxy needed)
+  const code = FD_CODES[leagueKey];
+  if (code) {
+    try {
+      const d = await fdDirectCall(`/v4/competitions/${code}/standings`);
+      if (d && d.standings) {
+        const table = d.standings.find(s => s.type === 'TOTAL')?.table;
+        if (table) {
+          storeStandingsSnapshot(leagueKey, table.map(r => ({ pos: r.position, team: normTeam(r.team.name) })));
+          return enrichWithMovement(leagueKey, table.map(row => ({
+            pos:  row.position,
+            team: normTeam(row.team.name),
+            P:    row.playedGames,
+            W:    row.won, D: row.draw, L: row.lost,
+            GF:   row.goalsFor, GA: row.goalsAgainst,
+            GD:   row.goalDifference,
+            pts:  row.points,
+            form: (row.form || '').slice(-5),
+            zone: row.position <= 4 ? 'cl' : row.position <= 6 ? 'el' : (row.position >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
+          })));
+        }
+      }
+    } catch(e) { console.warn('fdFetchStandings direct error:', e.message); }
+  }
+  // FALLBACK: API-Football via Netlify proxy
   const leagueId = AF_LEAGUES[leagueKey];
   if (leagueId) {
     try {
@@ -4138,38 +4190,38 @@ async function fdFetchStandings(leagueKey) {
           })));
         }
       }
-    } catch(e) { console.warn('fdFetchStandings AF error:', e.message); }
+    } catch(e) { console.warn('fdFetchStandings AF fallback error:', e.message); }
   }
-  // Fallback: football-data.org direct
-  const code = FD_CODES[leagueKey];
-  if (!code) return null;
-  try {
-    console.log(`📡 Trying football-data.org direct for ${leagueKey} standings…`);
-    const d = await fdFetch(`/v4/competitions/${code}/standings`);
-    if (!d || !d.standings) return null;
-    const table = d.standings.find(s => s.type === 'TOTAL')?.table;
-    if (!table) return null;
-    storeStandingsSnapshot(leagueKey, table.map(r => ({ pos: r.position, team: normTeam(r.team.name) })));
-    return enrichWithMovement(leagueKey, table.map(row => ({
-      pos:  row.position,
-      team: normTeam(row.team.name),
-      P:    row.playedGames,
-      W:    row.won, D: row.draw, L: row.lost,
-      GF:   row.goalsFor, GA: row.goalsAgainst,
-      GD:   row.goalDifference,
-      pts:  row.points,
-      form: (row.form || '').slice(-5),
-      zone: row.position <= 4 ? 'cl' : row.position <= 6 ? 'el' : (row.position >= (leagueKey==='bl'?16:18) ? 'rel' : ''),
-    })));
-  } catch(e) { console.warn('fdFetchStandings direct error:', e.message); return null; }
+  return null;
 }
 
 // Fetch recent + upcoming matches — now via API-Football with football-data.org fallback
 async function fdFetchMatches(leagueKey) {
-  const leagueId = AF_LEAGUES[leagueKey];
   const dateFrom = new Date(Date.now() - 14*86400000).toISOString().slice(0,10);
   const dateTo   = new Date(Date.now() + 14*86400000).toISOString().slice(0,10);
-  // Try API-Football via proxy first
+  // PRIMARY: football-data.org DIRECT (CORS-enabled, no proxy needed)
+  const code = FD_CODES[leagueKey];
+  if (code) {
+    try {
+      const d = await fdDirectCall(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
+      if (d && d.matches && d.matches.length) {
+        return d.matches.map(m => ({
+          home:   normTeam(m.homeTeam.name || m.homeTeam.shortName),
+          away:   normTeam(m.awayTeam.name || m.awayTeam.shortName),
+          date:   m.utcDate.slice(0,10),
+          time:   m.utcDate.slice(11,16),
+          week:   m.matchday || 0,
+          result: m.status === 'FINISHED'
+                    ? { h: m.score.fullTime.home, a: m.score.fullTime.away }
+                    : null,
+          referee: m.referees?.[0]?.name || null,
+          note:   '',
+        }));
+      }
+    } catch(e) { console.warn('fdFetchMatches direct error:', e.message); }
+  }
+  // FALLBACK: API-Football via Netlify proxy
+  const leagueId = AF_LEAGUES[leagueKey];
   if (leagueId) {
     try {
       const data = await afFetch('/fixtures', { league: leagueId, season: AF_SEASON, from: dateFrom, to: dateTo });
@@ -4187,28 +4239,9 @@ async function fdFetchMatches(leagueKey) {
           note:   '',
         }));
       }
-    } catch(e) { console.warn('fdFetchMatches AF error:', e.message); }
+    } catch(e) { console.warn('fdFetchMatches AF fallback error:', e.message); }
   }
-  // Fallback: football-data.org direct
-  const code = FD_CODES[leagueKey];
-  if (!code) return null;
-  try {
-    console.log(`📡 Trying football-data.org direct for ${leagueKey} matches…`);
-    const d = await fdFetch(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
-    if (!d || !d.matches) return null;
-    return d.matches.map(m => ({
-      home:   normTeam(m.homeTeam.name || m.homeTeam.shortName),
-      away:   normTeam(m.awayTeam.name || m.awayTeam.shortName),
-      date:   m.utcDate.slice(0,10),
-      time:   m.utcDate.slice(11,16),
-      week:   m.matchday || 0,
-      result: m.status === 'FINISHED'
-                ? { h: m.score.fullTime.home, a: m.score.fullTime.away }
-                : null,
-      referee: m.referees?.[0]?.name || null,
-      note:   '',
-    }));
-  } catch(e) { console.warn('fdFetchMatches direct error:', e.message); return null; }
+  return null;
 }
 
 // Fetch predictions/odds from Bzzoiro
@@ -4227,9 +4260,35 @@ async function bzFetchPredictions(leagueKey) {
 }
 
 // Main live-data orchestrator
-// ─── NETLIFY FUNCTION PROXY HELPER ───────────────────────────────────────
-// Calls /.netlify/functions/football-proxy which runs server-side,
-// adds the API key header, and returns JSON directly — no CORS issues.
+// ─── DIRECT football-data.org CALL (no proxy needed — CORS supported) ────
+// This is the PRIMARY data source — calls football-data.org directly with
+// the API key header. No Netlify Function required. 10 req/min free tier.
+async function fdDirectCall(path) {
+  if (!CONFIG.fdKey) { console.warn('fdDirectCall: no API key'); return null; }
+  try {
+    const r = await fetch('https://api.football-data.org' + path, {
+      headers: { 'X-Auth-Token': CONFIG.fdKey }
+    });
+    if (!r.ok) {
+      console.warn('fdDirectCall HTTP', r.status, path);
+      return null;
+    }
+    const parsed = await r.json();
+    if (parsed.message) {
+      console.warn('fdDirectCall API error:', parsed.message);
+      return null;
+    }
+    console.log('%c✓ football-data.org direct: ' + path, 'color:#4ade80');
+    return parsed;
+  } catch(e) {
+    console.warn('fdDirectCall exception:', e.message);
+    return null;
+  }
+}
+
+// ─── NETLIFY FUNCTION PROXY HELPER (fallback) ───────────────────────────
+// Calls /.netlify/functions/football-proxy which runs server-side.
+// Used as fallback if direct call fails.
 async function fdFetch(path) {
   // Try Netlify proxy first
   try {
@@ -4951,6 +5010,28 @@ async function fetchLiveScorers() {
     DEMO.scorers = allScorers.sort((a,b) => b.goals - a.goals).slice(0,10);
     if (state.activeTab === 'overview' || !state.activeTab) renderOverview();
     console.log('%c⚽ Live scorers loaded:', 'color:#4ade80', allScorers.length, 'players');
+  } else {
+    // Fallback: football-data.org direct scorers endpoint
+    for (const [key, code] of Object.entries(FD_CODES)) {
+      try {
+        const d = await fdDirectCall(`/v4/competitions/${code}/scorers?limit=5`);
+        if (d && d.scorers) {
+          d.scorers.forEach(s => {
+            allScorers.push({
+              player: s.player.name,
+              team: normTeam(s.team.name || s.team.shortName || ''),
+              league: key,
+              goals: s.goals || 0,
+              games: s.playedMatches || 0,
+            });
+          });
+        }
+      } catch(e) {}
+    }
+    if (allScorers.length > 0) {
+      DEMO.scorers = allScorers.sort((a,b) => b.goals - a.goals).slice(0,10);
+      console.log('%c⚽ Scorers loaded via fd.org:', 'color:#4ade80', allScorers.length);
+    }
   }
 }
 
@@ -4965,7 +5046,7 @@ async function fetchRefereeAssignments() {
     try {
       const dateFrom = new Date(Date.now()).toISOString().slice(0,10);
       const dateTo   = new Date(Date.now() + 10*86400000).toISOString().slice(0,10);
-      const d = await fdFetch(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
+      const d = await fdDirectCall(`/v4/competitions/${code}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`);
       if (d && d.matches) {
         d.matches.forEach(m => {
           if (m.referees && m.referees.length > 0) {
@@ -6069,8 +6150,8 @@ function renderWorldCup() {
 const REFRESH_INTERVAL_MS  = 24 * 60 * 60 * 1000; // 24 hours
 const STALE_THRESHOLD_MS   =  6 * 60 * 60 * 1000; // 6 hours → amber pulse
 const AWAY_THRESHOLD_MS    =  1 * 60 * 60 * 1000; // 1 hour away → refresh on return
-const QUOTA_PER_LOAD       = 78;   // requests per full refresh (from our audit)
-const QUOTA_DAILY_LIMIT    = 100;  // API-Football free tier
+const QUOTA_PER_LOAD       = 15;   // football-data.org direct: ~12 calls per refresh (5 standings + 5 matches + scorers + assists)
+const QUOTA_DAILY_LIMIT    = 100;  // API-Football free tier (fallback only now)
 const QUOTA_SAFETY_MARGIN  = 90;   // refuse refresh if this many used today
 const LS_LAST_FETCH        = 'fo_last_fetch';      // epoch ms
 const LS_QUOTA_DATE        = 'fo_quota_date';      // YYYY-MM-DD
@@ -6348,8 +6429,48 @@ async function fetchLiveScores(force = false) {
   }
 
   liveState.fetching = true;
-  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live data from FlashScore…</div>';
+  document.getElementById('liveMatchesWrap').innerHTML = '<div class="live-empty"><div class="pulse-dot" style="margin:0 auto 10px;"></div>Fetching live scores…</div>';
 
+  // ── PRIMARY: football-data.org direct (today's matches) ──
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const fdRes = await fetch('https://api.football-data.org/v4/matches?dateFrom=' + today + '&dateTo=' + today, {
+      headers: { 'X-Auth-Token': CONFIG.fdKey }
+    });
+    if (fdRes.ok) {
+      const fdData = await fdRes.json();
+      const topLeagues = [2021, 2014, 2019, 2002, 2015];
+      const leagueNames = {2021:'Premier League',2014:'La Liga',2019:'Serie A',2002:'Bundesliga',2015:'Ligue 1'};
+      const matches = (fdData.matches || []).filter(m => topLeagues.includes(m.competition && m.competition.id));
+      if (matches.length) {
+        liveState.data = matches.map(function(m) {
+          var statusMap = {'FINISHED':'FT','IN_PLAY':'Live','PAUSED':'HT','HALFTIME':'HT','LIVE':'Live','TIMED':'Scheduled','SCHEDULED':'Scheduled'};
+          var st = statusMap[m.status] || m.status;
+          return {
+            home_team: (m.homeTeam && m.homeTeam.shortName) || (m.homeTeam && m.homeTeam.name) || '?',
+            away_team: (m.awayTeam && m.awayTeam.shortName) || (m.awayTeam && m.awayTeam.name) || '?',
+            league: leagueNames[m.competition && m.competition.id] || (m.competition && m.competition.name) || '',
+            start_time: m.utcDate ? m.utcDate.slice(11,16) : '--:--',
+            home_score: m.score && m.score.fullTime ? m.score.fullTime.home : null,
+            away_score: m.score && m.score.fullTime ? m.score.fullTime.away : null,
+            status: st,
+            status_time: st === 'Live' ? (m.minute ? m.minute + "'" : 'Live') : st,
+            history: [],
+            _source: 'football-data.org'
+          };
+        });
+        localStorage.setItem('fo_flashscore_cache', JSON.stringify({ ts: Date.now(), items: liveState.data }));
+        var lfel = document.getElementById('liveLastFetch');
+        if (lfel) lfel.textContent = '\u00b7 football-data.org \u00b7 ' + new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+        console.log('%c\u2713 Live tab: ' + liveState.data.length + ' matches via football-data.org', 'color:#4ade80');
+        liveState.fetching = false;
+        renderLiveMatches();
+        return;
+      }
+    }
+  } catch(fdLiveErr) { console.warn('Live fd.org direct error:', fdLiveErr.message); }
+
+  // ── FALLBACK: FlashScore via Netlify proxy ──
   try {
     const res = await fetch('/.netlify/functions/flashscore', {
       method: 'POST',
