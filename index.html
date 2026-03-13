@@ -488,7 +488,7 @@ header{background:linear-gradient(180deg,#0a1628 0%,var(--s1) 100%);border-botto
       <option value="fouls">Fouls Committed</option>
     </select>
     <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer">
-      <input type="checkbox" id="pb-alert-only" onchange="renderPlayerBookings()" style="accent-color:var(--amber)">
+      <input type="checkbox" id="pb-alert-only" onchange="renderPlayerBookings()" style="accent-color:var(--accent3)">
       Ban alerts only
     </label>
     <div style="margin-left:auto;font-size:11px;color:var(--text3)" id="pb-count"></div>
@@ -565,14 +565,14 @@ function renderPlayerBookings() {
   document.getElementById('pb-stat-avg').textContent = avgY;
   document.getElementById('pb-count').textContent = `${players.length} players`;
 
-  const posColor = {'DF':'#4a9eff','MF':'var(--accent)','FW':'var(--amber)','GK':'#a78bfa'};
+  const posColor = {'DF':'#4a9eff','MF':'var(--accent)','FW':'var(--accent3)','GK':'#a78bfa'};
 
   const tbody = document.getElementById('pb-tbody');
   tbody.innerHTML = players.map((p,i) => {
     const pc = posColor[p.pos.split(',')[0]] || 'var(--text3)';
-    const yp90Color = p.yp90 >= 0.5 ? (p.yp90 >= 0.8 ? '#e55' : 'var(--amber)') : 'var(--text2)';
+    const yp90Color = p.yp90 >= 0.5 ? (p.yp90 >= 0.8 ? '#e55' : 'var(--accent3)') : 'var(--text2)';
     const alertHtml = p.alert 
-      ? `<span style="background:rgba(255,180,0,.15);border:1px solid rgba(255,180,0,.4);border-radius:20px;padding:2px 8px;font-size:10px;color:var(--amber);white-space:nowrap">${p.alert}</span>`
+      ? `<span style="background:rgba(255,180,0,.15);border:1px solid rgba(255,180,0,.4);border-radius:20px;padding:2px 8px;font-size:10px;color:var(--accent3);white-space:nowrap">${p.alert}</span>`
       : p.red > 0 
         ? `<span style="background:rgba(238,85,85,.1);border:1px solid rgba(238,85,85,.3);border-radius:20px;padding:2px 8px;font-size:10px;color:#e55">🟥 ${p.red} red${p.red>1?'s':''}</span>`
         : '<span style="color:var(--text3);font-size:11px">—</span>';
@@ -584,7 +584,7 @@ function renderPlayerBookings() {
       <td style="padding:8px 6px;text-align:center"><span style="background:${pc}22;color:${pc};border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700">${p.pos.split(',')[0]}</span></td>
       <td style="padding:8px 6px;text-align:center;color:var(--text2)">${p.mp}</td>
       <td style="padding:8px 6px;text-align:center;color:var(--text3)">${p.min}</td>
-      <td style="padding:8px 6px;text-align:center;font-weight:700;color:var(--amber)">${p.yellow}</td>
+      <td style="padding:8px 6px;text-align:center;font-weight:700;color:var(--accent3)">${p.yellow}</td>
       <td style="padding:8px 6px;text-align:center;font-weight:700;color:${p.red?'#e55':'var(--text3)'}">${p.red||'—'}</td>
       <td style="padding:8px 6px;text-align:center;color:var(--text2)">${p.fouls}</td>
       <td style="padding:8px 6px;text-align:center;font-weight:700;color:${yp90Color}">${p.yp90.toFixed(3)}</td>
@@ -668,9 +668,9 @@ function renderBookings() {
   const grid = document.getElementById('bk-cards-grid');
   grid.innerHTML = preds.map(p => {
     const lname = DATA.leagues[p.div] ? DATA.leagues[p.div].name : p.div;
-    const strictColor = p.strictness==='Strict'?'#e55':p.strictness==='Moderate'?'var(--amber)':'var(--accent)';
+    const strictColor = p.strictness==='Strict'?'#e55':p.strictness==='Moderate'?'var(--accent3)':'var(--accent)';
     const strictBg = p.strictness==='Strict'?'rgba(238,85,85,.15)':p.strictness==='Moderate'?'rgba(255,180,0,.15)':'rgba(0,217,126,.15)';
-    const o35Color = p.over35_pct>=70?'#e55':p.over35_pct>=50?'var(--amber)':'var(--text2)';
+    const o35Color = p.over35_pct>=70?'#e55':p.over35_pct>=50?'var(--accent3)':'var(--text2)';
     const cardBar = Math.min(100,(p.expected_cards/8)*100);
     const refUrl = p.referee!=='TBA'?`https://football.referee.is/?q=${encodeURIComponent(p.referee)}`:'https://football.referee.is/';
     return `<div class="league-section" style="padding:14px;cursor:default">
@@ -678,11 +678,11 @@ function renderBookings() {
         <div><div style="font-size:10px;color:var(--text3);margin-bottom:3px">${lname}</div>
         <div style="font-weight:600;font-size:14px">${p.home}</div>
         <div style="font-size:11px;color:var(--text3)">vs ${p.away}</div></div>
-        <div style="text-align:right"><div style="font-family:'Bebas Neue',cursive;font-size:28px;color:var(--amber);line-height:1">${p.expected_cards}</div>
+        <div style="text-align:right"><div style="font-family:'Bebas Neue',cursive;font-size:28px;color:var(--accent3);line-height:1">${p.expected_cards}</div>
         <div style="font-size:9px;color:var(--text3)">EXP. CARDS</div></div>
       </div>
       <div style="background:var(--s3);border-radius:4px;height:4px;margin-bottom:10px">
-        <div style="height:4px;border-radius:4px;background:linear-gradient(90deg,var(--amber),#e55);width:${cardBar}%"></div>
+        <div style="height:4px;border-radius:4px;background:linear-gradient(90deg,var(--accent3),#e55);width:${cardBar}%"></div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
         <div style="background:${strictBg};border:1px solid ${strictColor}40;border-radius:20px;padding:3px 10px;font-size:11px;color:${strictColor};font-weight:600">${p.strictness==='Unknown'?'❓ Ref TBA':p.strictness==='Strict'?'🟥 Strict':p.strictness==='Moderate'?'🟨 Moderate':'🟩 Lenient'}</div>
@@ -2077,7 +2077,7 @@ function cdRenderTeamBars() {
   const byL10    = [...teams].sort((a,b)=>b[1].last10.ypm - a[1].last10.ypm);
 
   document.getElementById('cd-bars-season-y').innerHTML = bySeason.map(([name,t])=>
-    cdBar(name, t.season.ypm, maxSY, 'var(--amber)', '/g')
+    cdBar(name, t.season.ypm, maxSY, 'var(--accent3)', '/g')
   ).join('');
 
   document.getElementById('cd-bars-l10-y').innerHTML = byL10.map(([name,t])=>
@@ -2094,7 +2094,7 @@ function cdRenderRefBars() {
   const byL10    = [...refs].sort((a,b)=>b[1].last10.ypm - a[1].last10.ypm);
 
   document.getElementById('cd-bars-ref-season').innerHTML = bySeason.map(([name,r])=>
-    cdBar(name, r.season.ypm, maxSY, 'var(--amber)', '/g')
+    cdBar(name, r.season.ypm, maxSY, 'var(--accent3)', '/g')
   ).join('');
 
   document.getElementById('cd-bars-ref-l10').innerHTML = byL10.map(([name,r])=>
@@ -2184,7 +2184,7 @@ function cdRenderRef() {
   if (!r) return;
 
   const haDiff = r.home_away_diff;
-  const haDiffCol = Math.abs(haDiff) > 0.3 ? 'var(--amber)' : 'var(--text3)';
+  const haDiffCol = Math.abs(haDiff) > 0.3 ? 'var(--accent3)' : 'var(--text3)';
   const haDiffLbl = haDiff > 0 ? `Books home teams +${haDiff} more Y/game` : haDiff < 0 ? `Books away teams +${Math.abs(haDiff)} more Y/game` : 'Even home/away distribution';
 
   document.getElementById('cd-ref-detail').innerHTML = `
@@ -2243,7 +2243,7 @@ function cdRenderRef() {
           <tbody>
             ${r.last10_games.map(g=>{
               const tot = g.hy+g.ay+g.hr+g.ar;
-              const totCol = tot>=6?'#e55':tot>=4?'var(--amber)':'var(--text2)';
+              const totCol = tot>=6?'#e55':tot>=4?'var(--accent3)':'var(--text2)';
               return `<tr style="border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
                 <td style="padding:6px 8px;color:var(--text3)">${g.date}</td>
                 <td style="padding:6px 8px;font-weight:500">${g.home}</td>
