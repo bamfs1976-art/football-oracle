@@ -1,0 +1,114 @@
+name: Update Football Data
+
+on:
+  schedule:
+    - cron: '0 16 * * 5'  # Every Friday at 4pm UTC
+  workflow_dispatch:      # Also allows manual trigger from GitHub
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download CSVs from football-data.co.uk
+        run: |
+          mkdir -p csv-data
+          BASE="https://www.football-data.co.uk/mmz4281/2526"
+          for league in E0 E1 E2 E3 EC SC0 SC1 SC2 SC3 D1 D2 I1 I2 F1 F2 B1 N1 P1 G1 SP1 SP2 T1; do
+            echo "Downloading $league..."
+            curl -sSL "$BASE/$league.csv" -o "csv-data/$league.csv" || echo "WARNING: $league failed"
+          done
+          echo "Download complete"
+          ls -la csv-data/
+
+      - name: Convert CSVs to JSON
+        run: |
+          python3 << 'PYEOF'
+          import csv, json, os
+
+          LEAGUE_NAMES = {
+              'E0':'Premier League','E1':'Championship','E2':'League One','E3':'League Two',
+              'EC':'National League','SC0':'Scottish Premiership','SC1':'Scottish Championship',
+              'SC2':'Scottish League One','SC3':'Scottish League Two','D1':'Bundesliga',
+              'D2':'2. Bundesliga','I1':'Serie A','I2':'Serie B','F1':'Ligue 1','F2':'Ligue 2',
+              'B1':'First Division A','N1':'Eredivisie','P1':'Primeira Liga',
+              'G1':'Super League Greece','SP1':'La Liga','SP2':'La Liga 2','T1':'Sueper Lig'
+          }
+
+          all_results = []
+          standings = {}
+
+          for fname in sorted(os.listdir('csv-data')):
+              if not fname.endswith('.csv'):
+                  continue
+              div = fname.replace('.csv', '')
+              league_name = LEAGUE_NAMES.get(div, div)
+              path = f'csv-data/{fname}'
+              teams = {}
+
+              with open(path, encoding='utf-8-sig') as f:
+                  reader = csv.DictReader(f)
+                  for row in reader:
+                      if not row.get('HomeTeam') or not row.get('FTHG'):
+                          continue
+                      try:
+                          hg = int(row['FTHG'])
+                          ag = int(row['FTAG'])
+                      except:
+                          continue
+                      all_results.append({
+                          'div': div, 'league': league_name, 'date': row['Date'],
+                          'home': row['HomeTeam'], 'away': row['AwayTeam'],
+                          'hg': hg, 'ag': ag, 'res': row['FTR'],
+                          'ref': row.get('Referee', '')
+                      })
+                      for team, gf, ga, is_home in [
+                          (row['HomeTeam'], hg, ag, True),
+                          (row['AwayTeam'], ag, hg, False)
+                      ]:
+                          if team not in teams:
+                              teams[team] = {'p':0,'w':0,'d':0,'l':0,'gf':0,'ga':0,'pts':0}
+                          t = teams[team]
+                          t['p'] += 1; t['gf'] += gf; t['ga'] += ga
+                          if (is_home and row['FTR']=='H') or (not is_home and row['FTR']=='A'):
+                              t['w'] += 1; t['pts'] += 3
+                          elif row['FTR'] == 'D':
+                              t['d'] += 1; t['pts'] += 1
+                          else:
+                              t['l'] += 1
+
+              table = [dict(team=k, **v, gd=v['gf']-v['ga']) for k, v in teams.items()]
+              table.sort(key=lambda x: (-x['pts'], -x['gd'], -x['gf']))
+              for i, row in enumerate(table):
+                  row['pos'] = i + 1
+              standings[div] = {'league': league_name, 'table': table}
+
+          os.makedirs('data', exist_ok=True)
+
+          with open('data/results.json', 'w') as f:
+              json.dump(all_results, f, separators=(',', ':'))
+
+          with open('data/standings.json', 'w') as f:
+              json.dump(standings, f, separators=(',', ':'))
+
+          print(f"Results: {len(all_results)} matches across {len(standings)} leagues")
+          for name in ['results', 'standings']:
+              size = os.path.getsize(f'data/{name}.json')
+              print(f"  {name}.json: {size/1024:.1f}KB")
+          PYEOF
+
+      - name: Commit and push updated JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/results.json data/standings.json
+          git diff --staged --quiet || git commit -m "Auto-update football data $(date +'%Y-%m-%d')"
+          git push
